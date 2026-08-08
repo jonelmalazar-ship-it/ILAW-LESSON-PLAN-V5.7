@@ -1,0 +1,655 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ILAW Teacher Suite V5 — Teacher Edition</title>
+<style>
+*{box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}
+body{margin:0;background:#f4f6f9;color:#333;height:100vh;overflow:hidden}
+.header{height:58px;background:#0d47a1;color:#fff;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.header h1{font-size:1.08rem;margin:0}
+.toolbar{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.main{display:flex;height:calc(100vh - 58px)}
+.editor{width:46%;background:#fff;padding:16px;overflow:auto;border-right:1px solid #ccc}
+.preview{width:54%;background:#eef2f5;padding:18px;overflow:auto;display:flex;justify-content:center}
+.ai-box,.tool-box{background:#e3f2fd;border:1px solid #90caf9;padding:12px;border-radius:7px;margin-bottom:14px}
+.tool-box{background:#fafafa;border-color:#ddd}
+h3{margin:4px 0 9px}
+label{display:block;font-size:.82rem;font-weight:700;margin:5px 0 3px}
+input,textarea,select{width:100%;padding:8px;border:1px solid #bbb;border-radius:4px;font-size:.88rem;background:#fff}
+textarea{min-height:62px;resize:vertical}
+.row{display:flex;gap:9px}.row>*{flex:1}
+.btn{border:0;border-radius:4px;padding:8px 11px;font-weight:700;cursor:pointer;margin:2px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:#0d47a1;color:#fff}.purple{background:#6a1b9a;color:#fff}.green{background:#2e7d32;color:#fff}
+.gray{background:#757575;color:#fff}.red{background:#c62828;color:#fff}.orange{background:#ef6c00;color:#fff}
+.small{font-size:.76rem;color:#555}.status{font-size:.78rem;font-weight:700;margin-top:5px;min-height:18px}
+.tabs{display:flex;gap:3px;border-bottom:2px solid #0d47a1;margin:8px 0}.tab{padding:7px 11px;border:0;background:#ddd;font-weight:700;cursor:pointer}.tab.active{background:#0d47a1;color:#fff}
+.logo-preview{width:54px;height:54px;object-fit:contain;border:1px dashed #999;background:#fff;display:none;border-radius:5px}
+.paper{background:#fff;max-width:800px;width:100%;padding:28px;box-shadow:0 0 10px #bbb;font-size:.81rem;line-height:1.35;color:#000}
+.doc-header{text-align:center;margin-bottom:12px}.doc-header img{width:70px;max-height:70px;object-fit:contain}.doc-header h2,.doc-header h3,.doc-header h4,.doc-header p{margin:2px}
+.doc-table{width:100%;border-collapse:collapse;margin-bottom:10px}.doc-table th,.doc-table td{border:1px solid #000;padding:5px;vertical-align:top}.doc-table th{text-align:center;background:#eee}
+.banner{background:#0d47a1;color:#fff;font-weight:700;padding:5px 7px;margin:7px 0}.sub{font-style:italic;font-weight:400;font-size:.72rem;margin-left:4px}
+.signatures{display:flex;justify-content:space-between;margin-top:22px}.sig{width:30%;text-align:center}.sigline{border-bottom:1px solid #000;margin-top:22px;font-weight:700}
+.lock-screen{position:fixed;inset:0;background:rgba(13,71,161,.97);z-index:9999;color:#fff;display:none;align-items:center;justify-content:center}
+.lock-card{width:min(390px,92vw);background:#fff;color:#222;border-radius:10px;padding:22px;box-shadow:0 10px 35px #001b44}
+#reflectionWrap.locked{opacity:.55}.hidden{display:none!important}
+@media(max-width:900px){.main{display:block;overflow:auto}.editor,.preview{width:100%;height:auto}.preview{min-height:600px}.header{height:auto}.toolbar{justify-content:flex-end}}
+@media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none}}
+</style>
+<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head>
+<body>
+
+<!-- V5.4 LOGO MODULE -->
+<style>
+.ilaw-logo-module{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+.ilaw-logo-preview{width:44px;height:44px;border:1px dashed #aaa;border-radius:6px;object-fit:contain;background:#fafafa;display:none}
+.ilaw-logo-btn{cursor:pointer}
+.ilaw-logo-status{font-size:12px;opacity:.8}
+</style>
+<div id="ilawLogoModule" class="ilaw-logo-module">
+  <img id="ilawLogoPreview" class="ilaw-logo-preview" alt="School logo preview" style="display: none;">
+  <label class="btn blue ilaw-logo-btn" for="ilawLogoInput">🖼️ Upload Logo</label>
+  <input id="ilawLogoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden="">
+  <button type="button" class="btn gray" id="ilawLogoRemove">Remove Logo</button>
+  <span id="ilawLogoStatus" class="ilaw-logo-status">No logo selected</span>
+</div>
+<script>
+(function(){
+  const KEY="ilaw_v54_school_logo";
+  const input=document.getElementById("ilawLogoInput");
+  const preview=document.getElementById("ilawLogoPreview");
+  const status=document.getElementById("ilawLogoStatus");
+  const remove=document.getElementById("ilawLogoRemove");
+
+  function show(data){
+    if(!data){ preview.removeAttribute("src"); preview.style.display="none"; status.textContent="No logo selected"; return; }
+    preview.src=data; preview.style.display="block"; status.textContent="Logo saved";
+  }
+  try{ show(localStorage.getItem(KEY)); }catch(e){ status.textContent="Logo storage unavailable"; }
+
+  input && input.addEventListener("change", function(){
+    const f=this.files && this.files[0];
+    if(!f)return;
+    if(f.size > 2*1024*1024){ alert("Please choose a logo smaller than 2 MB."); this.value=""; return; }
+    if(!/^image\/(png|jpeg|webp)$/.test(f.type)){ alert("Please use PNG, JPG/JPEG, or WEBP."); this.value=""; return; }
+    const r=new FileReader();
+    r.onload=function(){
+      try{
+        localStorage.setItem(KEY,r.result);
+        show(r.result);
+      }catch(e){
+        alert("The logo could not be saved in this browser. Try a smaller image.");
+      }
+    };
+    r.readAsDataURL(f);
+  });
+
+  remove && remove.addEventListener("click",function(){
+    try{localStorage.removeItem(KEY)}catch(e){}
+    if(input)input.value="";
+    show(null);
+  });
+
+  window.ILAW_getSchoolLogo=function(){
+    try{return localStorage.getItem(KEY)||""}catch(e){return ""}
+  };
+})();
+</script>
+<!-- END V5.4 LOGO MODULE -->
+
+
+<div id="lockScreen" class="lock-screen">
+  <div class="lock-card">
+    <h2>🔐 ILAW Teacher Suite</h2>
+    <p id="lockMessage">Enter your password to continue.</p>
+    <input id="unlockPassword" type="password" placeholder="Password" autocomplete="current-password">
+    <button class="btn primary" style="width:100%;margin-top:9px" onclick="unlockApp()">Unlock</button>
+    <div id="unlockStatus" class="status"></div>
+  </div>
+</div>
+
+<header class="header">
+  <h1>ILAW Teacher Suite V5 — Teacher Edition</h1>
+  <div class="toolbar">
+    <select id="langSelect" onchange="changeLanguage()" style="width:auto">
+      <option value="en">English</option><option value="fil">Filipino</option>
+    </select>
+    <button class="btn green" onclick="window.print()">🖨 Print/PDF</button>
+    <button class="btn gray" onclick="exportJSON()">Export</button>
+    <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
+    <button class="btn gray" onclick="openSettings()">⚙ Settings</button><button class="btn purple" onclick="openRawSource()">🧩 Raw Code</button>
+  </div>
+</header>
+
+<div class="main">
+<section class="editor">
+
+<div class="ai-box">
+  <h3>⚡ 1-Click AI Lesson Plan Generator</h3>
+  <div class="row">
+    <div>
+      <label>AI Connection</label>
+      <input id="apiKey" type="text" value="Secure server connection" readonly aria-label="Secure server connection">
+    </div>
+    <div style="max-width:160px">
+      <label>API</label>
+      <button class="btn primary" style="width:100%" onclick="testAPI()">🔌 Test API</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label>Subject &amp; Grade</label>
+      <select id="aiSubject" onchange="subjectChanged()"><option value="">Select subject...</option><option value="Science 7">Science 7</option><option value="Science 8">Science 8</option><option value="Science 9">Science 9</option><option value="Science 10">Science 10</option><option value="Mathematics 7">Mathematics 7</option><option value="Mathematics 8">Mathematics 8</option><option value="Mathematics 9">Mathematics 9</option><option value="Mathematics 10">Mathematics 10</option><option value="English 7">English 7</option><option value="English 8">English 8</option><option value="English 9">English 9</option><option value="English 10">English 10</option><option value="Filipino">Filipino</option><option value="Araling Panlipunan">Araling Panlipunan</option><option value="TLE/EPP">TLE/EPP</option><option value="MAPEH">MAPEH</option><option value="DRRR">DRRR</option><option value="Other">Other / Custom</option></select>
+    </div>
+    <div>
+      <label>Topic</label>
+      <select id="aiTopic" onchange="topicChanged()"><option value="">Select topic...</option><option value="Cells">Cells</option><option value="Reproduction">Reproduction</option><option value="Force and Pressure">Force and Pressure</option><option value="Waves">Waves</option><option value="Light">Light</option><option value="Electricity">Electricity</option><option value="__custom">Custom Topic...</option></select>
+    </div>
+  </div>
+  <div id="customTopicWrap" class="hidden">
+    <label>Custom Topic</label>
+    <input id="customTopic" placeholder="Type your topic">
+  </div>
+
+  <div class="row">
+    <button class="btn purple" id="generateBtn" onclick="generateFullLessonPlan()">✨ Generate Full Plan</button>
+    <button class="btn primary" onclick="improvePlan()">🧠 Improve Plan</button>
+  </div>
+  <div class="row">
+    <button class="btn orange" onclick="regenerateCurrentSession()">🔄 Regenerate Session</button>
+    <button class="btn gray" onclick="copyCurrentToNext()">📋 Copy to Next</button>
+    <button class="btn red" onclick="clearCurrentSession()">🧹 Clear Session</button>
+  </div>
+  <div id="aiStatus" class="status">⏳ AI server ready — click Test API to check the connection...</div>
+  <div class="small">The app checks available Gemini models first and uses one that supports generateContent.</div>
+</div>
+
+<div class="tool-box">
+  <h3>🖼️ School / Dashboard</h3>
+  <div class="row" style="align-items:center">
+    <div>
+      <label>School Logo</label>
+      <input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onchange="loadLogo(event)">
+      <button class="btn gray" onclick="removeLogo()">Remove Logo</button>
+    </div>
+    <img id="dashboardLogo" class="logo-preview" alt="School logo" style="display: none;">
+  </div>
+</div>
+
+<h3>Lesson Information</h3>
+<div class="row">
+  <div><label>Teacher Name</label><input id="teacherName" oninput="updateState()"></div>
+  <div><label>Teacher Title</label><input id="teacherTitle" oninput="updateState()"></div>
+</div>
+<div class="row">
+  <div><label>School Name</label><input id="schoolName" oninput="updateState()"></div>
+  <div><label>School Address</label><input id="schoolAddress" oninput="updateState()"></div>
+</div>
+<div class="row">
+  <div><label>Learning Area / Subject</label><input id="subject" oninput="updateState()"></div>
+  <div><label>Grade &amp; Section</label><input id="gradeSection" oninput="updateState()"></div>
+</div>
+<div class="row">
+  <div><label>No. of Sessions / Week</label><input id="termWeek" oninput="updateState()"></div>
+  <div><label>Lesson Plan Format</label><input id="planFormat" value="ILAW Matrix" oninput="updateState()"></div>
+</div>
+<label>Lesson Title</label><input id="lessonTitle" oninput="updateState()">
+<label>References</label><input id="references" oninput="updateState()">
+<label>Declaration of AI Use</label><textarea id="aiDeclaration" oninput="updateState()"></textarea>
+
+<hr>
+<h3>I - INTENTIONS</h3>
+<label>Curriculum Standards</label><textarea id="curriculumStandards" oninput="updateState()"></textarea>
+<label>Learning Competency (BOW)</label><textarea id="bowCompetency" oninput="updateState()"></textarea>
+<label>Learning Objectives</label><textarea id="objectives" oninput="updateState()"></textarea>
+<label>Learner Context</label><textarea id="learnerContext" oninput="updateState()"></textarea>
+
+<div style="margin:10px 0"><button class="btn gray" onclick="loadDefaultSample()">Thermal Dynamics Sample</button></div>
+
+<hr>
+<h3>Daily Schedule Editor</h3>
+<div class="tabs">
+  <button class="tab active" id="tab-mon" onclick="switchDay('mon',this)">Session 1</button>
+  <button class="tab" id="tab-tue" onclick="switchDay('tue',this)">Session 2</button>
+  <button class="tab" id="tab-wed" onclick="switchDay('wed',this)">Session 3</button>
+  <button class="tab" id="tab-thu" onclick="switchDay('thu',this)">Session 4</button>
+</div>
+<div id="dayLabel">SESSION 1</div>
+<label>Pre-Lesson</label><textarea id="preLessonInput" oninput="updateDayData()"></textarea>
+<label>Flow / Activities &amp; Procedures</label><textarea id="leadInput" oninput="updateDayData()"></textarea>
+<label>Learning Resources</label><textarea id="resourcesInput" oninput="updateDayData()"></textarea>
+<label>Opportunities for Integration</label><textarea id="integrationInput" oninput="updateDayData()"></textarea>
+
+<hr>
+<h3>Assessing &amp; Ways Forward</h3>
+<label>Formative Assessment</label><textarea id="assessInput" oninput="updateState()"></textarea>
+<label>Extended Learning Opportunities</label><textarea id="wayInput" oninput="updateState()"></textarea>
+
+<div id="reflectionWrap" class="tool-box">
+  <label>📅 Friday Reflection — Friday only</label>
+  <label style="font-weight:400">
+    <input type="checkbox" id="fridayCheck" onchange="toggleReflection()" style="width:auto">
+    It is Friday / enable weekly reflection
+  </label>
+
+  <div id="reflectionFields" style="display: block; margin-top: 12px;">
+    <label>1. Learner Progress</label>
+    <textarea id="reflectionProgress" placeholder="What evidence showed that learners achieved the target? Who may need additional support?"></textarea>
+
+    <label>2. What Worked Well</label>
+    <textarea id="reflectionWorked" placeholder="Which strategy, activity, or resource worked well? How did learners respond?"></textarea>
+
+    <label>3. Challenges Encountered</label>
+    <textarea id="reflectionChallenges" placeholder="What difficulties were encountered during teaching, participation, resources, or assessment?"></textarea>
+
+    <label>4. Adjustments for Next Week</label>
+    <textarea id="reflectionAdjustments" placeholder="What will you change, improve, reteach, or provide next week?"></textarea>
+
+    <label>5. Innovation / Localization</label>
+    <textarea id="reflectionInnovation" placeholder="What contextualized, localized, ICT-based, or innovative practice did you use?"></textarea>
+
+    <label>6. Weekly Summary</label>
+    <textarea id="fridayReflection" placeholder="Your overall Friday reflection..." oninput="updateFridayReflection()"></textarea>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <button type="button" class="btn purple" onclick="generateFridayReflection()">✨ Generate Reflection</button>
+      <button type="button" class="btn green" onclick="saveFridayReflection()">💾 Save Reflection</button>
+      <button type="button" class="btn gray" onclick="clearFridayReflection()">🗑️ Clear</button>
+      <span id="reflectionStatus" style="font-size:12px;align-self:center">✅ Reflection generated. Review it before finalizing.</span>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<section class="preview">
+<div class="paper" id="lessonPaper">
+  <div class="doc-header">
+    <img id="pvLogo" class="hidden" alt="School Logo">
+    <h4>Republic of the Philippines</h4>
+    <h3>Department of Education</h3>
+    <h4>REGION V — SCHOOLS DIVISION OF CAMARINES SUR</h4>
+    <h2 id="pvSchoolName"></h2><p id="pvSchoolAddress"></p>
+  </div>
+
+  <table class="doc-table">
+    <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle">Levels of Classification and Biological Taxonomy</td></tr>
+    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher/s</td><td id="pvTeacher"></td></tr>
+    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">No. of Sessions</td><td id="pvTermWeek">Quarter 4, Week 3</td></tr>
+    <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
+    <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
+  </tbody></table>
+
+  <div class="banner">INTENTIONS <span class="sub">Meaningful learning experiences are anchored in how we frame them.</span></div>
+  <table class="doc-table">
+    <tbody><tr><td style="width:25%;font-weight:bold">Curriculum Standards</td><td id="pvStandards" style="white-space:pre-wrap">The learners demonstrate an understanding of the concept of a species and the hierarchical system of classification of organisms.</td></tr>
+    <tr><td style="font-weight:bold">Learning Competency</td><td id="pvBow">Explain the hierarchical system of classification of organisms (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) and the rules of binomial nomenclature (Competency-aligned statement).</td></tr>
+    <tr><td style="font-weight:bold">Learning Objectives</td><td id="pvObjectives" style="white-space:pre-wrap">At the end of the 4-session module, learners will be able to: 1. Describe the eight taxonomic ranks in biological classification; 2. Apply the rules of binomial nomenclature when writing scientific names; 3. Use a simple dichotomous key to identify and classify local Philippine organisms; and 4. Recognize the importance of systematic classification in biodiversity conservation.</td></tr>
+    <tr><td style="font-weight:bold">Learner Context</td><td id="pvLearnerContext" style="white-space:pre-wrap">Grade 8 public high school learners with mixed academic readiness, working in small groups with access to print modules, visual charts, and localized plant/animal picture cards.</td></tr>
+  </tbody></table>
+
+  <div class="banner">LEARNING EXPERIENCES <span class="sub">A learning experience is like a thoughtfully designed journey.</span></div>
+  <table class="doc-table">
+    <thead><tr><th>Learning Experience</th><th>Session 1</th><th>Session 2</th><th>Session 3</th><th>Session 4</th></tr></thead>
+    <tbody>
+      <tr><td style="font-weight:bold">Pre-Lesson</td><td id="pv_mon_pre">Conduct a 5-minute activity called 'Organize the Supermarket' where students group 10 everyday items into logical categories and explain their rationale.</td><td id="pv_tue_pre">Quick recall game: 'Taxonomic Ladder' where student representatives arrange jumbled cards of the taxonomic levels from broadest to most specific.</td><td id="pv_wed_pre">Present pictures of two similar-looking local plants (e.g., Sampaguita and Chichirica) and ask students how a scientist would distinguish them.</td><td id="pv_thu_pre">Peer check: Groups exchange and verify their completed dichotomous key identification worksheets from Wednesday.</td></tr>
+      <tr><td style="font-weight:bold">Flow</td><td id="pv_mon_lead" style="white-space:pre-wrap">Introduce Taxonomy and Carolus Linnaeus. Discuss the concept of classifying biological diversity and present the 8 hierarchical levels (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) using the mnemonic 'Dear King Philip Came Over For Good Soup'.</td><td id="pv_tue_lead" style="white-space:pre-wrap">Discuss Binomial Nomenclature rules (Genus capitalized, species lowercase, italicized or underlined). Guide students in writing scientific names of local organisms such as Panthera pardus, Oryza sativa, and Jasminum sambac.</td><td id="pv_wed_lead" style="white-space:pre-wrap">Introduce simple Dichotomous Keys. Guide student groups in navigating a 4-step dichotomous key to identify five Philippine endemic organisms (e.g., Tamaraw, Philippine Eagle, Tarsier, Milkfish, Narra tree). Safety rule: Handle specimen cards carefully and maintain orderly group discussion.</td><td id="pv_thu_lead" style="white-space:pre-wrap">Facilitate a class synthesis connecting taxonomy to biodiversity conservation. Administer a 10-item multiple-choice formative quiz covering taxonomic ranks, scientific naming, and dichotomous key usage.</td></tr>
+      <tr><td style="font-weight:bold">Learning Resources</td><td id="pv_mon_res">Taxonomy graphic organizer, Manila paper, visual diagram of taxonomic hierarchy.</td><td id="pv_tue_res">Binomial nomenclature rule chart, practice worksheets, whiteboard markers.</td><td id="pv_wed_res">Dichotomous key activity sheets, picture cards of Philippine flora and fauna.</td><td id="pv_thu_res">Formative assessment sheets, summary slides/visual chart.</td></tr>
+      <tr><td style="font-weight:bold">Opportunities for integration</td><td id="pv_mon_integ">Values Integration: Orderliness, systematic thinking, and organization in daily life.</td><td id="pv_tue_integ">Language Arts: Applying proper capitalization, typography rules, and Latin root word awareness.</td><td id="pv_wed_integ">Environmental Education &amp; Nationalism: Appreciating endemic Philippine species and biodiversity hotspots.</td><td id="pv_thu_integ">Critical Thinking: Evaluating how accurate scientific naming aids global conservation efforts and medical research.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="banner">ASSESSING LEARNING</div>
+  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
+  <div class="banner">WAYS FORWARD</div>
+  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
+  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap"></td></tr></tbody></table>
+
+  <div class="signatures">
+    <div class="sig">Prepared by:<div class="sigline" id="pvSigTeacher"></div><div id="pvSigTitle"></div></div>
+    <div class="sig">Reviewed by:<div class="sigline">RAQUEL C. BERMAS</div><div>Science &amp; Math Coordinator</div></div>
+    <div class="sig">Noted by:<div class="sigline">SANDY A. SALDIVAR</div><div>Secondary School Principal I</div></div>
+  </div>
+</div>
+</section>
+</div>
+
+<script>
+const SUBJECT_TOPICS={
+"Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
+"Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
+"Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
+"Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
+"Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
+"Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
+"Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
+"Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
+"English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
+"English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
+"English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
+"English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
+"Filipino":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+"Araling Panlipunan":["Kasaysayan","Heograpiya","Ekonomiks","Pamahalaan","Kultura"],
+"TLE/EPP":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"MAPEH":["Music","Arts","Physical Education","Health"],
+"DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
+};
+let currentDay="mon", appLanguage="en", selectedModel=null;
+const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",planFormat:"ILAW Matrix",termWeek:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,matrix:{mon:{pre:"",lead:"",resources:"",integration:""},tue:{pre:"",lead:"",resources:"",integration:""},wed:{pre:"",lead:"",resources:"",integration:""},thu:{pre:"",lead:"",resources:"",integration:""}}});
+let appState=defaultState();
+
+const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolName:"ALTAMARINO-CLASIO HIGH SCHOOL",schoolAddress:"Curry, Pili, Camarines Sur",gradeSection:"GRADE 10 - ANDROMEDA",subject:"Science 10",termWeek:"Week 7 - 4 Sessions (240 minutes)",lessonTitle:"Thermal Dynamics of Change: Differentiating Exothermic and Endothermic Chemical Reactions",references:"Science 10 Learner's Material & TG | DepEd MATATAG Science 10 BOW",aiDeclaration:"Generative AI (Gemini) was utilized as a co-creator tool to structure and format the lesson activities into the ILAW framework.",curriculumStandards:"CONTENT STANDARD: Learners demonstrate an understanding of chemical reactions associated with biological and industrial processes affecting life and the environment.\\nPERFORMANCE STANDARD: Learners practice safety measures in handling household chemicals based on knowledge of chemical reactions.",bowCompetency:"Differentiate exothermic and endothermic reactions and explain their applications.",objectives:"1. Knowledge: Differentiate exothermic from endothermic reactions.\\n2. Skills: Measure and record temperature changes.\\n3. Attitude: Value safety and energy efficiency.",learnerContext:"Learners are familiar with heat release but need hands-on measurement to understand heat absorption.",formativeAssessment:"Thermal Reaction Matrix and exit ticket.",extendedLearning:"Investigate instant cold packs and self-heating meal packs used in disaster relief.",matrix:{mon:{pre:"Review prior learning; hot pack vs cold pack mystery.",lead:"Session 1: Introduce thermal energy and energy changes in reactions.",resources:"Thermometers, cups, safe household materials.",integration:"Health, Environmental Science, DRR"},tue:{pre:"Recall yesterday's key idea.",lead:"Session 2: Exothermic vs endothermic reactions and energy diagrams.",resources:"Charts, board, activity sheets.",integration:"Mathematics, Environmental Science"},wed:{pre:"Predict which reaction will warm/cool.",lead:"Session 3: Hands-on temperature investigation and data recording.",resources:"Thermometers, vinegar, baking soda, water, detergent.",integration:"Math, Health, Science Process Skills"},thu:{pre:"Review findings from investigation.",lead:"Session 4: Environmental and industrial applications; formative synthesis.",resources:"Scenario cards, worksheets.",integration:"DRR, Climate, Environmental Science"}}};
+
+function $(id){return document.getElementById(id)}
+function setText(id,v){if($(id))$(id).textContent=v||""}
+function setVal(id,v){if($(id))$(id).value=v??""}
+function save(){localStorage.setItem("ilaw_v3_state",JSON.stringify(appState))}
+function updateState(){
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>appState[k]=$(k).value);
+appState.formativeAssessment=$("assessInput").value;appState.extendedLearning=$("wayInput").value;save();render();
+}
+function render(){
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);setText("pvReflection",appState.fridayEnabled?appState.fridayReflection:"");
+["mon","tue","wed","thu"].forEach(d=>{setText("pv_"+d+"_pre",appState.matrix[d].pre);setText("pv_"+d+"_lead",appState.matrix[d].lead);setText("pv_"+d+"_res",appState.matrix[d].resources);setText("pv_"+d+"_integ",appState.matrix[d].integration)});
+setText("pvSigTeacher",appState.teacherName);setText("pvSigTitle",appState.teacherTitle);
+const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
+const dl=$("dashboardLogo");if(appState.logo){dl.src=appState.logo;dl.style.display="block"}else dl.style.display="none";
+$("fridayCheck").checked=!!appState.fridayEnabled;
+$("reflectionFields").style.display=appState.fridayEnabled?"block":"none";
+$("reflectionWrap").classList.toggle("locked",!appState.fridayEnabled);
+loadReflectionParts();
+}
+function syncForm(){
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>setVal(k,appState[k]));
+setVal("assessInput",appState.formativeAssessment);setVal("wayInput",appState.extendedLearning);setVal("fridayReflection",appState.fridayReflection);
+populateSubjects();$("aiSubject").value=appState.subject||"";subjectChanged();switchDay(currentDay,$("tab-"+currentDay));render();
+}
+function populateSubjects(){let s=$("aiSubject");s.innerHTML='<option value="">Select subject...</option>'+Object.keys(SUBJECT_TOPICS).map(x=>`<option>${x}</option>`).join("")+'<option value="Other">Other / Custom</option>'}
+function subjectChanged(){let s=$("aiSubject").value,t=$("aiTopic");t.innerHTML='<option value="">Select topic...</option>'+((SUBJECT_TOPICS[s]||[]).map(x=>`<option>${x}</option>`).join(""))+'<option value="__custom">Custom Topic...</option>';if(s&&s!=="Other"){appState.subject=s;setVal("subject",s)}$("customTopicWrap").classList.add("hidden");updateState()}
+function topicChanged(){let custom=$("aiTopic").value==="__custom";$("customTopicWrap").classList.toggle("hidden",!custom)}
+function topicValue(){return $("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim()}
+function switchDay(d,btn){currentDay=d;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");setText("dayLabel","SESSION "+({mon:1,tue:2,wed:3,thu:4}[d]));setVal("preLessonInput",appState.matrix[d].pre);setVal("leadInput",appState.matrix[d].lead);setVal("resourcesInput",appState.matrix[d].resources);setVal("integrationInput",appState.matrix[d].integration)}
+function updateDayData(){appState.matrix[currentDay]={pre:$("preLessonInput").value,lead:$("leadInput").value,resources:$("resourcesInput").value,integration:$("integrationInput").value};save();render()}
+function updateFridayReflection(){appState.fridayReflection=$("fridayReflection").value;save();render()}
+function toggleReflection(){appState.fridayEnabled=$("fridayCheck").checked;save();render()}
+function loadLogo(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{appState.logo=r.result;save();render()};r.readAsDataURL(f)}
+function removeLogo(){appState.logo="";$("logoFile").value="";save();render()}
+function loadDefaultSample(){appState={...defaultState(),...sample};save();syncForm()}
+function exportJSON(){let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
+function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();save();syncForm()}
+function changeLanguage(){appLanguage=$("langSelect").value;save()}
+
+
+function loadReflectionParts(){
+  const map={
+    reflectionProgress:appState.reflectionProgress||"",
+    reflectionWorked:appState.reflectionWorked||"",
+    reflectionChallenges:appState.reflectionChallenges||"",
+    reflectionAdjustments:appState.reflectionAdjustments||"",
+    reflectionInnovation:appState.reflectionInnovation||"",
+    fridayReflection:appState.fridayReflection||""
+  };
+  Object.keys(map).forEach(id=>{const e=$(id);if(e)e.value=map[id]});
+}
+function saveFridayReflection(){
+  appState.reflectionProgress=$("reflectionProgress").value;
+  appState.reflectionWorked=$("reflectionWorked").value;
+  appState.reflectionChallenges=$("reflectionChallenges").value;
+  appState.reflectionAdjustments=$("reflectionAdjustments").value;
+  appState.reflectionInnovation=$("reflectionInnovation").value;
+  appState.fridayReflection=$("fridayReflection").value;
+  save(); render();
+  $("reflectionStatus").textContent="✅ Reflection saved.";
+}
+function clearFridayReflection(){
+  if(!confirm("Clear this week's Friday reflection?"))return;
+  ["reflectionProgress","reflectionWorked","reflectionChallenges","reflectionAdjustments","reflectionInnovation","fridayReflection"].forEach(id=>{if($(id))$(id).value=""});
+  appState.reflectionProgress="";appState.reflectionWorked="";appState.reflectionChallenges="";
+  appState.reflectionAdjustments="";appState.reflectionInnovation="";appState.fridayReflection="";
+  save();render();
+  $("reflectionStatus").textContent="Reflection cleared.";
+}
+async function generateFridayReflection(){
+  const key="";
+  const btn=document.querySelector('#reflectionFields button.btn.purple');
+  if(btn)btn.disabled=true;
+  $("reflectionStatus").textContent="⏳ Generating from this week's lesson plan...";
+  try{
+    const lesson={
+      subject:appState.subject,gradeSection:appState.gradeSection,lessonTitle:appState.lessonTitle,
+      objectives:appState.objectives,assessment:appState.formativeAssessment,
+      session1:appState.matrix.mon,session2:appState.matrix.tue,
+      session3:appState.matrix.wed,session4:appState.matrix.thu
+    };
+    const prompt=`Create a realistic Philippine teacher Friday weekly reflection based ONLY on this lesson-plan data.
+Do not invent learner scores, attendance, behavior, events, or outcomes. If evidence is not provided, use cautious wording such as "I will continue to monitor".
+Return JSON ONLY with these fields:
+progress, worked, challenges, adjustments, innovation, summary.
+Each should be concise and professional, first-person teacher voice, 1-3 sentences.
+LESSON DATA:
+${JSON.stringify(lesson)}`;
+    const r=await callGeminiReflection(prompt);
+    $("reflectionProgress").value=r.progress||"";
+    $("reflectionWorked").value=r.worked||"";
+    $("reflectionChallenges").value=r.challenges||"";
+    $("reflectionAdjustments").value=r.adjustments||"";
+    $("reflectionInnovation").value=r.innovation||"";
+    $("fridayReflection").value=r.summary||"";
+    saveFridayReflection();
+    $("reflectionStatus").textContent="✅ Reflection generated. Review it before finalizing.";
+  }catch(e){
+    $("reflectionStatus").textContent="❌ "+e.message;
+  }finally{
+    if(btn)btn.disabled=false;
+  }
+}
+function readableError(e){
+  if(e instanceof Error && e.message)return e.message;
+  if(typeof e==="string")return e;
+  if(e && e.message)return e.message;
+  try{return JSON.stringify(e)}catch(_){return String(e)}
+}
+async function apiFetch(url,key,opts={}){
+  try{
+    const headers={"Content-Type":"application/json",...(opts.headers||{})};
+    const r=await fetch("/api/gemini",{...opts,headers});
+    const raw=await r.text();
+    let d=null;
+    try{d=raw?JSON.parse(raw):null}catch(_){}
+    if(!r.ok){
+      const msg=d?.error?.message||d?.message||raw||("HTTP "+r.status);
+      throw Error(msg);
+    }
+    return d;
+  }catch(e){
+    throw Error(readableError(e));
+  }
+}
+async function generateWithFallback(key,prompt,useSchema=true,responseSchemaOverride=null){
+  $("aiStatus").textContent="⏳ Connecting to the ILAW AI server...";
+  const d=await apiFetch("/api/gemini",null,{
+    method:"POST",
+    body:JSON.stringify({
+      prompt,
+      useSchema,
+      responseSchema:responseSchemaOverride||schema
+    })
+  });
+  if(d?.model)selectedModel=d.model;
+  if(d?.data && typeof d.data==="object")return d.data;
+  if(d && typeof d==="object")return d;
+  throw Error("The AI server returned an invalid response.");
+}
+
+function aiPrompt(topic,subject,extra=""){
+return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"} on "${topic}". ${extra}
+Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Return ONLY JSON.`
+}
+const schema={type:"OBJECT",properties:{
+lessonTitle:{type:"STRING"},subject:{type:"STRING"},termWeek:{type:"STRING"},references:{type:"STRING"},aiDeclaration:{type:"STRING"},curriculumStandards:{type:"STRING"},bowCompetency:{type:"STRING"},objectives:{type:"STRING"},learnerContext:{type:"STRING"},formativeAssessment:{type:"STRING"},extendedLearning:{type:"STRING"},
+matrix:{type:"OBJECT",properties:{mon:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},tue:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},wed:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},thu:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]}},required:["mon","tue","wed","thu"]}},required:["lessonTitle","subject","termWeek","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","formativeAssessment","extendedLearning","matrix"]};
+const reflectionSchema={type:"OBJECT",properties:{
+  progress:{type:"STRING"},
+  worked:{type:"STRING"},
+  challenges:{type:"STRING"},
+  adjustments:{type:"STRING"},
+  innovation:{type:"STRING"},
+  summary:{type:"STRING"}
+},required:["progress","worked","challenges","adjustments","innovation","summary"]};
+
+async function callGeminiReflection(prompt){
+  return await generateWithFallback("",prompt,true,reflectionSchema);
+}
+async function callGemini(prompt){
+  return await generateWithFallback("",prompt,true);
+}
+async function testAPI(){
+ try{
+   selectedModel=null;
+   const d=await apiFetch("/api/gemini",null,{method:"POST",body:JSON.stringify({test:true})});
+   selectedModel=d?.model||"server";
+   $("aiStatus").textContent="✅ Secure AI server works. Model: "+selectedModel;
+ }catch(e){
+   selectedModel=null;
+   $("aiStatus").textContent="❌ "+readableError(e);
+ }
+}
+async function generateFullLessonPlan(){
+ let topic=topicValue(),subject=$("aiSubject").value||$("subject").value;
+ if(!topic)return alert("Select or enter a lesson topic.");
+ if(!subject)return alert("Select a subject.");
+ $("generateBtn").disabled=true;
+ try{
+   let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));
+   let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection};
+   appState={...defaultState(),...d,...keep,subject:d.subject||subject};
+   save();syncForm();
+   $("aiStatus").textContent="✅ Full lesson plan generated.";
+ }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
+ finally{$("generateBtn").disabled=false}
+}
+async function improvePlan(){
+ if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");
+ try{
+   $("aiStatus").textContent="⏳ Reviewing alignment...";
+   let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));
+   let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection};
+   appState={...defaultState(),...d,...keep};
+   save();syncForm();
+   $("aiStatus").textContent="✅ Plan improved.";
+ }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
+}
+async function regenerateCurrentSession(){
+ if(!appState.lessonTitle)return alert("Load or generate a plan first.");
+ let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
+ try{
+   const p=`Create ONLY a replacement ${dayName} for a DepEd ILAW lesson plan on "${appState.lessonTitle}" (${appState.subject}). It must logically follow the previous session and prepare for the next. Return JSON with pre,lead,resources,integration strings. Existing current session: ${JSON.stringify(appState.matrix[currentDay])}`;
+   const x=await generateWithFallback("",p,false);
+   if(!x||typeof x!=="object")throw Error("The model returned invalid session data.");
+   appState.matrix[currentDay]=x;save();switchDay(currentDay,$("tab-"+currentDay));render();
+   $("aiStatus").textContent="✅ "+dayName+" regenerated using "+selectedModel+".";
+ }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
+}
+</script>
+
+<div id="rawSourceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;padding:24px">
+  <div style="background:#fff;height:100%;border-radius:8px;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:10px 14px;background:#263238;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <b>🧩 ILAW V5 — RAW SOURCE CODE</b>
+      <div>
+        <button class="btn green" onclick="copyRawSource()">📋 Copy Raw Code</button>
+        <button class="btn gray" onclick="downloadRawSource()">💾 Save HTML</button>
+        <button class="btn red" onclick="closeRawSource()">✕ Close</button>
+      </div>
+    </div>
+    <textarea id="rawSourceBox" spellcheck="false" style="flex:1;width:100%;border:0;border-radius:0;padding:14px;font:12px Consolas,monospace;resize:none"></textarea>
+  </div>
+</div>
+<script>
+function openRawSource(){
+  const m=document.getElementById("rawSourceModal"), b=document.getElementById("rawSourceBox");
+  if(!m||!b)return;
+  b.value=document.documentElement.outerHTML;
+  m.style.display="block";
+}
+function closeRawSource(){const m=document.getElementById("rawSourceModal");if(m)m.style.display="none"}
+async function copyRawSource(){
+  const b=document.getElementById("rawSourceBox"); if(!b)return;
+  try{await navigator.clipboard.writeText(b.value);alert("Raw source copied.");}
+  catch(e){b.select();document.execCommand("copy");alert("Raw source copied.");}
+}
+function downloadRawSource(){
+  const b=document.getElementById("rawSourceBox"); if(!b)return;
+  const blob=new Blob([b.value],{type:"text/html;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="ILAW_Teacher_Suite_V5_RAW_SOURCE.html";a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+</script>
+
+<script>
+/* V5.3 RESCUE ENGINE: standalone subject/topic dropdown.
+   This is intentionally independent of the main app script. */
+(function(){
+  const TOPICS={
+    "Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
+    "Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
+    "Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
+    "Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
+    "Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
+    "Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
+    "Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
+    "Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
+    "English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
+    "English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
+    "English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
+    "English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
+    "Filipino":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+    "Araling Panlipunan":["Kasaysayan","Heograpiya","Ekonomiks","Pamahalaan","Kultura"],
+    "TLE/EPP":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+    "MAPEH":["Music","Arts","Physical Education","Health"],
+    "DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
+  };
+  function q(id){return document.getElementById(id)}
+  function fillSubjects(){
+    const s=q("aiSubject"); if(!s)return;
+    s.innerHTML='<option value="">Select subject...</option>'+
+      Object.keys(TOPICS).map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">'+x+'</option>').join('')+
+      '<option value="Other">Other / Custom</option>';
+    const current=q("subject")?.value||"";
+    if(current && TOPICS[current]) s.value=current;
+    fillTopics();
+  }
+  function fillTopics(){
+    const s=q("aiSubject"), t=q("aiTopic"); if(!s||!t)return;
+    const arr=TOPICS[s.value]||[];
+    t.innerHTML='<option value="">Select topic...</option>'+
+      arr.map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">'+x+'</option>').join('')+
+      '<option value="__custom">Custom Topic...</option>';
+    const wrap=q("customTopicWrap");
+    if(wrap)wrap.classList.toggle("hidden",t.value!=="__custom");
+    const subject=q("subject");
+    if(subject && s.value && s.value!=="Other") subject.value=s.value;
+  }
+  function topicChange(){
+    const t=q("aiTopic"), wrap=q("customTopicWrap");
+    if(wrap)wrap.classList.toggle("hidden",!t||t.value!=="__custom");
+  }
+  window.populateSubjects=fillSubjects;
+  window.subjectChanged=fillTopics;
+  window.topicChanged=topicChange;
+  document.addEventListener("DOMContentLoaded",function(){
+    fillSubjects();
+    const s=q("aiSubject"); if(s)s.addEventListener("change",fillTopics);
+    const t=q("aiTopic"); if(t)t.addEventListener("change",topicChange);
+  });
+})();
+</script>
+
+
+
+
+
+
+</body></html>
