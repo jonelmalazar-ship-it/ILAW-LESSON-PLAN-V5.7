@@ -29,13 +29,6 @@ textarea{min-height:62px;resize:vertical}
 .doc-header{text-align:center;margin-bottom:12px}.doc-header img{width:70px;max-height:70px;object-fit:contain}.doc-header h2,.doc-header h3,.doc-header h4,.doc-header p{margin:2px}
 .doc-table{width:100%;border-collapse:collapse;margin-bottom:10px}.doc-table th,.doc-table td{border:1px solid #000;padding:5px;vertical-align:top}.doc-table th{text-align:center;background:#eee}
 .banner{background:#0d47a1;color:#fff;font-weight:700;padding:5px 7px;margin:7px 0}.sub{font-style:italic;font-weight:400;font-size:.72rem;margin-left:4px}
-
-.hand-reflection-lines{display:flex;flex-direction:column;gap:10px;padding:6px 0 2px;min-height:58px}
-.hand-reflection-lines span{display:block;height:10px;border-bottom:1px solid #777}
-.session-reflection-lines{display:flex;flex-direction:column;gap:9px;padding:5px 0 2px}
-.session-reflection-lines>div{display:grid;grid-template-columns:92px 1fr;align-items:end;gap:8px;min-height:20px}
-.session-reflection-lines strong{font-size:.9rem;white-space:nowrap}
-.session-reflection-lines span{display:block;height:15px;border-bottom:1px solid #777}
 .signatures{display:flex;justify-content:space-between;margin-top:22px}.sig{width:30%;text-align:center}.sigline{border-bottom:1px solid #000;margin-top:22px;font-weight:700}
 .editor .sig-editor{width:100%;box-sizing:border-box}
 .sig-editor{background:#fafafa;border:1px solid #ddd;border-radius:7px;padding:10px;margin-top:8px}.sig-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr auto;gap:7px;align-items:end;margin:7px 0}.sig-row label{margin:0}.sig-remove{min-width:42px}@media(max-width:700px){.sig-row{grid-template-columns:1fr}.sig-remove{width:100%}.signatures{display:block}.sig{width:100%;margin-bottom:24px}}
@@ -43,16 +36,42 @@ textarea{min-height:62px;resize:vertical}
 .lock-card{width:min(390px,92vw);background:#fff;color:#222;border-radius:10px;padding:22px;box-shadow:0 10px 35px #001b44}
 #reflectionWrap.locked{opacity:.55}.hidden{display:none!important}
 @media(max-width:900px){.main{display:block;overflow:auto}.editor,.preview{width:100%;height:auto}.preview{min-height:600px}.header{height:auto}.toolbar{justify-content:flex-end}}
-@media print{
-  .editor,.header,.ilaw-logo-module,#lockScreen,#rawSourceModal{display:none!important}
-  .main{display:block;height:auto}
-  .preview{width:100%;padding:0;background:#fff}
-  .paper{box-shadow:none;padding:0;max-width:none;width:100%}
-  body{background:#fff;overflow:visible}
-}
+@media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none}}
 </style>
-<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style><style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head>
-<body>
+<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style><style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style>
+<!-- Supabase Authentication -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://mbnxmwpvkzwgefkcydpd.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__m_yjde1ILHedwBG1-Ej9A_hUjr06RB";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+</script>
+</head>
+<body class="auth-locked">
+
+<style>
+body.auth-locked > *:not(#authGate){display:none!important}
+#authGate{position:fixed;inset:0;z-index:30000;background:#f4f6f9;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.auth-card{width:min(430px,96vw);background:#fff;border-radius:14px;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.16);border:1px solid #dbe3ea}
+.auth-card h1{margin:0 0 4px;color:#0d47a1;font-size:1.35rem}.auth-sub{margin:0 0 18px;color:#667;font-size:.86rem}
+.auth-tabs{display:flex;gap:4px;margin-bottom:14px}.auth-tab{flex:1;border:0;border-radius:6px;padding:9px;font-weight:700;cursor:pointer;background:#e9eef5;color:#334}.auth-tab.active{background:#0d47a1;color:#fff}
+.auth-card input{margin-bottom:8px}.auth-actions{display:flex;gap:8px;margin-top:8px}.auth-actions .btn{flex:1}.auth-status{min-height:20px;margin-top:10px;font-size:.8rem;font-weight:700}.auth-note{font-size:.72rem;color:#667;margin-top:12px;line-height:1.4}
+#accountBadge{font-size:.72rem;background:#e3f2fd;color:#0d47a1;padding:6px 8px;border-radius:12px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:700px){.auth-card{padding:18px}.auth-actions{flex-direction:column}}
+</style>
+<div id="authGate">
+  <div class="auth-card">
+    <h1>ILAW Teacher Suite</h1><p class="auth-sub">Individual teacher account</p>
+    <div class="auth-tabs"><button type="button" id="loginTab" class="auth-tab active" onclick="showAuthMode('login')">Login</button><button type="button" id="registerTab" class="auth-tab" onclick="showAuthMode('register')">Register</button></div>
+    <div id="registerNameWrap" class="hidden"><label>Full Name</label><input id="authName" type="text" autocomplete="name" placeholder="Your full name"></div>
+    <label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+    <label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters">
+    <div id="authConfirmWrap" class="hidden"><label>Confirm Password</label><input id="authConfirmPassword" type="password" autocomplete="new-password" placeholder="Repeat your password"></div>
+    <div class="auth-actions"><button type="button" id="authSubmitBtn" class="btn primary" onclick="submitAuth()">Login</button><button type="button" id="authForgotBtn" class="btn gray" onclick="resetPassword()">Forgot Password</button></div>
+    <div id="authStatus" class="auth-status"></div><div class="auth-note">Your teacher profile is stored in your individual account. Keep your password private.</div>
+  </div>
+</div>
+
 
 <!-- V5.4 LOGO MODULE -->
 <style>
@@ -131,8 +150,10 @@ textarea{min-height:62px;resize:vertical}
     </select>
     <button class="btn green" onclick="window.print()">🖨 Print/PDF</button>
     <button class="btn gray" onclick="exportJSON()">Export</button>
+    <span id="accountBadge">Not signed in</span>
     <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
-    <button class="btn gray" onclick="openSettings()">⚙ Settings</button><button class="btn purple" onclick="openRawSource()">🧩 Raw Code</button>
+    <button class="btn gray" onclick="openSettings()">⚙ Settings</button>
+    <button class="btn red" onclick="signOutTeacher()">Logout</button>
   </div>
 </header>
 
@@ -173,9 +194,7 @@ textarea{min-height:62px;resize:vertical}
     <button class="btn gray" onclick="copyCurrentToNext()">📋 Copy to Next</button>
     <button class="btn red" onclick="clearCurrentSession()">🧹 Clear Session</button>
   </div>
-  <div id="aiStatus" class="status">❌ &lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Error&gt;&lt;Code&gt;UnsupportedHttpVerb&lt;/Code&gt;&lt;Message&gt;The resource doesn't support specified Http Verb.
-RequestId:f5705f6d-b01e-00b8-0d43-271a79000000
-Time:2026-08-08T14:37:27.9921478Z&lt;/Message&gt;&lt;/Error&gt;</div>
+  <div id="aiStatus" class="status">⏳ Trying gemini-3.6-flash...</div>
   <div class="small">The app checks available Gemini models first and uses one that supports generateContent.</div>
 </div>
 
@@ -319,14 +338,7 @@ Time:2026-08-08T14:37:27.9921478Z&lt;/Message&gt;&lt;/Error&gt;</div>
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
   <div class="banner">WAYS FORWARD</div>
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
-  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection">
-<div class="session-reflection-lines" aria-label="Four blank reflection lines">
-  <div><strong>Session 1:</strong><span></span></div>
-  <div><strong>Session 2:</strong><span></span></div>
-  <div><strong>Session 3:</strong><span></span></div>
-  <div><strong>Session 4:</strong><span></span></div>
-</div>
-</td></tr></tbody></table>
+  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap"></td></tr></tbody></table>
 
   <div id="pvSignatures" class="signatures"></div>
 </div>
@@ -362,7 +374,12 @@ const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolNam
 function $(id){return document.getElementById(id)}
 function setText(id,v){if($(id))$(id).textContent=v||""}
 function setVal(id,v){if($(id))$(id).value=v??""}
-function save(){localStorage.setItem("ilaw_v3_state",JSON.stringify(appState))}
+function save(){
+  const uid=window.ILAW_currentUser?.id;
+  if(!uid)return;
+  localStorage.setItem("ilaw_v3_state_"+uid,JSON.stringify(appState));
+  queueProfileSave();
+}
 function updateState(){
 ["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>appState[k]=$(k).value);
 appState.formativeAssessment=$("assessInput").value;appState.extendedLearning=$("wayInput").value;save();render();
@@ -378,7 +395,7 @@ function addSignatory(){appState.signatories=normalizeSignatories(appState.signa
 function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
 function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
 function render(){
-setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);setText("pvReflection",appState.fridayEnabled?appState.fridayReflection:"");
 ["mon","tue","wed","thu"].forEach(d=>{setText("pv_"+d+"_pre",appState.matrix[d].pre);setText("pv_"+d+"_lead",appState.matrix[d].lead);setText("pv_"+d+"_res",appState.matrix[d].resources);setText("pv_"+d+"_integ",appState.matrix[d].integration)});
 appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
 const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
@@ -558,6 +575,124 @@ async function regenerateCurrentSession(){
    $("aiStatus").textContent="✅ "+dayName+" regenerated using "+selectedModel+".";
  }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
 }
+</script>
+
+
+<script>
+let authMode="login";
+let profileSaveTimer=null;
+
+function showAuthMode(mode){
+  authMode=mode;
+  const isRegister=mode==="register";
+  $("loginTab")?.classList.toggle("active",!isRegister);
+  $("registerTab")?.classList.toggle("active",isRegister);
+  $("registerNameWrap")?.classList.toggle("hidden",!isRegister);
+  $("authConfirmWrap")?.classList.toggle("hidden",!isRegister);
+  $("authSubmitBtn").textContent=isRegister?"Create Account":"Login";
+  $("authForgotBtn").style.display=isRegister?"none":"inline-block";
+  $("authStatus").textContent="";
+}
+function authMessage(message,ok=false){const el=$("authStatus");if(el)el.textContent=(ok?"✅ ":"❌ ")+message;}
+
+async function submitAuth(){
+  const email=$("authEmail").value.trim(), password=$("authPassword").value, name=$("authName").value.trim(), confirm=$("authConfirmPassword").value, btn=$("authSubmitBtn");
+  if(!email||!password)return authMessage("Enter your email and password.");
+  if(authMode==="register"){
+    if(!name)return authMessage("Enter your full name.");
+    if(password.length<6)return authMessage("Password must be at least 6 characters.");
+    if(password!==confirm)return authMessage("Passwords do not match.");
+  }
+  btn.disabled=true; authMessage(authMode==="register"?"Creating your account...":"Signing in...");
+  try{
+    if(authMode==="register"){
+      const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name}}});
+      if(error)throw error;
+      if(data?.session) await enterTeacherApp(data.session.user);
+      else {authMessage("Account created. Check your email and confirm it before logging in.",true);$("authPassword").value="";$("authConfirmPassword").value="";}
+    }else{
+      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+      if(error)throw error;
+      await enterTeacherApp(data.user);
+    }
+  }catch(e){authMessage(e?.message||"Authentication failed.");}
+  finally{btn.disabled=false;}
+}
+
+async function resetPassword(){
+  const email=$("authEmail").value.trim();
+  if(!email)return authMessage("Enter your email first.");
+  try{
+    const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin});
+    if(error)throw error;
+    authMessage("Password reset email sent. Check your inbox.",true);
+  }catch(e){authMessage(e?.message||"Unable to send password reset email.");}
+}
+
+async function loadTeacherProfile(user){
+  try{
+    const {data,error}=await supabaseClient.from("profiles").select("full_name,school_name,designation").eq("id",user.id).maybeSingle();
+    if(error)throw error;
+    if(data){
+      if(data.full_name){setVal("teacherName",data.full_name);appState.teacherName=data.full_name;}
+      if(data.school_name){setVal("schoolName",data.school_name);appState.schoolName=data.school_name;}
+      if(data.designation){setVal("teacherTitle",data.designation);appState.teacherTitle=data.designation;}
+    }else{
+      const metadataName=user.user_metadata?.full_name||"";
+      if(metadataName){setVal("teacherName",metadataName);appState.teacherName=metadataName;}
+      await saveTeacherProfile();
+    }
+  }catch(e){console.warn("Profile load:",e);}
+}
+async function saveTeacherProfile(){
+  const user=window.ILAW_currentUser;if(!user)return;
+  try{
+    const {error}=await supabaseClient.from("profiles").upsert({id:user.id,full_name:appState.teacherName||null,school_name:appState.schoolName||null,designation:appState.teacherTitle||null,updated_at:new Date().toISOString()});
+    if(error)throw error;
+  }catch(e){console.warn("Profile save:",e);}
+}
+function queueProfileSave(){
+  if(!window.ILAW_currentUser)return;
+  clearTimeout(profileSaveTimer);profileSaveTimer=setTimeout(saveTeacherProfile,900);
+}
+async function loadTeacherState(user){
+  try{
+    const raw=localStorage.getItem("ilaw_v3_state_"+user.id);
+    appState=raw?{...defaultState(),...JSON.parse(raw)}:defaultState();
+  }catch(e){console.warn("State load:",e);appState=defaultState();}
+  syncForm();
+  await loadTeacherProfile(user);
+  save();render();
+}
+async function enterTeacherApp(user){
+  window.ILAW_currentUser=user;
+  document.body.classList.remove("auth-locked");
+  $("authGate").style.display="none";
+  $("accountBadge").textContent=user.email||"Teacher account";
+  await loadTeacherState(user);
+}
+async function signOutTeacher(){
+  if(!confirm("Log out of this teacher account?"))return;
+  await supabaseClient.auth.signOut();
+  window.ILAW_currentUser=null;
+  document.body.classList.add("auth-locked");
+  $("authGate").style.display="flex";
+  $("accountBadge").textContent="Not signed in";
+  showAuthMode("login");$("authPassword").value="";
+}
+async function initSupabaseAuth(){
+  if(!SUPABASE_PUBLISHABLE_KEY||SUPABASE_PUBLISHABLE_KEY.includes("PASTE_YOUR_")){
+    authMessage("Supabase Publishable Key is not configured yet.");return;
+  }
+  try{
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(session?.user)await enterTeacherApp(session.user);
+    supabaseClient.auth.onAuthStateChange(async(_event,session)=>{
+      if(session?.user&&window.ILAW_currentUser?.id!==session.user.id)await enterTeacherApp(session.user);
+    });
+  }catch(e){authMessage(e?.message||"Unable to connect to Supabase.");}
+}
+document.addEventListener("DOMContentLoaded",initSupabaseAuth);
 </script>
 
 <div id="rawSourceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;padding:24px">
