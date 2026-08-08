@@ -30,13 +30,15 @@ textarea{min-height:62px;resize:vertical}
 .doc-table{width:100%;border-collapse:collapse;margin-bottom:10px}.doc-table th,.doc-table td{border:1px solid #000;padding:5px;vertical-align:top}.doc-table th{text-align:center;background:#eee}
 .banner{background:#0d47a1;color:#fff;font-weight:700;padding:5px 7px;margin:7px 0}.sub{font-style:italic;font-weight:400;font-size:.72rem;margin-left:4px}
 .signatures{display:flex;justify-content:space-between;margin-top:22px}.sig{width:30%;text-align:center}.sigline{border-bottom:1px solid #000;margin-top:22px;font-weight:700}
+.editor .sig-editor{width:100%;box-sizing:border-box}
+.sig-editor{background:#fafafa;border:1px solid #ddd;border-radius:7px;padding:10px;margin-top:8px}.sig-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr auto;gap:7px;align-items:end;margin:7px 0}.sig-row label{margin:0}.sig-remove{min-width:42px}@media(max-width:700px){.sig-row{grid-template-columns:1fr}.sig-remove{width:100%}.signatures{display:block}.sig{width:100%;margin-bottom:24px}}
 .lock-screen{position:fixed;inset:0;background:rgba(13,71,161,.97);z-index:9999;color:#fff;display:none;align-items:center;justify-content:center}
 .lock-card{width:min(390px,92vw);background:#fff;color:#222;border-radius:10px;padding:22px;box-shadow:0 10px 35px #001b44}
 #reflectionWrap.locked{opacity:.55}.hidden{display:none!important}
 @media(max-width:900px){.main{display:block;overflow:auto}.editor,.preview{width:100%;height:auto}.preview{min-height:600px}.header{height:auto}.toolbar{justify-content:flex-end}}
 @media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none}}
 </style>
-<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head>
+<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style><style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head>
 <body>
 
 <!-- V5.4 LOGO MODULE -->
@@ -128,8 +130,8 @@ textarea{min-height:62px;resize:vertical}
   <h3>⚡ 1-Click AI Lesson Plan Generator</h3>
   <div class="row">
     <div>
-      <label>AI Connection</label>
-      <input id="apiKey" type="text" value="Secure server connection" readonly aria-label="Secure server connection">
+      <label>Gemini API Key</label>
+      <input id="apiKey" type="password" placeholder="Paste Gemini API key">
     </div>
     <div style="max-width:160px">
       <label>API</label>
@@ -144,7 +146,7 @@ textarea{min-height:62px;resize:vertical}
     </div>
     <div>
       <label>Topic</label>
-      <select id="aiTopic" onchange="topicChanged()"><option value="">Select topic...</option><option value="Cells">Cells</option><option value="Reproduction">Reproduction</option><option value="Force and Pressure">Force and Pressure</option><option value="Waves">Waves</option><option value="Light">Light</option><option value="Electricity">Electricity</option><option value="__custom">Custom Topic...</option></select>
+      <select id="aiTopic" onchange="topicChanged()"><option value="">Select topic...</option><option value="__custom">Custom Topic...</option></select>
     </div>
   </div>
   <div id="customTopicWrap" class="hidden">
@@ -161,7 +163,7 @@ textarea{min-height:62px;resize:vertical}
     <button class="btn gray" onclick="copyCurrentToNext()">📋 Copy to Next</button>
     <button class="btn red" onclick="clearCurrentSession()">🧹 Clear Session</button>
   </div>
-  <div id="aiStatus" class="status">⏳ AI server ready — click Test API to check the connection...</div>
+  <div id="aiStatus" class="status">⏳ Trying gemini-3.6-flash...</div>
   <div class="small">The app checks available Gemini models first and uses one that supports generateContent.</div>
 </div>
 
@@ -197,6 +199,7 @@ textarea{min-height:62px;resize:vertical}
 <label>Lesson Title</label><input id="lessonTitle" oninput="updateState()">
 <label>References</label><input id="references" oninput="updateState()">
 <label>Declaration of AI Use</label><textarea id="aiDeclaration" oninput="updateState()"></textarea>
+<div class="tool-box"><h3>✍️ Signatories</h3><div class="small">Edit signatories here. Only the completed signatures appear in the lesson plan and Print/PDF.</div><div class="small">Set the role, name, and designation for each signatory. Add or remove rows depending on the school.</div><div id="signatoryEditor" class="sig-editor"></div><button type="button" class="btn green" onclick="addSignatory()">＋ Add Signatory</button></div>
 
 <hr>
 <h3>I - INTENTIONS</h3>
@@ -306,11 +309,7 @@ textarea{min-height:62px;resize:vertical}
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
   <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap"></td></tr></tbody></table>
 
-  <div class="signatures">
-    <div class="sig">Prepared by:<div class="sigline" id="pvSigTeacher"></div><div id="pvSigTitle"></div></div>
-    <div class="sig">Reviewed by:<div class="sigline">RAQUEL C. BERMAS</div><div>Science &amp; Math Coordinator</div></div>
-    <div class="sig">Noted by:<div class="sigline">SANDY A. SALDIVAR</div><div>Secondary School Principal I</div></div>
-  </div>
+  <div id="pvSignatures" class="signatures"></div>
 </div>
 </section>
 </div>
@@ -336,7 +335,7 @@ const SUBJECT_TOPICS={
 "DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
 };
 let currentDay="mon", appLanguage="en", selectedModel=null;
-const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",planFormat:"ILAW Matrix",termWeek:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,matrix:{mon:{pre:"",lead:"",resources:"",integration:""},tue:{pre:"",lead:"",resources:"",integration:""},wed:{pre:"",lead:"",resources:"",integration:""},thu:{pre:"",lead:"",resources:"",integration:""}}});
+const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",planFormat:"ILAW Matrix",termWeek:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{pre:"",lead:"",resources:"",integration:""},tue:{pre:"",lead:"",resources:"",integration:""},wed:{pre:"",lead:"",resources:"",integration:""},thu:{pre:"",lead:"",resources:"",integration:""}}});
 let appState=defaultState();
 
 const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolName:"ALTAMARINO-CLASIO HIGH SCHOOL",schoolAddress:"Curry, Pili, Camarines Sur",gradeSection:"GRADE 10 - ANDROMEDA",subject:"Science 10",termWeek:"Week 7 - 4 Sessions (240 minutes)",lessonTitle:"Thermal Dynamics of Change: Differentiating Exothermic and Endothermic Chemical Reactions",references:"Science 10 Learner's Material & TG | DepEd MATATAG Science 10 BOW",aiDeclaration:"Generative AI (Gemini) was utilized as a co-creator tool to structure and format the lesson activities into the ILAW framework.",curriculumStandards:"CONTENT STANDARD: Learners demonstrate an understanding of chemical reactions associated with biological and industrial processes affecting life and the environment.\\nPERFORMANCE STANDARD: Learners practice safety measures in handling household chemicals based on knowledge of chemical reactions.",bowCompetency:"Differentiate exothermic and endothermic reactions and explain their applications.",objectives:"1. Knowledge: Differentiate exothermic from endothermic reactions.\\n2. Skills: Measure and record temperature changes.\\n3. Attitude: Value safety and energy efficiency.",learnerContext:"Learners are familiar with heat release but need hands-on measurement to understand heat absorption.",formativeAssessment:"Thermal Reaction Matrix and exit ticket.",extendedLearning:"Investigate instant cold packs and self-heating meal packs used in disaster relief.",matrix:{mon:{pre:"Review prior learning; hot pack vs cold pack mystery.",lead:"Session 1: Introduce thermal energy and energy changes in reactions.",resources:"Thermometers, cups, safe household materials.",integration:"Health, Environmental Science, DRR"},tue:{pre:"Recall yesterday's key idea.",lead:"Session 2: Exothermic vs endothermic reactions and energy diagrams.",resources:"Charts, board, activity sheets.",integration:"Mathematics, Environmental Science"},wed:{pre:"Predict which reaction will warm/cool.",lead:"Session 3: Hands-on temperature investigation and data recording.",resources:"Thermometers, vinegar, baking soda, water, detergent.",integration:"Math, Health, Science Process Skills"},thu:{pre:"Review findings from investigation.",lead:"Session 4: Environmental and industrial applications; formative synthesis.",resources:"Scenario cards, worksheets.",integration:"DRR, Climate, Environmental Science"}}};
@@ -349,10 +348,20 @@ function updateState(){
 ["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>appState[k]=$(k).value);
 appState.formativeAssessment=$("assessInput").value;appState.extendedLearning=$("wayInput").value;save();render();
 }
+function normalizeSignatories(list){
+  if(!Array.isArray(list)||!list.length)return [{role:"Prepared by",name:appState.teacherName||"",designation:appState.teacherTitle||""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}];
+  return list.map(s=>({role:String(s?.role||"").trim(),name:String(s?.name||"").trim(),designation:String(s?.designation||"").trim()}));
+}
+function esc(v){return String(v??"").replace(/[&<>\"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;", "'":"&#39;"}[m]));}
+function renderSignatoryEditor(){const box=$("signatoryEditor");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map((s,i)=>`<div class="sig-row"><div><label>Role / Label</label><input value="${esc(s.role)}" oninput="updateSignatory(${i},'role',this.value)" placeholder="e.g. Checked by"></div><div><label>Name</label><input value="${esc(s.name)}" oninput="updateSignatory(${i},'name',this.value)" placeholder="Full name"></div><div><label>Designation</label><input value="${esc(s.designation)}" oninput="updateSignatory(${i},'designation',this.value)" placeholder="e.g. Master Teacher I"></div><button type="button" class="btn red sig-remove" onclick="removeSignatory(${i})">✕</button></div>`).join("");}
+function updateSignatory(i,field,value){appState.signatories=normalizeSignatories(appState.signatories);appState.signatories[i][field]=value;save();renderSignatoryPreview();}
+function addSignatory(){appState.signatories=normalizeSignatories(appState.signatories);appState.signatories.push({role:"Checked by",name:"",designation:""});save();renderSignatoryEditor();renderSignatoryPreview();}
+function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
+function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
 function render(){
 setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);setText("pvReflection",appState.fridayEnabled?appState.fridayReflection:"");
 ["mon","tue","wed","thu"].forEach(d=>{setText("pv_"+d+"_pre",appState.matrix[d].pre);setText("pv_"+d+"_lead",appState.matrix[d].lead);setText("pv_"+d+"_res",appState.matrix[d].resources);setText("pv_"+d+"_integ",appState.matrix[d].integration)});
-setText("pvSigTeacher",appState.teacherName);setText("pvSigTitle",appState.teacherTitle);
+appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
 const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
 const dl=$("dashboardLogo");if(appState.logo){dl.src=appState.logo;dl.style.display="block"}else dl.style.display="none";
 $("fridayCheck").checked=!!appState.fridayEnabled;
@@ -411,7 +420,8 @@ function clearFridayReflection(){
   $("reflectionStatus").textContent="Reflection cleared.";
 }
 async function generateFridayReflection(){
-  const key="";
+  const key=$("apiKey")?.value.trim();
+  if(!key){$("reflectionStatus").textContent="❌ Enter your Gemini API key first.";return}
   const btn=document.querySelector('#reflectionFields button.btn.purple');
   if(btn)btn.disabled=true;
   $("reflectionStatus").textContent="⏳ Generating from this week's lesson plan...";
@@ -429,7 +439,7 @@ progress, worked, challenges, adjustments, innovation, summary.
 Each should be concise and professional, first-person teacher voice, 1-3 sentences.
 LESSON DATA:
 ${JSON.stringify(lesson)}`;
-    const r=await callGeminiReflection(prompt);
+    const r=await callGemini(prompt);
     $("reflectionProgress").value=r.progress||"";
     $("reflectionWorked").value=r.worked||"";
     $("reflectionChallenges").value=r.challenges||"";
@@ -444,44 +454,60 @@ ${JSON.stringify(lesson)}`;
     if(btn)btn.disabled=false;
   }
 }
-function readableError(e){
-  if(e instanceof Error && e.message)return e.message;
-  if(typeof e==="string")return e;
-  if(e && e.message)return e.message;
-  try{return JSON.stringify(e)}catch(_){return String(e)}
-}
 async function apiFetch(url,key,opts={}){
   try{
-    const headers={"Content-Type":"application/json",...(opts.headers||{})};
-    const r=await fetch("/api/gemini",{...opts,headers});
-    const raw=await r.text();
-    let d=null;
-    try{d=raw?JSON.parse(raw):null}catch(_){}
-    if(!r.ok){
-      const msg=d?.error?.message||d?.message||raw||("HTTP "+r.status);
-      throw Error(msg);
-    }
-    return d;
+    return await fetch(url,{...opts,headers:{"Content-Type":"application/json","x-goog-api-key":key,...(opts.headers||{})}});
   }catch(e){
-    throw Error(readableError(e));
+    throw Error("Network request failed. If you opened this HTML directly from your computer and the browser blocks the request, run it from a local web server or use the desktop-app build.");
   }
 }
-async function generateWithFallback(key,prompt,useSchema=true,responseSchemaOverride=null){
-  $("aiStatus").textContent="⏳ Connecting to the ILAW AI server...";
-  const d=await apiFetch("/api/gemini",null,{
-    method:"POST",
-    body:JSON.stringify({
-      prompt,
-      useSchema,
-      responseSchema:responseSchemaOverride||schema
-    })
-  });
-  if(d?.model)selectedModel=d.model;
-  if(d?.data && typeof d.data==="object")return d.data;
-  if(d && typeof d==="object")return d;
-  throw Error("The AI server returned an invalid response.");
+async function getModels(key){
+let r=await fetch("https://generativelanguage.googleapis.com/v1beta/models?key="+encodeURIComponent(key));
+let d=await r.json();
+if(!r.ok)throw Error(d.error?.message||"Could not list Gemini models.");
+const preferred=["gemini-3.6-flash","gemini-3.5-flash","gemini-3.5-flash-lite","gemini-3.1-flash-lite","gemini-3.1-flash","gemini-2.5-flash","gemini-2.5-flash-lite"];
+const models=(d.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent"));
+return models.sort((a,b)=>{
+ const an=(a.name||"").replace(/^models\//,""), bn=(b.name||"").replace(/^models\//,"");
+ const ai=preferred.indexOf(an), bi=preferred.indexOf(bn);
+ if(ai>=0||bi>=0)return (ai<0?999:ai)-(bi<0?999:bi);
+ if(/flash/i.test(an)!==/flash/i.test(bn))return /flash/i.test(an)?-1:1;
+ return an.localeCompare(bn);
+});
 }
-
+async function chooseModel(key){
+ if(selectedModel)return selectedModel;
+ const ms=await getModels(key);
+ if(!ms.length)throw Error("No Gemini model available for generateContent.");
+ selectedModel=ms[0].name.replace(/^models\//,"");
+ return selectedModel;
+}
+async function generateWithFallback(key, prompt, useSchema=true){
+ const models=await getModels(key);
+ let errors=[];
+ for(const m of models){
+   const model=m.name.replace(/^models\//,"");
+   try{
+     $("aiStatus").textContent="⏳ Trying "+model+"...";
+     const config={};
+     if(useSchema){config.responseMimeType="application/json";config.responseSchema=schema;}
+     const r=await apiFetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,key,{
+       method:"POST",
+       body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:config})
+     });
+     const d=await r.json();
+     if(!r.ok){
+       errors.push(model+": "+(d.error?.message||("HTTP "+r.status)));
+       continue;
+     }
+     const txt=d.candidates?.[0]?.content?.parts?.map(x=>x.text||"").join("").replace(/```json|```/g,"").trim();
+     if(!txt){errors.push(model+": empty response");continue;}
+     selectedModel=model;
+     return JSON.parse(txt);
+   }catch(e){errors.push(model+": "+e.message)}
+ }
+ throw Error("No available Gemini model could generate content.\n"+errors.join("\n"));
+}
 function aiPrompt(topic,subject,extra=""){
 return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"} on "${topic}". ${extra}
 Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Return ONLY JSON.`
@@ -489,67 +515,41 @@ Use realistic classroom activities, age-appropriate tasks, measurable objectives
 const schema={type:"OBJECT",properties:{
 lessonTitle:{type:"STRING"},subject:{type:"STRING"},termWeek:{type:"STRING"},references:{type:"STRING"},aiDeclaration:{type:"STRING"},curriculumStandards:{type:"STRING"},bowCompetency:{type:"STRING"},objectives:{type:"STRING"},learnerContext:{type:"STRING"},formativeAssessment:{type:"STRING"},extendedLearning:{type:"STRING"},
 matrix:{type:"OBJECT",properties:{mon:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},tue:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},wed:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},thu:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]}},required:["mon","tue","wed","thu"]}},required:["lessonTitle","subject","termWeek","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","formativeAssessment","extendedLearning","matrix"]};
-const reflectionSchema={type:"OBJECT",properties:{
-  progress:{type:"STRING"},
-  worked:{type:"STRING"},
-  challenges:{type:"STRING"},
-  adjustments:{type:"STRING"},
-  innovation:{type:"STRING"},
-  summary:{type:"STRING"}
-},required:["progress","worked","challenges","adjustments","innovation","summary"]};
 
-async function callGeminiReflection(prompt){
-  return await generateWithFallback("",prompt,true,reflectionSchema);
-}
 async function callGemini(prompt){
-  return await generateWithFallback("",prompt,true);
+ let key=$("apiKey").value.trim();
+ if(!key)throw Error("Enter your Gemini API key.");
+ const data=await generateWithFallback(key,prompt,true);
+ return data;
 }
 async function testAPI(){
  try{
+   const key=$("apiKey").value.trim();
+   if(!key)throw Error("Enter your Gemini API key.");
    selectedModel=null;
-   const d=await apiFetch("/api/gemini",null,{method:"POST",body:JSON.stringify({test:true})});
-   selectedModel=d?.model||"server";
-   $("aiStatus").textContent="✅ Secure AI server works. Model: "+selectedModel;
+   await generateWithFallback(key,"Reply with JSON only: {\"ok\":true}",false);
+   $("aiStatus").textContent="✅ API works. Model: "+selectedModel;
  }catch(e){
    selectedModel=null;
-   $("aiStatus").textContent="❌ "+readableError(e);
+   $("aiStatus").textContent="❌ "+e.message;
  }
 }
 async function generateFullLessonPlan(){
- let topic=topicValue(),subject=$("aiSubject").value||$("subject").value;
- if(!topic)return alert("Select or enter a lesson topic.");
- if(!subject)return alert("Select a subject.");
- $("generateBtn").disabled=true;
- try{
-   let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));
-   let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection};
-   appState={...defaultState(),...d,...keep,subject:d.subject||subject};
-   save();syncForm();
-   $("aiStatus").textContent="✅ Full lesson plan generated.";
- }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
- finally{$("generateBtn").disabled=false}
-}
+let topic=topicValue(),subject=$("aiSubject").value||$("subject").value;if(!topic)return alert("Select or enter a lesson topic.");if(!subject)return alert("Select a subject.");
+$("generateBtn").disabled=true;try{let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep,subject:d.subject||subject};save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated."}catch(e){$("aiStatus").textContent="❌ "+e.message}finally{$("generateBtn").disabled=false}}
 async function improvePlan(){
- if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");
- try{
-   $("aiStatus").textContent="⏳ Reviewing alignment...";
-   let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));
-   let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection};
-   appState={...defaultState(),...d,...keep};
-   save();syncForm();
-   $("aiStatus").textContent="✅ Plan improved.";
- }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
-}
+if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
 async function regenerateCurrentSession(){
  if(!appState.lessonTitle)return alert("Load or generate a plan first.");
  let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
  try{
+   const key=$("apiKey").value.trim(); if(!key)throw Error("Enter your Gemini API key.");
    const p=`Create ONLY a replacement ${dayName} for a DepEd ILAW lesson plan on "${appState.lessonTitle}" (${appState.subject}). It must logically follow the previous session and prepare for the next. Return JSON with pre,lead,resources,integration strings. Existing current session: ${JSON.stringify(appState.matrix[currentDay])}`;
-   const x=await generateWithFallback("",p,false);
+   const x=await generateWithFallback(key,p,false);
    if(!x||typeof x!=="object")throw Error("The model returned invalid session data.");
    appState.matrix[currentDay]=x;save();switchDay(currentDay,$("tab-"+currentDay));render();
    $("aiStatus").textContent="✅ "+dayName+" regenerated using "+selectedModel+".";
- }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
+ }catch(e){$("aiStatus").textContent="❌ "+e.message}
 }
 </script>
 
