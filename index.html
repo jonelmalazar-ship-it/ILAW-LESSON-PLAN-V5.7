@@ -129,10 +129,7 @@ textarea{min-height:62px;resize:vertical}
 <div class="ai-box">
   <h3>⚡ 1-Click AI Lesson Plan Generator</h3>
   <div class="row">
-    <div>
-      <label>Gemini API Key</label>
-      <input id="apiKey" type="password" placeholder="Paste Gemini API key">
-    </div>
+    <div class="small" style="align-self:center">🔒 Secure AI connection: the Gemini API key is stored on the server and is not entered by users.</div>
     <div style="max-width:160px">
       <label>API</label>
       <button class="btn primary" style="width:100%" onclick="testAPI()">🔌 Test API</button>
@@ -420,8 +417,6 @@ function clearFridayReflection(){
   $("reflectionStatus").textContent="Reflection cleared.";
 }
 async function generateFridayReflection(){
-  const key=$("apiKey")?.value.trim();
-  if(!key){$("reflectionStatus").textContent="❌ Enter your Gemini API key first.";return}
   const btn=document.querySelector('#reflectionFields button.btn.purple');
   if(btn)btn.disabled=true;
   $("reflectionStatus").textContent="⏳ Generating from this week's lesson plan...";
@@ -454,59 +449,42 @@ ${JSON.stringify(lesson)}`;
     if(btn)btn.disabled=false;
   }
 }
+function readableError(e){
+  if(e instanceof Error && e.message)return e.message;
+  if(typeof e==="string")return e;
+  if(e && e.message)return e.message;
+  try{return JSON.stringify(e)}catch(_){return String(e)}
+}
 async function apiFetch(url,key,opts={}){
   try{
-    return await fetch(url,{...opts,headers:{"Content-Type":"application/json","x-goog-api-key":key,...(opts.headers||{})}});
+    const headers={"Content-Type":"application/json",...(opts.headers||{})};
+    const r=await fetch("/api/gemini",{...opts,headers});
+    const raw=await r.text();
+    let d=null;
+    try{d=raw?JSON.parse(raw):null}catch(_){}
+    if(!r.ok){
+      const msg=d?.error?.message||d?.message||raw||("HTTP "+r.status);
+      throw Error(msg);
+    }
+    return d;
   }catch(e){
-    throw Error("Network request failed. If you opened this HTML directly from your computer and the browser blocks the request, run it from a local web server or use the desktop-app build.");
+    throw Error(readableError(e));
   }
 }
-async function getModels(key){
-let r=await fetch("https://generativelanguage.googleapis.com/v1beta/models?key="+encodeURIComponent(key));
-let d=await r.json();
-if(!r.ok)throw Error(d.error?.message||"Could not list Gemini models.");
-const preferred=["gemini-3.6-flash","gemini-3.5-flash","gemini-3.5-flash-lite","gemini-3.1-flash-lite","gemini-3.1-flash","gemini-2.5-flash","gemini-2.5-flash-lite"];
-const models=(d.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent"));
-return models.sort((a,b)=>{
- const an=(a.name||"").replace(/^models\//,""), bn=(b.name||"").replace(/^models\//,"");
- const ai=preferred.indexOf(an), bi=preferred.indexOf(bn);
- if(ai>=0||bi>=0)return (ai<0?999:ai)-(bi<0?999:bi);
- if(/flash/i.test(an)!==/flash/i.test(bn))return /flash/i.test(an)?-1:1;
- return an.localeCompare(bn);
-});
-}
-async function chooseModel(key){
- if(selectedModel)return selectedModel;
- const ms=await getModels(key);
- if(!ms.length)throw Error("No Gemini model available for generateContent.");
- selectedModel=ms[0].name.replace(/^models\//,"");
- return selectedModel;
-}
-async function generateWithFallback(key, prompt, useSchema=true){
- const models=await getModels(key);
- let errors=[];
- for(const m of models){
-   const model=m.name.replace(/^models\//,"");
-   try{
-     $("aiStatus").textContent="⏳ Trying "+model+"...";
-     const config={};
-     if(useSchema){config.responseMimeType="application/json";config.responseSchema=schema;}
-     const r=await apiFetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,key,{
-       method:"POST",
-       body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:config})
-     });
-     const d=await r.json();
-     if(!r.ok){
-       errors.push(model+": "+(d.error?.message||("HTTP "+r.status)));
-       continue;
-     }
-     const txt=d.candidates?.[0]?.content?.parts?.map(x=>x.text||"").join("").replace(/```json|```/g,"").trim();
-     if(!txt){errors.push(model+": empty response");continue;}
-     selectedModel=model;
-     return JSON.parse(txt);
-   }catch(e){errors.push(model+": "+e.message)}
- }
- throw Error("No available Gemini model could generate content.\n"+errors.join("\n"));
+async function generateWithFallback(key,prompt,useSchema=true,responseSchemaOverride=null){
+  $("aiStatus").textContent="⏳ Connecting to the ILAW AI server...";
+  const d=await apiFetch("/api/gemini",null,{
+    method:"POST",
+    body:JSON.stringify({
+      prompt,
+      useSchema,
+      responseSchema:responseSchemaOverride||schema
+    })
+  });
+  if(d?.model)selectedModel=d.model;
+  if(d?.data && typeof d.data==="object")return d.data;
+  if(d && typeof d==="object")return d;
+  throw Error("The AI server returned an invalid response.");
 }
 function aiPrompt(topic,subject,extra=""){
 return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"} on "${topic}". ${extra}
@@ -516,23 +494,31 @@ const schema={type:"OBJECT",properties:{
 lessonTitle:{type:"STRING"},subject:{type:"STRING"},termWeek:{type:"STRING"},references:{type:"STRING"},aiDeclaration:{type:"STRING"},curriculumStandards:{type:"STRING"},bowCompetency:{type:"STRING"},objectives:{type:"STRING"},learnerContext:{type:"STRING"},formativeAssessment:{type:"STRING"},extendedLearning:{type:"STRING"},
 matrix:{type:"OBJECT",properties:{mon:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},tue:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},wed:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},thu:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]}},required:["mon","tue","wed","thu"]}},required:["lessonTitle","subject","termWeek","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","formativeAssessment","extendedLearning","matrix"]};
 
+const reflectionSchema={type:"OBJECT",properties:{
+  progress:{type:"STRING"},
+  worked:{type:"STRING"},
+  challenges:{type:"STRING"},
+  adjustments:{type:"STRING"},
+  innovation:{type:"STRING"},
+  summary:{type:"STRING"}
+},required:["progress","worked","challenges","adjustments","innovation","summary"]};
+
+async function callGeminiReflection(prompt){
+  return await generateWithFallback("",prompt,true,reflectionSchema);
+}
 async function callGemini(prompt){
- let key=$("apiKey").value.trim();
- if(!key)throw Error("Enter your Gemini API key.");
- const data=await generateWithFallback(key,prompt,true);
- return data;
+  return await generateWithFallback("",prompt,true);
 }
 async function testAPI(){
- try{
-   const key=$("apiKey").value.trim();
-   if(!key)throw Error("Enter your Gemini API key.");
-   selectedModel=null;
-   await generateWithFallback(key,"Reply with JSON only: {\"ok\":true}",false);
-   $("aiStatus").textContent="✅ API works. Model: "+selectedModel;
- }catch(e){
-   selectedModel=null;
-   $("aiStatus").textContent="❌ "+e.message;
- }
+  try{
+    selectedModel=null;
+    const d=await apiFetch("/api/gemini",null,{method:"POST",body:JSON.stringify({test:true})});
+    selectedModel=d?.model||"server";
+    $("aiStatus").textContent="✅ Secure AI server works. Model: "+selectedModel;
+  }catch(e){
+    selectedModel=null;
+    $("aiStatus").textContent="❌ "+readableError(e);
+  }
 }
 async function generateFullLessonPlan(){
 let topic=topicValue(),subject=$("aiSubject").value||$("subject").value;if(!topic)return alert("Select or enter a lesson topic.");if(!subject)return alert("Select a subject.");
@@ -543,13 +529,12 @@ async function regenerateCurrentSession(){
  if(!appState.lessonTitle)return alert("Load or generate a plan first.");
  let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
  try{
-   const key=$("apiKey").value.trim(); if(!key)throw Error("Enter your Gemini API key.");
    const p=`Create ONLY a replacement ${dayName} for a DepEd ILAW lesson plan on "${appState.lessonTitle}" (${appState.subject}). It must logically follow the previous session and prepare for the next. Return JSON with pre,lead,resources,integration strings. Existing current session: ${JSON.stringify(appState.matrix[currentDay])}`;
-   const x=await generateWithFallback(key,p,false);
+   const x=await generateWithFallback("",p,false);
    if(!x||typeof x!=="object")throw Error("The model returned invalid session data.");
    appState.matrix[currentDay]=x;save();switchDay(currentDay,$("tab-"+currentDay));render();
    $("aiStatus").textContent="✅ "+dayName+" regenerated using "+selectedModel+".";
- }catch(e){$("aiStatus").textContent="❌ "+e.message}
+ }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
 }
 </script>
 
