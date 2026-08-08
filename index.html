@@ -434,7 +434,7 @@ progress, worked, challenges, adjustments, innovation, summary.
 Each should be concise and professional, first-person teacher voice, 1-3 sentences.
 LESSON DATA:
 ${JSON.stringify(lesson)}`;
-    const r=await callGemini(prompt);
+    const r=await callGeminiReflection(prompt);
     $("reflectionProgress").value=r.progress||"";
     $("reflectionWorked").value=r.worked||"";
     $("reflectionChallenges").value=r.challenges||"";
