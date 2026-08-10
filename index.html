@@ -1,7 +1,7 @@
 <html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ILAW Teacher Suite V5 — Teacher Edition</title>
+<title>ILAW Teacher Suite V7 — Studio</title>
 <style>
 *{box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}
 body{margin:0;background:#f4f6f9;color:#333;height:100vh;overflow:hidden}
@@ -31,7 +31,7 @@ textarea{min-height:62px;resize:vertical}
 .banner{background:#0d47a1;color:#fff;font-weight:700;padding:5px 7px;margin:7px 0}.sub{font-style:italic;font-weight:400;font-size:.72rem;margin-left:4px}
 .signatures{display:flex;justify-content:space-between;margin-top:22px}.sig{width:30%;text-align:center}.sigline{border-bottom:1px solid #000;margin-top:22px;font-weight:700}
 .editor .sig-editor{width:100%;box-sizing:border-box}
-.sig-editor{background:#fafafa;border:1px solid #ddd;border-radius:7px;padding:10px;margin-top:8px}.sig-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr auto;gap:7px;align-items:end;margin:7px 0}.sig-row label{margin:0}.sig-remove{min-width:42px}@media(max-width:700px){.sig-row{grid-template-columns:1fr}.sig-remove{width:100%}.signatures{display:block}.sig{width:100%;margin-bottom:24px}}
+.sig-editor{background:#fafafa;border:1px solid #ddd;border-radius:7px;padding:10px;margin-top:8px}.print-reflection-lines>div{display:flex;align-items:flex-end;gap:7px;min-height:30px;margin:2px 0}.print-reflection-lines b{width:18px;flex:0 0 18px}.print-reflection-lines span{display:block;border-bottom:1px solid #000;flex:1;height:22px}.sig-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr auto;gap:7px;align-items:end;margin:7px 0}.sig-row label{margin:0}.sig-remove{min-width:42px}@media(max-width:700px){.sig-row{grid-template-columns:1fr}.sig-remove{width:100%}.signatures{display:block}.sig{width:100%;margin-bottom:24px}}
 .lock-screen{position:fixed;inset:0;background:rgba(13,71,161,.97);z-index:9999;color:#fff;display:none;align-items:center;justify-content:center}
 .lock-card{width:min(390px,92vw);background:#fff;color:#222;border-radius:10px;padding:22px;box-shadow:0 10px 35px #001b44}
 #reflectionWrap.locked{opacity:.55}.hidden{display:none!important}
@@ -143,17 +143,17 @@ body.auth-locked > *:not(#authGate){display:none!important}
 </div>
 
 <header class="header">
-  <h1>ILAW Teacher Suite V5 — Teacher Edition</h1>
+  <h1>ILAW Teacher Suite V7 — Studio</h1>
   <div class="toolbar">
     <select id="langSelect" onchange="changeLanguage()" style="width:auto">
       <option value="en">English</option><option value="fil">Filipino</option>
     </select>
-    <button class="btn green" onclick="window.print()">🖨 Print/PDF</button>
-    <button class="btn gray" onclick="exportJSON()">Export</button>
+    <button class="btn green" data-i18n="print" onclick="window.print()">🖨 Print/PDF</button>
+    <button class="btn gray" data-i18n="export" onclick="exportJSON()">Export</button>
     <span id="accountBadge">Not signed in</span>
-    <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
-    <button class="btn gray" onclick="openSettings()">⚙ Settings</button>
-    <button class="btn red" onclick="signOutTeacher()">Logout</button>
+    <button class="btn orange" data-i18n="lock" onclick="lockApp()">🔒 Lock</button>
+    <button class="btn gray" data-i18n="settings" onclick="openSettings()">⚙ Settings</button>
+    <button class="btn red" data-i18n="logout" onclick="signOutTeacher()">Logout</button>
   </div>
 </header>
 
@@ -172,12 +172,22 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
   <div class="row">
     <div>
-      <label>Subject &amp; Grade</label>
-      <select id="aiSubject" onchange="subjectChanged()"><option value="">Select subject...</option><option value="Science 7">Science 7</option><option value="Science 8">Science 8</option><option value="Science 9">Science 9</option><option value="Science 10">Science 10</option><option value="Mathematics 7">Mathematics 7</option><option value="Mathematics 8">Mathematics 8</option><option value="Mathematics 9">Mathematics 9</option><option value="Mathematics 10">Mathematics 10</option><option value="English 7">English 7</option><option value="English 8">English 8</option><option value="English 9">English 9</option><option value="English 10">English 10</option><option value="Filipino">Filipino</option><option value="Araling Panlipunan">Araling Panlipunan</option><option value="TLE/EPP">TLE/EPP</option><option value="MAPEH">MAPEH</option><option value="DRRR">DRRR</option><option value="Other">Other / Custom</option></select>
+      <label data-i18n="subjectGrade">Subject &amp; Grade</label>
+      <select id="aiSubject" onchange="subjectChanged()"><option value="">Select subject...</option></select>
     </div>
     <div>
-      <label>Topic</label>
-      <select id="aiTopic" onchange="topicChanged()"><option value="">Select topic...</option><option value="__custom">Custom Topic...</option></select>
+      <label>MAPEH Component</label>
+      <select id="mapehComponent" onchange="mapehComponentChanged()"><option value="">Select component...</option><option>Music</option><option>Arts</option><option>PE</option><option>Health</option></select>
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label data-i18n="topic">Subtopic</label>
+      <select id="aiTopic" onchange="topicChanged()"><option value="">Select subtopic...</option><option value="__custom">Custom Subtopic...</option></select>
+    </div>
+    <div>
+      <label data-i18n="lessonTitle">Exact Lesson Title</label>
+      <input id="aiLessonTitle" placeholder="The generator will follow this exact title" oninput="aiLessonTitleChanged()">
     </div>
   </div>
   <div id="customTopicWrap" class="hidden">
@@ -212,24 +222,32 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
 <h3>Lesson Information</h3>
 <div class="row">
-  <div><label>Teacher Name</label><input id="teacherName" oninput="updateState()"></div>
-  <div><label>Teacher Title</label><input id="teacherTitle" oninput="updateState()"></div>
+  <div><label data-i18n="teacherName">Teacher Name</label><input id="teacherName" oninput="updateState()"></div>
+  <div><label data-i18n="teacherTitle">Teacher Title</label><input id="teacherTitle" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label>School Name</label><input id="schoolName" oninput="updateState()"></div>
-  <div><label>School Address</label><input id="schoolAddress" oninput="updateState()"></div>
+  <div><label data-i18n="schoolName">School Name</label><input id="schoolName" oninput="updateState()"></div>
+  <div><label data-i18n="schoolAddress">School Address</label><input id="schoolAddress" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label>Learning Area / Subject</label><input id="subject" oninput="updateState()"></div>
-  <div><label>Grade &amp; Section</label><input id="gradeSection" oninput="updateState()"></div>
+  <div><label data-i18n="learningArea">Learning Area / Subject</label><input id="subject" oninput="updateState()"></div>
+  <div><label data-i18n="gradeSection">Grade &amp; Section</label><input id="gradeSection" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label>No. of Sessions / Week</label><input id="termWeek" oninput="updateState()"></div>
+  <div><label data-i18n="sessions">No. of Sessions</label><input id="sessions" type="number" min="1" max="4" value="1" oninput="updateState()"><div class="small" id="sessionMinutesHint">1 session = 60 minutes</div></div>
+  <div><label data-i18n="term">Term</label><select id="term" onchange="updateState()"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select></div>
+</div>
+<div class="row">
+  <div><label data-i18n="date">Date</label><input id="planDate" type="date" oninput="updateState()"></div>
+  <div><label data-i18n="termWeek">Term Week</label><input id="termWeek" placeholder="e.g. Week 7" oninput="updateState()"></div>
+</div>
+<div class="row">
   <div><label>Lesson Plan Format</label><input id="planFormat" value="ILAW Matrix" oninput="updateState()"></div>
+  <div></div>
 </div>
-<label>Lesson Title</label><input id="lessonTitle" oninput="updateState()">
-<label>References</label><input id="references" oninput="updateState()">
-<label>Declaration of AI Use</label><textarea id="aiDeclaration" oninput="updateState()"></textarea>
+<label data-i18n="lessonTitle">Lesson Title</label><input id="lessonTitle" oninput="updateState()">
+<label data-i18n="references">References</label><input id="references" oninput="updateState()">
+<label data-i18n="aiDeclaration">Declaration of AI Use</label><textarea id="aiDeclaration" oninput="updateState()"></textarea>
 <div class="tool-box"><h3>✍️ Signatories</h3><div class="small">Edit signatories here. Only the completed signatures appear in the lesson plan and Print/PDF.</div><div class="small">Set the role, name, and designation for each signatory. Add or remove rows depending on the school.</div><div id="signatoryEditor" class="sig-editor"></div><button type="button" class="btn green" onclick="addSignatory()">＋ Add Signatory</button></div>
 
 <hr>
@@ -309,8 +327,10 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
   <table class="doc-table">
     <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle">Levels of Classification and Biological Taxonomy</td></tr>
-    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher/s</td><td id="pvTeacher"></td></tr>
-    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">No. of Sessions</td><td id="pvTermWeek">Quarter 4, Week 3</td></tr>
+    <tr><td style="font-weight:bold">Learning Area</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher"></td></tr>
+    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">No. of Sessions</td><td id="pvSessions">1 session (60 minutes)</td></tr>
+    <tr><td style="font-weight:bold">Term</td><td id="pvTerm">Term 1</td><td style="font-weight:bold">Term Week</td><td id="pvTermWeek"></td></tr>
+    <tr><td style="font-weight:bold">Date</td><td colspan="3" id="pvPlanDate"></td></tr>
     <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
     <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
   </tbody></table>
@@ -338,7 +358,12 @@ body.auth-locked > *:not(#authGate){display:none!important}
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
   <div class="banner">WAYS FORWARD</div>
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
-  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap"></td></tr></tbody></table>
+  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" class="print-reflection-lines">
+    <div><b>1.</b><span></span></div>
+    <div><b>2.</b><span></span></div>
+    <div><b>3.</b><span></span></div>
+    <div><b>4.</b><span></span></div>
+  </td></tr></tbody></table>
 
   <div id="pvSignatures" class="signatures"></div>
 </div>
@@ -347,27 +372,61 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
 <script>
 const SUBJECT_TOPICS={
-"Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
-"Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
-"Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
-"Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
-"Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
-"Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
-"Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
-"Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
-"English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
-"English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
-"English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
-"English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
-"Filipino":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
-"Araling Panlipunan":["Kasaysayan","Heograpiya","Ekonomiks","Pamahalaan","Kultura"],
-"TLE/EPP":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
-"MAPEH":["Music","Arts","Physical Education","Health"],
-"DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
+ "Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
+ "Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
+ "Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
+ "Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
+ "Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
+ "Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
+ "Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
+ "Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
+ "English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
+ "English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
+ "English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
+ "English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
+ "Filipino 7":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+ "Filipino 8":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+ "Filipino 9":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+ "Filipino 10":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+ "Araling Panlipunan 7":["Kasaysayan","Heograpiya","Kultura","Kabihasnan","Pamahalaan"],
+ "Araling Panlipunan 8":["Kasaysayan","Heograpiya","Ekonomiks","Kultura","Pamahalaan"],
+ "Araling Panlipunan 9":["Ekonomiks","Produksyon","Pagkonsumo","Pamilihan","Pamahalaan"],
+ "Araling Panlipunan 10":["Mga Isyung Panlipunan","Ekonomiks","Politika","Karapatang Pantao","Pandaigdigang Isyu"],
+ "EsP 7":["Pagkilala sa Sarili","Pakikipagkapwa","Pananagutan","Pagpapahalaga","Pagpapasya"],
+ "EsP 8":["Pagpapakatao","Pakikipag-ugnayan","Pagpapasya","Pananagutan","Pagpapahalaga"],
+ "EsP 9":["Moral na Pagpapasya","Kabutihang Panlahat","Karapatan","Paninindigan","Pananagutan"],
+ "EsP 10":["Pagpapahalaga sa Buhay","Etika","Moral na Paninindigan","Kabutihang Panlahat","Pananagutang Panlipunan"],
+ "TLE/EPP 7":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+ "TLE/EPP 8":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+ "TLE/EPP 9":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+ "TLE/EPP 10":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+ "MAPEH 7":["Music","Arts","Physical Education","Health"],
+ "MAPEH 8":["Music","Arts","Physical Education","Health"],
+ "MAPEH 9":["Music","Arts","Physical Education","Health"],
+ "MAPEH 10":["Music","Arts","Physical Education","Health"],
+ "DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
 };
+const MAPEH_SUBTOPICS={
+  Music:{"MAPEH 7":["Rhythm and Meter","Melody and Texture","Philippine Folk Music","Traditional Philippine Instruments"],"MAPEH 8":["Music of Southeast Asia","Vocal and Instrumental Music","Musical Forms","Performance Practice"],"MAPEH 9":["Music of the Philippines","Western Music","20th Century Music","Music Appreciation"],"MAPEH 10":["Contemporary Music","Popular Music","Philippine Contemporary Composers","Music Production"]},
+  Arts:{"MAPEH 7":["Elements of Art","Principles of Design","Philippine Indigenous Arts","Drawing and Visual Composition"],"MAPEH 8":["Arts of Southeast Asia","Painting and Sculpture","Crafts and Design","Cultural Art Appreciation"],"MAPEH 9":["Philippine Art History","Modern Art","Visual Arts Techniques","Art Criticism"],"MAPEH 10":["Contemporary Philippine Arts","Media and Technology in Art","Public and Community Art","Art Production"]},
+  PE:{"MAPEH 7":["Physical Fitness","Locomotor Skills","Team Sports","Rhythmic Activities"],"MAPEH 8":["Fitness Training","Individual Sports","Team Sports","Dance and Recreation"],"MAPEH 9":["Physical Fitness Assessment","Sports Skills","Recreational Activities","Dance"],"MAPEH 10":["Fitness and Wellness","Sports and Games","Dance","Lifetime Physical Activities"]},
+  Health:{"MAPEH 7":["Personal Health","Nutrition","Mental and Emotional Health","Safety and First Aid"],"MAPEH 8":["Family Health","Adolescent Health","Disease Prevention","Consumer Health"],"MAPEH 9":["Community Health","Environmental Health","Health Services","Disease Prevention"],"MAPEH 10":["Health Trends","Global Health","Consumer and Environmental Health","Health Advocacy"]}
+};
+function isMapehSubject(s){return /^MAPEH (7|8|9|10)$/.test(s)}
+function mapehComponentChanged(){
+  const subject=$("aiSubject")?.value||"", component=$("mapehComponent")?.value||"", t=$("aiTopic");
+  if(!t)return;
+  const arr=isMapehSubject(subject)&&component?(MAPEH_SUBTOPICS[component]?.[subject]||[]):[];
+  t.innerHTML='<option value="">Select subtopic...</option>'+arr.map(x=>`<option>${x}</option>`).join('')+'<option value="__custom">Custom Subtopic...</option>';
+  $("customTopicWrap")?.classList.add('hidden');
+}
+function aiLessonTitleChanged(){const v=$("aiLessonTitle")?.value||"";appState.lessonTitle=v;setVal("lessonTitle",v);save();}
+function generationContext(){return{subject:$("aiSubject")?.value||$("subject")?.value||"",component:$("mapehComponent")?.value||"",subtopic:topicValue(),lessonTitle:$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim()||""};}
+
 let currentDay="mon", appLanguage="en", selectedModel=null;
-const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",planFormat:"ILAW Matrix",termWeek:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{pre:"",lead:"",resources:"",integration:""},tue:{pre:"",lead:"",resources:"",integration:""},wed:{pre:"",lead:"",resources:"",integration:""},thu:{pre:"",lead:"",resources:"",integration:""}}});
+const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",term:"Term 1",sessions:1,planDate:"",termWeek:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{pre:"",lead:"",resources:"",integration:""},tue:{pre:"",lead:"",resources:"",integration:""},wed:{pre:"",lead:"",resources:"",integration:""},thu:{pre:"",lead:"",resources:"",integration:""}}});
 let appState=defaultState();
+window.ILAW_applySchoolLogo=function(data){appState.logo=data||"";save();render();};
 
 const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolName:"ALTAMARINO-CLASIO HIGH SCHOOL",schoolAddress:"Curry, Pili, Camarines Sur",gradeSection:"GRADE 10 - ANDROMEDA",subject:"Science 10",termWeek:"Week 7 - 4 Sessions (240 minutes)",lessonTitle:"Thermal Dynamics of Change: Differentiating Exothermic and Endothermic Chemical Reactions",references:"Science 10 Learner's Material & TG | DepEd MATATAG Science 10 BOW",aiDeclaration:"Generative AI (Gemini) was utilized as a co-creator tool to structure and format the lesson activities into the ILAW framework.",curriculumStandards:"CONTENT STANDARD: Learners demonstrate an understanding of chemical reactions associated with biological and industrial processes affecting life and the environment.\\nPERFORMANCE STANDARD: Learners practice safety measures in handling household chemicals based on knowledge of chemical reactions.",bowCompetency:"Differentiate exothermic and endothermic reactions and explain their applications.",objectives:"1. Knowledge: Differentiate exothermic from endothermic reactions.\\n2. Skills: Measure and record temperature changes.\\n3. Attitude: Value safety and energy efficiency.",learnerContext:"Learners are familiar with heat release but need hands-on measurement to understand heat absorption.",formativeAssessment:"Thermal Reaction Matrix and exit ticket.",extendedLearning:"Investigate instant cold packs and self-heating meal packs used in disaster relief.",matrix:{mon:{pre:"Review prior learning; hot pack vs cold pack mystery.",lead:"Session 1: Introduce thermal energy and energy changes in reactions.",resources:"Thermometers, cups, safe household materials.",integration:"Health, Environmental Science, DRR"},tue:{pre:"Recall yesterday's key idea.",lead:"Session 2: Exothermic vs endothermic reactions and energy diagrams.",resources:"Charts, board, activity sheets.",integration:"Mathematics, Environmental Science"},wed:{pre:"Predict which reaction will warm/cool.",lead:"Session 3: Hands-on temperature investigation and data recording.",resources:"Thermometers, vinegar, baking soda, water, detergent.",integration:"Math, Health, Science Process Skills"},thu:{pre:"Review findings from investigation.",lead:"Session 4: Environmental and industrial applications; formative synthesis.",resources:"Scenario cards, worksheets.",integration:"DRR, Climate, Environmental Science"}}};
 
@@ -380,8 +439,13 @@ function save(){
   localStorage.setItem("ilaw_v3_state_"+uid,JSON.stringify(appState));
   queueProfileSave();
 }
+function formatSessions(n){const x=Math.max(1,Math.min(4,Number(n)||1));return x+" session"+(x===1?"":"s")+" ("+(x*60)+" minutes)";}
+function formatDate(v){if(!v)return "";const d=new Date(v+"T00:00:00");return d.toLocaleDateString(appLanguage==="fil"?"en-PH":"en-US",{year:"numeric",month:"long",day:"numeric"});}
 function updateState(){
-["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>appState[k]=$(k).value);
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","sessions","planDate","term","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>appState[k]=$(k).value);
+if($("mapehComponent"))appState.mapehComponent=$("mapehComponent").value;
+if($("aiTopic"))appState.subtopic=$("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim();
+if($("aiLessonTitle"))appState.lessonTitle=$("aiLessonTitle").value.trim()||appState.lessonTitle;
 appState.formativeAssessment=$("assessInput").value;appState.extendedLearning=$("wayInput").value;save();render();
 }
 function normalizeSignatories(list){
@@ -395,7 +459,8 @@ function addSignatory(){appState.signatories=normalizeSignatories(appState.signa
 function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
 function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
 function render(){
-setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);setText("pvReflection",appState.fridayEnabled?appState.fridayReflection:"");
+  if(!appState.logo){try{const savedLogo=localStorage.getItem("ilaw_v54_school_logo");if(savedLogo)appState.logo=savedLogo}catch(_){}}
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvSessions",formatSessions(appState.sessions));setText("pvTerm",appState.term||"Term 1");setText("pvPlanDate",formatDate(appState.planDate));setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);
 ["mon","tue","wed","thu"].forEach(d=>{setText("pv_"+d+"_pre",appState.matrix[d].pre);setText("pv_"+d+"_lead",appState.matrix[d].lead);setText("pv_"+d+"_res",appState.matrix[d].resources);setText("pv_"+d+"_integ",appState.matrix[d].integration)});
 appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
 const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
@@ -406,37 +471,39 @@ $("reflectionWrap").classList.toggle("locked",!appState.fridayEnabled);
 loadReflectionParts();
 }
 function syncForm(){
-["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>setVal(k,appState[k]));
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","sessions","planDate","term","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>setVal(k,appState[k]));
 setVal("assessInput",appState.formativeAssessment);setVal("wayInput",appState.extendedLearning);setVal("fridayReflection",appState.fridayReflection);
-populateSubjects();$("aiSubject").value=appState.subject||"";subjectChanged();switchDay(currentDay,$("tab-"+currentDay));render();
+populateSubjects();$("aiSubject").value=appState.subject||"";subjectChanged();if(isMapehSubject(appState.subject)&&$("mapehComponent")){$("mapehComponent").value=appState.mapehComponent||"";mapehComponentChanged();$("aiTopic").value=appState.subtopic||"";}if($("aiLessonTitle"))$("aiLessonTitle").value=appState.lessonTitle||"";switchDay(currentDay,$("tab-"+currentDay));render();
 }
 function populateSubjects(){let s=$("aiSubject");s.innerHTML='<option value="">Select subject...</option>'+Object.keys(SUBJECT_TOPICS).map(x=>`<option>${x}</option>`).join("")+'<option value="Other">Other / Custom</option>'}
-function subjectChanged(){let s=$("aiSubject").value,t=$("aiTopic");t.innerHTML='<option value="">Select topic...</option>'+((SUBJECT_TOPICS[s]||[]).map(x=>`<option>${x}</option>`).join(""))+'<option value="__custom">Custom Topic...</option>';if(s&&s!=="Other"){appState.subject=s;setVal("subject",s)}$("customTopicWrap").classList.add("hidden");updateState()}
-function topicChanged(){let custom=$("aiTopic").value==="__custom";$("customTopicWrap").classList.toggle("hidden",!custom)}
+function subjectChanged(){
+  const s=$("aiSubject").value,t=$("aiTopic");
+  if(isMapehSubject(s)){
+    $("mapehComponent") && ($("mapehComponent").value="");
+    t.innerHTML='<option value="">Select subtopic...</option><option value="__custom">Custom Subtopic...</option>';
+  }else{
+    $("mapehComponent") && ($("mapehComponent").value="");
+    t.innerHTML='<option value="">Select topic...</option>'+((SUBJECT_TOPICS[s]||[]).map(x=>`<option>${x}</option>`).join(''))+'<option value="__custom">Custom Topic...</option>';
+  }
+  if(s&&s!=="Other"){appState.subject=s;setVal("subject",s)}
+  $("customTopicWrap").classList.add("hidden");
+  updateState();
+}
+function topicChanged(){const custom=$("aiTopic").value==="__custom";$("customTopicWrap").classList.toggle("hidden",!custom)}
 function topicValue(){return $("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim()}
 function switchDay(d,btn){currentDay=d;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");setText("dayLabel","SESSION "+({mon:1,tue:2,wed:3,thu:4}[d]));setVal("preLessonInput",appState.matrix[d].pre);setVal("leadInput",appState.matrix[d].lead);setVal("resourcesInput",appState.matrix[d].resources);setVal("integrationInput",appState.matrix[d].integration)}
 function updateDayData(){appState.matrix[currentDay]={pre:$("preLessonInput").value,lead:$("leadInput").value,resources:$("resourcesInput").value,integration:$("integrationInput").value};save();render()}
 function updateFridayReflection(){appState.fridayReflection=$("fridayReflection").value;save();render()}
 function toggleReflection(){appState.fridayEnabled=$("fridayCheck").checked;save();render()}
-function loadLogo(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{appState.logo=r.result;save();render()};r.readAsDataURL(f)}
-function removeLogo(){appState.logo="";$("logoFile").value="";save();render()}
+function loadLogo(e){const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{appState.logo=r.result;try{localStorage.setItem("ilaw_v54_school_logo",r.result)}catch(_){ }save();render()};r.readAsDataURL(f)}
+function removeLogo(){appState.logo="";$("logoFile").value="";try{localStorage.removeItem("ilaw_v54_school_logo")}catch(_){ }save();render()}
 function loadDefaultSample(){appState={...defaultState(),...sample};save();syncForm()}
-function exportJSON(){let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
-function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();save();syncForm()}
-function changeLanguage(){appLanguage=$("langSelect").value;save()}
+function exportJSON(){const a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
+function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();try{localStorage.removeItem("ilaw_v54_school_logo")}catch(_){ }save();syncForm()}
+function changeLanguage(){appLanguage=$("langSelect").value;applyLanguage();save()}
+function applyLanguage(){const fil=appLanguage==="fil";const labels={print:fil?"Print/PDF":"Print/PDF",export:fil?"Export":"Export",lock:fil?"I-lock":"Lock",settings:fil?"Settings":"Settings",logout:fil?"Logout":"Logout",subjectGrade:fil?"Subject at Grade":"Subject & Grade",topic:fil?"Subtopic":"Subtopic",lessonTitle:fil?"Exact Lesson Title":"Exact Lesson Title",teacherName:fil?"Pangalan ng Guro":"Teacher Name",teacherTitle:fil?"Tungkulin ng Guro":"Teacher Title",schoolName:fil?"Pangalan ng Paaralan":"School Name",schoolAddress:fil?"Address ng Paaralan":"School Address",learningArea:fil?"Learning Area / Subject":"Learning Area / Subject",gradeSection:fil?"Baitang at Seksyon":"Grade & Section",sessions:fil?"Bilang ng Sessions":"No. of Sessions",term:fil?"Termino":"Term",date:fil?"Petsa":"Date",termWeek:fil?"Term Week":"Term Week",references:fil?"Mga Sanggunian":"References",aiDeclaration:fil?"Pahayag sa Paggamit ng AI":"Declaration of AI Use"};document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(labels[k])el.textContent=labels[k]});}
+function loadReflectionParts(){const map={reflectionProgress:appState.reflectionProgress||"",reflectionWorked:appState.reflectionWorked||"",reflectionChallenges:appState.reflectionChallenges||"",reflectionAdjustments:appState.reflectionAdjustments||"",reflectionInnovation:appState.reflectionInnovation||"",fridayReflection:appState.fridayReflection||""};Object.keys(map).forEach(id=>{const e=$(id);if(e)e.value=map[id]})}
 
-
-function loadReflectionParts(){
-  const map={
-    reflectionProgress:appState.reflectionProgress||"",
-    reflectionWorked:appState.reflectionWorked||"",
-    reflectionChallenges:appState.reflectionChallenges||"",
-    reflectionAdjustments:appState.reflectionAdjustments||"",
-    reflectionInnovation:appState.reflectionInnovation||"",
-    fridayReflection:appState.fridayReflection||""
-  };
-  Object.keys(map).forEach(id=>{const e=$(id);if(e)e.value=map[id]});
-}
 function saveFridayReflection(){
   appState.reflectionProgress=$("reflectionProgress").value;
   appState.reflectionWorked=$("reflectionWorked").value;
@@ -526,8 +593,9 @@ async function generateWithFallback(key,prompt,useSchema=true,responseSchemaOver
   throw Error("The AI server returned an invalid response.");
 }
 function aiPrompt(topic,subject,extra=""){
-return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"} on "${topic}". ${extra}
-Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Return ONLY JSON.`
+ const c=generationContext(), exactTitle=c.lessonTitle||topic;
+ const hierarchy=c.component?`Component: ${c.component}. Subtopic: ${c.subtopic||"Not specified"}.`:`Topic: ${c.subtopic||topic}.`;
+ return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"}. ${hierarchy} The EXACT LESSON TITLE is "${exactTitle}". Treat that exact lesson title as the primary anchor of every section of the generated plan. Do not replace it with a generic topic, do not broaden it, and do not invent a different title. ${extra} Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Return ONLY JSON.`
 }
 const schema={type:"OBJECT",properties:{
 lessonTitle:{type:"STRING"},subject:{type:"STRING"},termWeek:{type:"STRING"},references:{type:"STRING"},aiDeclaration:{type:"STRING"},curriculumStandards:{type:"STRING"},bowCompetency:{type:"STRING"},objectives:{type:"STRING"},learnerContext:{type:"STRING"},formativeAssessment:{type:"STRING"},extendedLearning:{type:"STRING"},
@@ -560,10 +628,10 @@ async function testAPI(){
   }
 }
 async function generateFullLessonPlan(){
-let topic=topicValue(),subject=$("aiSubject").value||$("subject").value;if(!topic)return alert("Select or enter a lesson topic.");if(!subject)return alert("Select a subject.");
-$("generateBtn").disabled=true;try{let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep,subject:d.subject||subject};save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated."}catch(e){$("aiStatus").textContent="❌ "+e.message}finally{$("generateBtn").disabled=false}}
+let topic=topicValue(),subject=$("aiSubject").value||$("subject").value,exactTitle=$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim();if(!topic&&!exactTitle)return alert("Select or enter a subtopic.");if(!subject)return alert("Select a subject.");if(isMapehSubject(subject)&&!$("mapehComponent")?.value)return alert("Select a MAPEH component.");if(!exactTitle)return alert("Enter the exact Lesson Title to guide the generator.");
+$("generateBtn").disabled=true;try{let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,term:appState.term,sessions:appState.sessions,planDate:appState.planDate,termWeek:appState.termWeek,planFormat:appState.planFormat};appState={...defaultState(),...d,...keep,subject:d.subject||subject,lessonTitle:exactTitle,mapehComponent:generationContext().component,subtopic:topic};save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated."}catch(e){$("aiStatus").textContent="❌ "+e.message}finally{$("generateBtn").disabled=false}}
 async function improvePlan(){
-if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
+if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,term:appState.term,sessions:appState.sessions,planDate:appState.planDate,termWeek:appState.termWeek,planFormat:appState.planFormat};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
 async function regenerateCurrentSession(){
  if(!appState.lessonTitle)return alert("Load or generate a plan first.");
  let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
@@ -670,6 +738,7 @@ async function enterTeacherApp(user){
   $("authGate").style.display="none";
   $("accountBadge").textContent=user.email||"Teacher account";
   await loadTeacherState(user);
+  applyLanguage();
 }
 async function signOutTeacher(){
   if(!confirm("Log out of this teacher account?"))return;
@@ -695,10 +764,20 @@ async function initSupabaseAuth(){
 document.addEventListener("DOMContentLoaded",initSupabaseAuth);
 </script>
 
+<div id="settingsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:11000;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;width:min(430px,96vw);border-radius:10px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.25)">
+    <h3>⚙ Settings</h3>
+    <label>App Lock PIN</label><input id="settingsPin" type="password" minlength="4" maxlength="12" placeholder="Set a PIN (4-12 characters)">
+    <div class="small" style="margin:5px 0 10px">This local PIN locks this browser session. It is not your Supabase password.</div>
+    <label>Language</label><select id="settingsLanguage"><option value="en">English</option><option value="fil">Filipino</option></select>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn gray" onclick="closeSettings()">Cancel</button><button class="btn primary" onclick="saveSettings()">Save Settings</button></div>
+    <div id="settingsStatus" class="status"></div>
+  </div>
+</div>
 <div id="rawSourceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;padding:24px">
   <div style="background:#fff;height:100%;border-radius:8px;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:10px 14px;background:#263238;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:8px">
-      <b>🧩 ILAW V5 — RAW SOURCE CODE</b>
+      <b>🧩 ILAW V7 — RAW SOURCE CODE</b>
       <div>
         <button class="btn green" onclick="copyRawSource()">📋 Copy Raw Code</button>
         <button class="btn gray" onclick="downloadRawSource()">💾 Save HTML</button>
@@ -725,73 +804,25 @@ function downloadRawSource(){
   const b=document.getElementById("rawSourceBox"); if(!b)return;
   const blob=new Blob([b.value],{type:"text/html;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="ILAW_Teacher_Suite_V5_RAW_SOURCE.html";a.click();
+  a.download="ILAW_Teacher_Suite_V7_RAW_SOURCE.html";a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 </script>
 
+
+
+
+
+
+
+
 <script>
-/* V5.3 RESCUE ENGINE: standalone subject/topic dropdown.
-   This is intentionally independent of the main app script. */
-(function(){
-  const TOPICS={
-    "Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
-    "Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
-    "Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
-    "Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
-    "Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
-    "Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
-    "Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
-    "Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
-    "English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
-    "English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
-    "English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
-    "English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
-    "Filipino":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
-    "Araling Panlipunan":["Kasaysayan","Heograpiya","Ekonomiks","Pamahalaan","Kultura"],
-    "TLE/EPP":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
-    "MAPEH":["Music","Arts","Physical Education","Health"],
-    "DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
-  };
-  function q(id){return document.getElementById(id)}
-  function fillSubjects(){
-    const s=q("aiSubject"); if(!s)return;
-    s.innerHTML='<option value="">Select subject...</option>'+
-      Object.keys(TOPICS).map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">'+x+'</option>').join('')+
-      '<option value="Other">Other / Custom</option>';
-    const current=q("subject")?.value||"";
-    if(current && TOPICS[current]) s.value=current;
-    fillTopics();
-  }
-  function fillTopics(){
-    const s=q("aiSubject"), t=q("aiTopic"); if(!s||!t)return;
-    const arr=TOPICS[s.value]||[];
-    t.innerHTML='<option value="">Select topic...</option>'+
-      arr.map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">'+x+'</option>').join('')+
-      '<option value="__custom">Custom Topic...</option>';
-    const wrap=q("customTopicWrap");
-    if(wrap)wrap.classList.toggle("hidden",t.value!=="__custom");
-    const subject=q("subject");
-    if(subject && s.value && s.value!=="Other") subject.value=s.value;
-  }
-  function topicChange(){
-    const t=q("aiTopic"), wrap=q("customTopicWrap");
-    if(wrap)wrap.classList.toggle("hidden",!t||t.value!=="__custom");
-  }
-  window.populateSubjects=fillSubjects;
-  window.subjectChanged=fillTopics;
-  window.topicChanged=topicChange;
-  document.addEventListener("DOMContentLoaded",function(){
-    fillSubjects();
-    const s=q("aiSubject"); if(s)s.addEventListener("change",fillTopics);
-    const t=q("aiTopic"); if(t)t.addEventListener("change",topicChange);
-  });
-})();
+const LOCK_KEY="ilaw_v5_lock_pin";
+function openSettings(){const m=$("settingsModal");if(!m)return;$("settingsPin").value=localStorage.getItem(LOCK_KEY)||"";$("settingsLanguage").value=appLanguage||"en";$("settingsStatus").textContent="";m.style.display="flex";}
+function closeSettings(){const m=$("settingsModal");if(m)m.style.display="none";}
+function saveSettings(){const pin=$("settingsPin").value.trim();if(pin&&pin.length<4){$("settingsStatus").textContent="PIN must be at least 4 characters.";return;}if(pin)localStorage.setItem(LOCK_KEY,pin);else localStorage.removeItem(LOCK_KEY);$("langSelect").value=$("settingsLanguage").value;changeLanguage();$("settingsStatus").textContent="Settings saved.";setTimeout(closeSettings,400);}
+function lockApp(){const pin=localStorage.getItem(LOCK_KEY);if(!pin){openSettings();$("settingsStatus").textContent="Set an App Lock PIN first.";return;}$("lockScreen").style.display="flex";$("unlockPassword").value="";$("unlockStatus").textContent="";}
+function unlockApp(){const pin=localStorage.getItem(LOCK_KEY)||"";if(!pin){$("lockScreen").style.display="none";return;}if($("unlockPassword").value===pin){$("lockScreen").style.display="none";$("unlockStatus").textContent="";}else $("unlockStatus").textContent="❌ Incorrect PIN.";}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("settingsModal")?.style.display==="flex")closeSettings();});
 </script>
-
-
-
-
-
-
 </body></html>
