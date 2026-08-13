@@ -36,7 +36,8 @@ textarea{min-height:62px;resize:vertical}
 .lock-card{width:min(390px,92vw);background:#fff;color:#222;border-radius:10px;padding:22px;box-shadow:0 10px 35px #001b44}
 #reflectionWrap.locked{opacity:.55}.hidden{display:none!important}
 @media(max-width:900px){.main{display:block;overflow:auto}.editor,.preview{width:100%;height:auto}.preview{min-height:600px}.header{height:auto}.toolbar{justify-content:flex-end}}
-@media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none}}
+@page{size:A4 landscape;margin:8mm}
+@media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none;width:100%;min-height:auto;border:0;border-radius:0;box-sizing:border-box}}
 </style>
 <style>
 /* ILAW V7 — Premium Teacher Suite UI */
