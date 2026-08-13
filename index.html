@@ -279,7 +279,7 @@ function clearCurrentSession(){
 <div id="printCenter" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card print-card"><div class="modal-head"><div><h2>🖨 Print Center</h2><p>Choose paper size and orientation before printing or saving.</p></div><button type="button" class="modal-x" onclick="closePrintCenter()">×</button></div><div class="print-grid"><div><label>Paper Size</label><select id="paperSizeSelect"><option value="letter">Short / Letter — 8.5 × 11 in</option><option value="legal">Long / Legal — 8.5 × 14 in</option><option value="a4">A4 — 210 × 297 mm</option><option value="a3">A3 — 297 × 420 mm</option><option value="a5">A5 — 148 × 210 mm</option><option value="b4">B4 — 250 × 353 mm</option><option value="b5">B5 — 176 × 250 mm</option><option value="tabloid">Tabloid — 11 × 17 in</option><option value="executive">Executive — 7.25 × 10.5 in</option><option value="statement">Statement — 5.5 × 8.5 in</select></div><div><label>Orientation</label><div class="orientation-pills"><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="portrait"><span>▯ Portrait</span></label><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="landscape"><span>▭ Landscape</span></label></div></div></div><div class="print-preview-note"><strong>Preview:</strong> <span id="printSummary">A4 • Landscape</span></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePrintCenter()">Cancel</button><button type="button" class="btn green" onclick="printFromCenter('print')">🖨 Print</button><button type="button" class="btn primary" onclick="printFromCenter('pdf')">💾 Save as PDF</button></div></div></div>
 <div id="preferencesModal" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card"><div class="modal-head"><div><h2>⚙ Preferences</h2><p>Manage print defaults and local workspace lock.</p></div><button type="button" class="modal-x" onclick="closePreferences()">×</button></div><div class="pref-section"><h3>Print Defaults</h3><div class="row"><div><label>Default Paper Size</label><select id="prefPaperSize"><option value="letter">Short / Letter</option><option value="legal">Long / Legal</option><option value="a4">A4</option><option value="a3">A3</option><option value="a5">A5</option><option value="b4">B4</option><option value="b5">B5</option><option value="tabloid">Tabloid</option><option value="executive">Executive</option><option value="statement">Statement</option></select></div><div><label>Default Orientation</label><select id="prefOrientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div></div><div class="pref-section"><h3>Local Workspace Lock</h3><div class="row"><div><label>New PIN</label><input id="newLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits"></div><div><label>Confirm PIN</label><input id="confirmLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat PIN"></div></div><button type="button" class="btn orange" onclick="saveLockPinFromPreferences()">🔐 Update Lock PIN</button></div><div id="prefStatus" class="status"></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePreferences()">Close</button><button type="button" class="btn primary" onclick="savePreferences()">💾 Save Preferences</button></div></div></div>
 <header class="header">
-  <h1>ILAW Teacher Suite V7 — Studio</h1>
+  <h1>ILAW Teacher Suite V8 — Studio</h1>
   <div class="toolbar">
     <select id="langSelect" onchange="changeLanguage()" style="width:auto">
       <option value="en">English</option><option value="fil">Filipino</option>
@@ -989,60 +989,7 @@ function downloadRawSource(){
 <script>
 /* V5.3 RESCUE ENGINE: standalone subject/topic dropdown.
    This is intentionally independent of the main app script. */
-(function(){
-  const TOPICS={
-    "Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
-    "Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
-    "Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
-    "Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
-    "Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
-    "Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
-    "Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
-    "Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
-    "English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
-    "English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
-    "English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
-    "English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
-    "Filipino":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
-    "Araling Panlipunan":["Kasaysayan","Heograpiya","Ekonomiks","Pamahalaan","Kultura"],
-    "TLE/EPP":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
-    "MAPEH":["Music","Arts","Physical Education","Health"],
-    "DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
-  };
-  function q(id){return document.getElementById(id)}
-  function fillSubjects(){
-    const s=q("aiSubject"); if(!s)return;
-    s.innerHTML='<option value="">Select subject...</option>'+
-      Object.keys(TOPICS).map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">'+x+'</option>').join('')+
-      '<option value="Other">Other / Custom</option>';
-    const current=q("subject")?.value||"";
-    if(current && TOPICS[current]) s.value=current;
-    fillTopics();
-  }
-  function fillTopics(){
-    const s=q("aiSubject"), t=q("aiTopic"); if(!s||!t)return;
-    const arr=TOPICS[s.value]||[];
-    t.innerHTML='<option value="">Select topic...</option>'+
-      arr.map(x=>'<option value="'+x.replace(/"/g,'&quot;')+'">'+x+'</option>').join('')+
-      '<option value="__custom">Custom Topic...</option>';
-    const wrap=q("customTopicWrap");
-    if(wrap)wrap.classList.toggle("hidden",t.value!=="__custom");
-    const subject=q("subject");
-    if(subject && s.value && s.value!=="Other") subject.value=s.value;
-  }
-  function topicChange(){
-    const t=q("aiTopic"), wrap=q("customTopicWrap");
-    if(wrap)wrap.classList.toggle("hidden",!t||t.value!=="__custom");
-  }
-  window.populateSubjects=fillSubjects;
-  window.subjectChanged=fillTopics;
-  window.topicChanged=topicChange;
-  document.addEventListener("DOMContentLoaded",function(){
-    fillSubjects();
-    const s=q("aiSubject"); if(s)s.addEventListener("change",fillTopics);
-    const t=q("aiTopic"); if(t)t.addEventListener("change",topicChange);
-  });
-})();
+;
 normalizeAppState();initPrintOrientation();
 </script>
 
