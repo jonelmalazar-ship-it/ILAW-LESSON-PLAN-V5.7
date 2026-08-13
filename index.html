@@ -101,6 +101,8 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__m_yjde1ILHedwBG1-Ej9A_hUjr06RB";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 </script>
+<style>
+.curriculum-row{align-items:flex-start}.curriculum-status{padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px dashed #cbd5e1;margin-top:6px}.session-meta-editor{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;margin:8px 0 10px;padding:10px;background:#f8fafc;border:1px solid #dbe3ee;border-radius:10px}.session-meta-print td{background:#f8fafc;font-size:.76rem;font-weight:600}.ilaw-modal{position:fixed;inset:0;z-index:25000;background:rgba(8,28,56,.62);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}.ilaw-modal.show{display:flex}.ilaw-modal-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dbe3ee;border-radius:18px;padding:20px;box-shadow:0 24px 80px rgba(5,25,55,.35)}.print-card{width:min(780px,96vw)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px}.modal-head h2{margin:0 0 4px;color:#173f78}.modal-head p{margin:0;color:#64748b;font-size:.82rem}.modal-x{border:0;background:#eef2f7;color:#334155;border-radius:10px;width:34px;height:34px;font-size:22px;cursor:pointer}.print-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.orientation-pills{display:flex;gap:8px}.orientation-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #cbd5e1;background:#f8fafc;border-radius:11px;padding:12px;cursor:pointer}.orientation-pill input{width:auto}.print-preview-note{margin-top:15px;padding:11px 12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a5f}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:18px}.pref-section{border:1px solid #e2e8f0;border-radius:12px;padding:13px;margin-bottom:12px;background:#fbfdff}.pref-section h3{margin:0 0 10px;color:#173f78;font-size:.9rem}@media(max-width:700px){.session-meta-editor,.print-grid{grid-template-columns:1fr}.orientation-pills{flex-direction:column}}@media print{.ilaw-modal{display:none!important}.session-meta-print td{background:#fff!important}}</style>
 </head>
 <body class="auth-locked">
 
@@ -173,15 +175,10 @@ function lockApp(){
   setTimeout(()=>input?.focus(),50);
 }
 
-function openSettings(){
-  const current=localStorage.getItem("ilaw_local_lock_pin");
-  const action=prompt("Settings\n\nEnter a new local lock PIN (4–8 digits), or leave blank to keep the current PIN.","");
-  if(action===null)return;
-  if(action==="")return;
-  if(!/^[0-9]{4,8}$/.test(action)){alert("PIN must contain 4–8 digits.");return;}
-  localStorage.setItem("ilaw_local_lock_pin",action);
-  alert(current?"Lock PIN updated successfully.":"Lock PIN saved successfully.");
-}
+function openSettings(){const m=$("preferencesModal");if(!m)return;const p=getPrintPrefs();$("prefPaperSize").value=p.size;$("prefOrientation").value=p.orientation;$("prefStatus").textContent="";$("newLockPin").value="";$("confirmLockPin").value="";m.classList.add("show");m.setAttribute("aria-hidden","false")}
+function closePreferences(){const m=$("preferencesModal");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true")}}
+function savePreferences(){const size=$("prefPaperSize")?.value||"a4",orientation=$("prefOrientation")?.value||"landscape";try{localStorage.setItem("ilaw_print_size",size);localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}$("prefStatus").textContent="✅ Preferences saved."}
+function saveLockPinFromPreferences(){const pin=$("newLockPin")?.value.trim()||"",cp=$("confirmLockPin")?.value.trim()||"";if(!/^[0-9]{4,8}$/.test(pin))return $("prefStatus").textContent="❌ PIN must contain 4–8 digits.";if(pin!==cp)return $("prefStatus").textContent="❌ PIN confirmation does not match.";localStorage.setItem("ilaw_local_lock_pin",pin);$("newLockPin").value="";$("confirmLockPin").value="";$("prefStatus").textContent="✅ Lock PIN updated."}
 
 function copyCurrentToNext(){
   const order=["mon","tue","wed","thu"];
@@ -279,24 +276,19 @@ function clearCurrentSession(){
   </div>
 </div>
 
+<div id="printCenter" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card print-card"><div class="modal-head"><div><h2>🖨 Print Center</h2><p>Choose paper size and orientation before printing or saving.</p></div><button type="button" class="modal-x" onclick="closePrintCenter()">×</button></div><div class="print-grid"><div><label>Paper Size</label><select id="paperSizeSelect"><option value="letter">Short / Letter — 8.5 × 11 in</option><option value="legal">Long / Legal — 8.5 × 14 in</option><option value="a4">A4 — 210 × 297 mm</option><option value="a3">A3 — 297 × 420 mm</option><option value="a5">A5 — 148 × 210 mm</option><option value="b4">B4 — 250 × 353 mm</option><option value="b5">B5 — 176 × 250 mm</option><option value="tabloid">Tabloid — 11 × 17 in</option><option value="executive">Executive — 7.25 × 10.5 in</option><option value="statement">Statement — 5.5 × 8.5 in</select></div><div><label>Orientation</label><div class="orientation-pills"><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="portrait"><span>▯ Portrait</span></label><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="landscape"><span>▭ Landscape</span></label></div></div></div><div class="print-preview-note"><strong>Preview:</strong> <span id="printSummary">A4 • Landscape</span></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePrintCenter()">Cancel</button><button type="button" class="btn green" onclick="printFromCenter('print')">🖨 Print</button><button type="button" class="btn primary" onclick="printFromCenter('pdf')">💾 Save as PDF</button></div></div></div>
+<div id="preferencesModal" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card"><div class="modal-head"><div><h2>⚙ Preferences</h2><p>Manage print defaults and local workspace lock.</p></div><button type="button" class="modal-x" onclick="closePreferences()">×</button></div><div class="pref-section"><h3>Print Defaults</h3><div class="row"><div><label>Default Paper Size</label><select id="prefPaperSize"><option value="letter">Short / Letter</option><option value="legal">Long / Legal</option><option value="a4">A4</option><option value="a3">A3</option><option value="a5">A5</option><option value="b4">B4</option><option value="b5">B5</option><option value="tabloid">Tabloid</option><option value="executive">Executive</option><option value="statement">Statement</option></select></div><div><label>Default Orientation</label><select id="prefOrientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div></div><div class="pref-section"><h3>Local Workspace Lock</h3><div class="row"><div><label>New PIN</label><input id="newLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits"></div><div><label>Confirm PIN</label><input id="confirmLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat PIN"></div></div><button type="button" class="btn orange" onclick="saveLockPinFromPreferences()">🔐 Update Lock PIN</button></div><div id="prefStatus" class="status"></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePreferences()">Close</button><button type="button" class="btn primary" onclick="savePreferences()">💾 Save Preferences</button></div></div></div>
 <header class="header">
   <h1>ILAW Teacher Suite V7 — Studio</h1>
   <div class="toolbar">
     <select id="langSelect" onchange="changeLanguage()" style="width:auto">
       <option value="en">English</option><option value="fil">Filipino</option>
     </select>
-    <button class="btn green" onclick="window.print()">🖨 Print/PDF</button>
-    <button class="btn green" onclick="savePDF()">💾 Download / Save PDF</button>
-    <label class="orientation-control" title="Choose the paper orientation for Print/PDF">
-      <span>Orientation</span>
-      <select id="printOrientation" onchange="setPrintOrientation(this.value)" aria-label="Paper orientation">
-        <option value="landscape">Landscape</option>
-        <option value="portrait">Portrait</option>
-      </select>
-    </label>
-    <span id="accountBadge">Not signed in</span>
+    <button class="btn green" onclick="openPrintCenter()">🖨 Print/PDF</button>
+    <button class="btn green" onclick="openPrintCenter()">💾 Download / Save PDF</button>
+<span id="accountBadge">Not signed in</span>
     <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
-    <button class="btn gray" onclick="openSettings()">⚙ Settings</button>
+    <button class="btn gray" onclick="openSettings()">⚙ Preferences</button>
     <button class="btn red" onclick="signOutTeacher()">Logout</button>
   </div>
 </header>
@@ -324,6 +316,13 @@ function clearCurrentSession(){
       <select id="mapehComponent" onchange="mapehComponentChanged()"><option value="">Select component...</option><option>Music</option><option>Arts</option><option>PE</option><option>Health</option></select>
     </div>
   </div>
+  <div class="row curriculum-row">
+    <div><label>School Year</label><select id="schoolYear" onchange="curriculumContextChanged()"><option value="2026-2027">2026–2027</option><option value="2027-2028">2027–2028</option><option value="2028-2029">2028–2029</option></select></div>
+    <div><label>Term</label><select id="academicTerm" onchange="curriculumContextChanged()"><option value="Term 1">Term 1</option><option value="Term 2">Term 2</option><option value="Term 3">Term 3</option></select></div>
+    <div><label>Curriculum Basis</label><input id="curriculumVersion" readonly placeholder="Auto-detected from grade + school year"></div>
+  </div>
+  <div class="row"><div><label>BOW Item / Competency</label><textarea id="bowItem" rows="2" placeholder="Paste or select the applicable BOW competency/item for this term."></textarea></div><div><label>BOW Reference / Source</label><input id="bowReference" placeholder="e.g. DepEd BOW / MELCs / MATATAG CG"></div></div>
+  <div id="curriculumStatus" class="small curriculum-status">Curriculum basis will be detected automatically.</div>
   <div class="row">
     <div>
       <label>Subtopic</label>
@@ -378,7 +377,7 @@ function clearCurrentSession(){
   <div><label>Grade &amp; Section</label><input id="gradeSection" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label>No. of Sessions / Week</label><input id="termWeek" oninput="updateState()"></div>
+  <div><label>BOW Term / Week Reference</label><input id="termWeek" oninput="updateState()"></div>
   <div><label>Lesson Plan Format</label><input id="planFormat" value="ILAW Matrix" oninput="updateState()"></div>
 </div>
 <label>Lesson Title</label><input id="lessonTitle" oninput="updateState()">
@@ -404,6 +403,7 @@ function clearCurrentSession(){
   <button class="tab" id="tab-thu" onclick="switchDay('thu',this)">Session 4</button>
 </div>
 <div id="dayLabel">SESSION 1</div>
+<div class="session-meta-editor"><div><label>Session Date</label><input type="date" id="sessionDateInput" onchange="updateDayData()"></div><div><label>Time In</label><input type="time" id="sessionTimeIn" onchange="updateDayData()"></div><div><label>Time Out</label><input type="time" id="sessionTimeOut" onchange="updateDayData()"></div></div>
 <label>Pre-Lesson</label><textarea id="preLessonInput" oninput="updateDayData()"></textarea>
 <label>Flow / Activities &amp; Procedures</label><textarea id="leadInput" oninput="updateDayData()"></textarea>
 <label>Learning Resources</label><textarea id="resourcesInput" oninput="updateDayData()"></textarea>
@@ -464,7 +464,10 @@ function clearCurrentSession(){
   <table class="doc-table">
     <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle">Levels of Classification and Biological Taxonomy</td></tr>
     <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher"></td></tr>
-    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">No. of Sessions</td><td id="pvTermWeek">Quarter 4, Week 3</td></tr>
+    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">BOW Term / Week</td><td id="pvTermWeek"></td></tr>
+    <tr><td style="font-weight:bold">Curriculum Basis</td><td id="pvCurriculumVersion"></td><td style="font-weight:bold">Academic Term</td><td id="pvAcademicTerm"></td></tr>
+    <tr><td style="font-weight:bold">BOW Item / Competency</td><td colspan="3" id="pvBowItem" style="white-space:pre-wrap"></td></tr>
+    <tr><td style="font-weight:bold">BOW Reference</td><td colspan="3" id="pvBowReference"></td></tr>
     <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
     <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
   </tbody></table>
@@ -480,7 +483,7 @@ function clearCurrentSession(){
   <div class="banner">LEARNING EXPERIENCES <span class="sub">A learning experience is like a thoughtfully designed journey.</span></div>
   <table class="doc-table">
     <thead><tr><th>Learning Experience</th><th>Session 1</th><th>Session 2</th><th>Session 3</th><th>Session 4</th></tr></thead>
-    <tbody>
+    <tbody><tr class="session-meta-print"><td style="font-weight:bold">Date / Time</td><td id="pv_mon_meta"></td><td id="pv_tue_meta"></td><td id="pv_wed_meta"></td><td id="pv_thu_meta"></td></tr>
       <tr><td style="font-weight:bold">Pre-Lesson</td><td id="pv_mon_pre">Conduct a 5-minute activity called 'Organize the Supermarket' where students group 10 everyday items into logical categories and explain their rationale.</td><td id="pv_tue_pre">Quick recall game: 'Taxonomic Ladder' where student representatives arrange jumbled cards of the taxonomic levels from broadest to most specific.</td><td id="pv_wed_pre">Present pictures of two similar-looking local plants (e.g., Sampaguita and Chichirica) and ask students how a scientist would distinguish them.</td><td id="pv_thu_pre">Peer check: Groups exchange and verify their completed dichotomous key identification worksheets from Wednesday.</td></tr>
       <tr><td style="font-weight:bold">Flow</td><td id="pv_mon_lead" style="white-space:pre-wrap">Introduce Taxonomy and Carolus Linnaeus. Discuss the concept of classifying biological diversity and present the 8 hierarchical levels (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) using the mnemonic 'Dear King Philip Came Over For Good Soup'.</td><td id="pv_tue_lead" style="white-space:pre-wrap">Discuss Binomial Nomenclature rules (Genus capitalized, species lowercase, italicized or underlined). Guide students in writing scientific names of local organisms such as Panthera pardus, Oryza sativa, and Jasminum sambac.</td><td id="pv_wed_lead" style="white-space:pre-wrap">Introduce simple Dichotomous Keys. Guide student groups in navigating a 4-step dichotomous key to identify five Philippine endemic organisms (e.g., Tamaraw, Philippine Eagle, Tarsier, Milkfish, Narra tree). Safety rule: Handle specimen cards carefully and maintain orderly group discussion.</td><td id="pv_thu_lead" style="white-space:pre-wrap">Facilitate a class synthesis connecting taxonomy to biodiversity conservation. Administer a 10-item multiple-choice formative quiz covering taxonomic ranks, scientific naming, and dichotomous key usage.</td></tr>
       <tr><td style="font-weight:bold">Learning Resources</td><td id="pv_mon_res">Taxonomy graphic organizer, Manila paper, visual diagram of taxonomic hierarchy.</td><td id="pv_tue_res">Binomial nomenclature rule chart, practice worksheets, whiteboard markers.</td><td id="pv_wed_res">Dichotomous key activity sheets, picture cards of Philippine flora and fauna.</td><td id="pv_thu_res">Formative assessment sheets, summary slides/visual chart.</td></tr>
@@ -566,17 +569,16 @@ function aiLessonTitleChanged(){
   setVal("lessonTitle",v);
   save();
 }
-function generationContext(){
-  return {
-    subject:$("aiSubject")?.value||$("subject")?.value||"",
-    component:$("mapehComponent")?.value||"",
-    subtopic:topicValue(),
-    lessonTitle:$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim()||""
-  };
-}
+function generationContext(){return{subject:$("aiSubject")?.value||$("subject")?.value||"",component:$("mapehComponent")?.value||"",subtopic:topicValue(),lessonTitle:$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim()||"",schoolYear:$("schoolYear")?.value||appState.schoolYear||"2026-2027",academicTerm:$("academicTerm")?.value||appState.academicTerm||"Term 1",curriculumVersion:$("curriculumVersion")?.value||appState.curriculumVersion||"",bowItem:$("bowItem")?.value.trim()||appState.bowItem||"",bowReference:$("bowReference")?.value.trim()||appState.bowReference||""}}
 let currentDay="mon", appLanguage="en", selectedModel=null;
-const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",termWeek:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{pre:"",lead:"",resources:"",integration:""},tue:{pre:"",lead:"",resources:"",integration:""},wed:{pre:"",lead:"",resources:"",integration:""},thu:{pre:"",lead:"",resources:"",integration:""}}});
+const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",termWeek:"",academicTerm:"Term 1",schoolYear:"2026-2027",curriculumVersion:"",bowItem:"",bowReference:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},tue:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},wed:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},thu:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""}}});
 let appState=defaultState();
+function getGradeNumber(){const src=(appState.gradeSection||$("aiSubject")?.value||"").toString();const m=src.match(/(?:Grade|Science|Mathematics|English|Filipino|MAPEH|TLE\/EPP)\s*(7|8|9|10)\b/i);return m?Number(m[1]):null}
+function getCurriculumBasis(grade,sy){sy=String(sy||"2026-2027");if(grade===7||grade===8)return"MATATAG / Revised K–10 Curriculum";if(grade===9)return sy>="2026-2027"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum (transition)";if(grade===10)return sy>="2027-2028"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum / current BOW (transition)";return"Curriculum basis to be verified"}
+function updateCurriculumBasis(saveIt=false){const grade=getGradeNumber(),sy=$("schoolYear")?.value||appState.schoolYear||"2026-2027";appState.schoolYear=sy;appState.curriculumVersion=getCurriculumBasis(grade,sy);if($("curriculumVersion"))$("curriculumVersion").value=appState.curriculumVersion;if($("curriculumStatus"))$("curriculumStatus").textContent=grade?"✓ "+appState.curriculumVersion+" • "+(appState.academicTerm||"Term 1")+" • BOW-driven planning.":"Select a Grade 7–10 subject to detect the curriculum basis.";if(saveIt)save()}
+function normalizeAppState(){const b=defaultState();appState={...b,...appState,matrix:{...b.matrix,...(appState.matrix||{})}};["mon","tue","wed","thu"].forEach(d=>appState.matrix[d]={...b.matrix[d],...(appState.matrix[d]||{})});if(!["Term 1","Term 2","Term 3"].includes(appState.academicTerm))appState.academicTerm="Term 1";if(!appState.schoolYear)appState.schoolYear="2026-2027";updateCurriculumBasis(false)}
+function curriculumContextChanged(){appState.academicTerm=$("academicTerm")?.value||"Term 1";appState.schoolYear=$("schoolYear")?.value||"2026-2027";appState.bowItem=$("bowItem")?.value||"";appState.bowReference=$("bowReference")?.value||"";updateCurriculumBasis(true);render()}
+
 
 const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolName:"ALTAMARINO-CLASIO HIGH SCHOOL",schoolAddress:"Curry, Pili, Camarines Sur",gradeSection:"GRADE 10 - ANDROMEDA",subject:"Science 10",termWeek:"Week 7 - 4 Sessions (240 minutes)",lessonTitle:"Thermal Dynamics of Change: Differentiating Exothermic and Endothermic Chemical Reactions",references:"Science 10 Learner's Material & TG | DepEd MATATAG Science 10 BOW",aiDeclaration:"Generative AI (Gemini) was utilized as a co-creator tool to structure and format the lesson activities into the ILAW framework.",curriculumStandards:"CONTENT STANDARD: Learners demonstrate an understanding of chemical reactions associated with biological and industrial processes affecting life and the environment.\\nPERFORMANCE STANDARD: Learners practice safety measures in handling household chemicals based on knowledge of chemical reactions.",bowCompetency:"Differentiate exothermic and endothermic reactions and explain their applications.",objectives:"1. Knowledge: Differentiate exothermic from endothermic reactions.\\n2. Skills: Measure and record temperature changes.\\n3. Attitude: Value safety and energy efficiency.",learnerContext:"Learners are familiar with heat release but need hands-on measurement to understand heat absorption.",formativeAssessment:"Thermal Reaction Matrix and exit ticket.",extendedLearning:"Investigate instant cold packs and self-heating meal packs used in disaster relief.",matrix:{mon:{pre:"Review prior learning; hot pack vs cold pack mystery.",lead:"Session 1: Introduce thermal energy and energy changes in reactions.",resources:"Thermometers, cups, safe household materials.",integration:"Health, Environmental Science, DRR"},tue:{pre:"Recall yesterday's key idea.",lead:"Session 2: Exothermic vs endothermic reactions and energy diagrams.",resources:"Charts, board, activity sheets.",integration:"Mathematics, Environmental Science"},wed:{pre:"Predict which reaction will warm/cool.",lead:"Session 3: Hands-on temperature investigation and data recording.",resources:"Thermometers, vinegar, baking soda, water, detergent.",integration:"Math, Health, Science Process Skills"},thu:{pre:"Review findings from investigation.",lead:"Session 4: Environmental and industrial applications; formative synthesis.",resources:"Scenario cards, worksheets.",integration:"DRR, Climate, Environmental Science"}}};
 
@@ -590,7 +592,7 @@ function save(){
   queueProfileSave();
 }
 function updateState(){
-["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>appState[k]=$(k).value);
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","bowItem","bowReference"].forEach(k=>{if($(k))appState[k]=$(k).value});appState.academicTerm=$("academicTerm")?.value||appState.academicTerm||"Term 1";appState.schoolYear=$("schoolYear")?.value||appState.schoolYear||"2026-2027";updateCurriculumBasis(false);
 if($("mapehComponent"))appState.mapehComponent=$("mapehComponent").value;
 if($("aiTopic"))appState.subtopic=$("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim();
 if($("aiLessonTitle"))appState.lessonTitle=$("aiLessonTitle").value.trim()||appState.lessonTitle;
@@ -607,8 +609,8 @@ function addSignatory(){appState.signatories=normalizeSignatories(appState.signa
 function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
 function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
 function render(){
-setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);setText("pvReflection",appState.fridayEnabled?appState.fridayReflection:"");
-["mon","tue","wed","thu"].forEach(d=>{setText("pv_"+d+"_pre",appState.matrix[d].pre);setText("pv_"+d+"_lead",appState.matrix[d].lead);setText("pv_"+d+"_res",appState.matrix[d].resources);setText("pv_"+d+"_integ",appState.matrix[d].integration)});
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvAcademicTerm",appState.academicTerm);setText("pvCurriculumVersion",appState.curriculumVersion);setText("pvBowItem",appState.bowItem||appState.bowCompetency);setText("pvBowReference",appState.bowReference);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);setText("pvReflection",appState.fridayEnabled?appState.fridayReflection:"");
+["mon","tue","wed","thu"].forEach(d=>{const m=appState.matrix[d]||{};setText("pv_"+d+"_pre",m.pre);setText("pv_"+d+"_lead",m.lead);setText("pv_"+d+"_res",m.resources);setText("pv_"+d+"_integ",m.integration);setText("pv_"+d+"_meta",[m.date||"",m.timeIn&&m.timeOut?m.timeIn+" – "+m.timeOut:(m.timeIn||m.timeOut||"")].filter(Boolean).join(" • "))});
 appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
 const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
 const dl=$("dashboardLogo");if(appState.logo){dl.src=appState.logo;dl.style.display="block"}else dl.style.display="none";
@@ -618,7 +620,7 @@ $("reflectionWrap").classList.toggle("locked",!appState.fridayEnabled);
 loadReflectionParts();
 }
 function syncForm(){
-["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>setVal(k,appState[k]));
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","bowItem","bowReference"].forEach(k=>setVal(k,appState[k]));setVal("academicTerm",appState.academicTerm||"Term 1");setVal("schoolYear",appState.schoolYear||"2026-2027");setVal("curriculumVersion",appState.curriculumVersion||"");
 setVal("assessInput",appState.formativeAssessment);setVal("wayInput",appState.extendedLearning);setVal("fridayReflection",appState.fridayReflection);
 populateSubjects();$("aiSubject").value=appState.subject||"";subjectChanged();
 if(isMapehSubject(appState.subject)&&$("mapehComponent")){
@@ -645,34 +647,22 @@ function subjectChanged(){
 }
 function topicChanged(){let custom=$("aiTopic").value==="__custom";$("customTopicWrap").classList.toggle("hidden",!custom)}
 function topicValue(){return $("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim()}
-function switchDay(d,btn){currentDay=d;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");setText("dayLabel","SESSION "+({mon:1,tue:2,wed:3,thu:4}[d]));setVal("preLessonInput",appState.matrix[d].pre);setVal("leadInput",appState.matrix[d].lead);setVal("resourcesInput",appState.matrix[d].resources);setVal("integrationInput",appState.matrix[d].integration)}
-function updateDayData(){appState.matrix[currentDay]={pre:$("preLessonInput").value,lead:$("leadInput").value,resources:$("resourcesInput").value,integration:$("integrationInput").value};save();render()}
+function switchDay(d,btn){currentDay=d;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");const m=appState.matrix[d]||{};setText("dayLabel","SESSION "+({mon:1,tue:2,wed:3,thu:4}[d]));setVal("sessionDateInput",m.date);setVal("sessionTimeIn",m.timeIn);setVal("sessionTimeOut",m.timeOut);setVal("preLessonInput",m.pre);setVal("leadInput",m.lead);setVal("resourcesInput",m.resources);setVal("integrationInput",m.integration)}
+function updateDayData(){const m=appState.matrix[currentDay]||{};appState.matrix[currentDay]={...m,date:$("sessionDateInput")?.value||"",timeIn:$("sessionTimeIn")?.value||"",timeOut:$("sessionTimeOut")?.value||"",pre:$("preLessonInput").value,lead:$("leadInput").value,resources:$("resourcesInput").value,integration:$("integrationInput").value};save();render()}
 function updateFridayReflection(){appState.fridayReflection=$("fridayReflection").value;save();render()}
 function toggleReflection(){appState.fridayEnabled=$("fridayCheck").checked;save();render()}
 function loadLogo(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{appState.logo=r.result;save();render()};r.readAsDataURL(f)}
 function removeLogo(){appState.logo="";$("logoFile").value="";save();render()}
-function loadDefaultSample(){appState={...defaultState(),...sample};save();syncForm()}
+function loadDefaultSample(){appState={...defaultState(),...sample};normalizeAppState();save();syncForm()}
 function exportJSON(){let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
-function setPrintOrientation(value){
-  const orientation=value==="portrait"?"portrait":"landscape";
-  const paper=document.querySelector(".paper");
-  const select=document.getElementById("printOrientation");
-  if(select)select.value=orientation;
-  if(paper){
-    paper.classList.remove("orientation-landscape","orientation-portrait");
-    paper.classList.add("orientation-"+orientation);
-  }
-  let style=document.getElementById("ilawPrintOrientationStyle");
-  if(!style){style=document.createElement("style");style.id="ilawPrintOrientationStyle";document.head.appendChild(style);}
-  style.textContent="@page{size:A4 "+orientation+";margin:8mm}";
-  try{localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}
-}
-function initPrintOrientation(){
-  let orientation="landscape";
-  try{const saved=localStorage.getItem("ilaw_print_orientation");if(saved==="portrait"||saved==="landscape")orientation=saved}catch(e){}
-  setPrintOrientation(orientation);
-}
-function savePDF(){window.print()}
+const PAPER_SIZES={letter:{label:"Short / Letter",css:"letter"},legal:{label:"Long / Legal",css:"legal"},a4:{label:"A4",css:"A4"},a3:{label:"A3",css:"A3"},a5:{label:"A5",css:"A5"},b4:{label:"B4",css:"B4"},b5:{label:"B5",css:"B5"},tabloid:{label:"Tabloid",css:"tabloid"},executive:{label:"Executive",css:"7.25in 10.5in"},statement:{label:"Statement",css:"5.5in 8.5in"}};
+function getPrintPrefs(){let size="a4",orientation="landscape";try{size=localStorage.getItem("ilaw_print_size")||size;orientation=localStorage.getItem("ilaw_print_orientation")||orientation}catch(e){}if(!PAPER_SIZES[size])size="a4";if(!["portrait","landscape"].includes(orientation))orientation="landscape";return{size,orientation}}
+function updatePrintSummary(){const size=$("paperSizeSelect")?.value||"a4",orientation=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||"landscape",el=$("printSummary");if(el)el.textContent=(PAPER_SIZES[size]?.label||"A4")+" • "+(orientation==="landscape"?"Landscape":"Portrait")}
+function openPrintCenter(){const m=$("printCenter");if(!m)return window.print();const p=getPrintPrefs();$("paperSizeSelect").value=p.size;const r=document.querySelector('input[name="printOrientationChoice"][value="'+p.orientation+'"]');if(r)r.checked=true;updatePrintSummary();$("paperSizeSelect").onchange=updatePrintSummary;document.querySelectorAll('input[name="printOrientationChoice"]').forEach(x=>x.onchange=updatePrintSummary);m.classList.add("show");m.setAttribute("aria-hidden","false")}
+function closePrintCenter(){const m=$("printCenter");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true")}}
+function printFromCenter(mode){const size=$("paperSizeSelect")?.value||"a4",orientation=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||"landscape",paper=PAPER_SIZES[size]||PAPER_SIZES.a4;try{localStorage.setItem("ilaw_print_size",size);localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}let style=$("ilawPrintOrientationStyle");if(!style){style=document.createElement("style");style.id="ilawPrintOrientationStyle";document.head.appendChild(style)}style.textContent="@page{size:"+paper.css+" "+orientation+";margin:8mm}";closePrintCenter();setTimeout(()=>window.print(),80)}
+function initPrintOrientation(){getPrintPrefs()}
+function savePDF(){openPrintCenter()}
 function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();save();syncForm()}
 function changeLanguage(){appLanguage=$("langSelect").value;save()}
 
@@ -818,6 +808,7 @@ if(!topic&&!exactTitle)return alert("Select or enter a subtopic.");
 if(!subject)return alert("Select a subject.");
 if(isMapehSubject(subject)&&!$("mapehComponent")?.value)return alert("Select a MAPEH component.");
 if(!exactTitle)return alert("Enter the exact Lesson Title to guide the generator.");
+const ctx=generationContext();appState.academicTerm=ctx.academicTerm;appState.schoolYear=ctx.schoolYear;appState.curriculumVersion=ctx.curriculumVersion;appState.bowItem=ctx.bowItem;appState.bowReference=ctx.bowReference;save();
 $("generateBtn").disabled=true;
 try{
   let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));
@@ -923,8 +914,8 @@ function queueProfileSave(){
 async function loadTeacherState(user){
   try{
     const raw=localStorage.getItem("ilaw_v3_state_"+user.id);
-    appState=raw?{...defaultState(),...JSON.parse(raw)}:defaultState();
-  }catch(e){console.warn("State load:",e);appState=defaultState();}
+    appState=raw?{...defaultState(),...JSON.parse(raw)}:defaultState();normalizeAppState();
+  }catch(e){console.warn("State load:",e);appState=defaultState();normalizeAppState();}
   syncForm();
   await loadTeacherProfile(user);
   save();render();
@@ -1052,7 +1043,7 @@ function downloadRawSource(){
     const t=q("aiTopic"); if(t)t.addEventListener("change",topicChange);
   });
 })();
-initPrintOrientation();
+normalizeAppState();initPrintOrientation();
 </script>
 
 
