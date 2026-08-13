@@ -112,6 +112,88 @@ body.auth-locked > *:not(#authGate){display:none!important}
 </div>
 
 
+
+<script>
+/* V7 Studio button handlers — additive patch; existing generator/auth code remains unchanged. */
+function unlockApp(){
+  const screen=document.getElementById("lockScreen");
+  const input=document.getElementById("unlockPassword");
+  const status=document.getElementById("unlockStatus");
+  if(!screen)return;
+  const saved=localStorage.getItem("ilaw_local_lock_pin");
+  if(!saved){
+    const pin=prompt("Create a local lock PIN (4–8 digits). This PIN is only for locking this browser session.");
+    if(!pin||!/^[0-9]{4,8}$/.test(pin)){
+      if(status)status.textContent="Use a 4–8 digit PIN.";
+      return;
+    }
+    localStorage.setItem("ilaw_local_lock_pin",pin);
+  }
+  const value=(input?.value||"").trim();
+  if(value!==localStorage.getItem("ilaw_local_lock_pin")){
+    if(status)status.textContent="❌ Incorrect PIN.";
+    return;
+  }
+  screen.style.display="none";
+  document.body.classList.remove("app-locked");
+  if(input)input.value="";
+  if(status)status.textContent="";
+}
+
+function lockApp(){
+  const screen=document.getElementById("lockScreen");
+  const input=document.getElementById("unlockPassword");
+  const status=document.getElementById("unlockStatus");
+  if(!screen)return;
+  if(!localStorage.getItem("ilaw_local_lock_pin")){
+    const pin=prompt("Create a local lock PIN first (4–8 digits).");
+    if(!pin||!/^[0-9]{4,8}$/.test(pin)){alert("Lock PIN must contain 4–8 digits.");return;}
+    localStorage.setItem("ilaw_local_lock_pin",pin);
+  }
+  screen.style.display="flex";
+  document.body.classList.add("app-locked");
+  if(input)input.value="";
+  if(status)status.textContent="";
+  setTimeout(()=>input?.focus(),50);
+}
+
+function openSettings(){
+  const current=localStorage.getItem("ilaw_local_lock_pin");
+  const action=prompt("Settings\n\nEnter a new local lock PIN (4–8 digits), or leave blank to keep the current PIN.","");
+  if(action===null)return;
+  if(action==="")return;
+  if(!/^[0-9]{4,8}$/.test(action)){alert("PIN must contain 4–8 digits.");return;}
+  localStorage.setItem("ilaw_local_lock_pin",action);
+  alert(current?"Lock PIN updated successfully.":"Lock PIN saved successfully.");
+}
+
+function copyCurrentToNext(){
+  const order=["mon","tue","wed","thu"];
+  const i=order.indexOf(currentDay);
+  if(i<0||i===order.length-1){alert("Session 4 is the last session; there is no next session.");return;}
+  const next=order[i+1];
+  appState.matrix[next]={...appState.matrix[currentDay]};
+  save();
+  switchDay(next,document.getElementById("tab-"+next));
+  render();
+  const label={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"};
+  const st=document.getElementById("aiStatus");
+  if(st)st.textContent="✅ "+label[currentDay]+" copied to "+label[next]+".";
+}
+
+function clearCurrentSession(){
+  const label={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay]||"current session";
+  if(!confirm("Clear all content in "+label+"?"))return;
+  appState.matrix[currentDay]={pre:"",lead:"",resources:"",integration:""};
+  save();
+  switchDay(currentDay,document.getElementById("tab-"+currentDay));
+  render();
+  const st=document.getElementById("aiStatus");
+  if(st)st.textContent="🧹 "+label+" cleared.";
+}
+
+</script>
+
 <!-- V5.4 LOGO MODULE -->
 <style>
 .ilaw-logo-module{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
@@ -188,7 +270,7 @@ body.auth-locked > *:not(#authGate){display:none!important}
       <option value="en">English</option><option value="fil">Filipino</option>
     </select>
     <button class="btn green" onclick="window.print()">🖨 Print/PDF</button>
-    <button class="btn green" onclick="window.print()">💾 Save PDF</button>
+    <button class="btn green" onclick="savePDF()">💾 Download / Save PDF</button>
     <span id="accountBadge">Not signed in</span>
     <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
     <button class="btn gray" onclick="openSettings()">⚙ Settings</button>
@@ -358,7 +440,7 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
   <table class="doc-table">
     <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle">Levels of Classification and Biological Taxonomy</td></tr>
-    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher/s</td><td id="pvTeacher"></td></tr>
+    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher"></td></tr>
     <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">No. of Sessions</td><td id="pvTermWeek">Quarter 4, Week 3</td></tr>
     <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
     <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
@@ -548,6 +630,7 @@ function loadLogo(e){let f=e.target.files[0];if(!f)return;let r=new FileReader()
 function removeLogo(){appState.logo="";$("logoFile").value="";save();render()}
 function loadDefaultSample(){appState={...defaultState(),...sample};save();syncForm()}
 function exportJSON(){let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
+function savePDF(){window.print()}
 function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();save();syncForm()}
 function changeLanguage(){appLanguage=$("langSelect").value;save()}
 
