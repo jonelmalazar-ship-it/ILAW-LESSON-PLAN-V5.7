@@ -36,8 +36,7 @@ textarea{min-height:62px;resize:vertical}
 .lock-card{width:min(390px,92vw);background:#fff;color:#222;border-radius:10px;padding:22px;box-shadow:0 10px 35px #001b44}
 #reflectionWrap.locked{opacity:.55}.hidden{display:none!important}
 @media(max-width:900px){.main{display:block;overflow:auto}.editor,.preview{width:100%;height:auto}.preview{min-height:600px}.header{height:auto}.toolbar{justify-content:flex-end}}
-@page{size:A4 landscape;margin:8mm}
-@media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none;width:100%;min-height:auto;border:0;border-radius:0;box-sizing:border-box}}
+@media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none}}
 </style>
 <style>
 /* ILAW V7 — Premium Teacher Suite UI */
@@ -77,6 +76,22 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
 .status{color:#475569}
 .lock-card{border-radius:16px;box-shadow:0 18px 55px rgba(0,27,68,.35)}
 @media(max-width:900px){.editor,.preview{width:100%}.main{height:auto}.header h1{font-size:.95rem}.paper{min-height:auto}}
+</style>
+<style>
+/* Orientation control — additive only. Existing buttons are unchanged. */
+.orientation-control{display:inline-flex;align-items:center;gap:5px;margin:2px;padding:4px 6px;border-radius:9px;font-size:.72rem;font-weight:700;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20)}
+.orientation-control span{white-space:nowrap;opacity:.95}
+.orientation-control select{min-height:30px!important;padding:5px 8px!important;border:0!important;border-radius:7px!important;background:#fff!important;color:#173b70!important;font-weight:700}
+.paper.orientation-landscape{width:297mm;max-width:297mm;min-height:210mm}
+.paper.orientation-portrait{width:210mm;max-width:210mm;min-height:297mm}
+@media(max-width:900px){.paper.orientation-landscape,.paper.orientation-portrait{width:100%;max-width:none;min-height:auto}}
+@media print{
+  .orientation-control{display:none!important}
+  html,body{background:#fff!important}
+  .main{display:block!important;height:auto!important}
+  .preview{width:100%!important;padding:0!important;background:#fff!important;display:block!important}
+  .paper{width:100%!important;max-width:none!important;height:auto!important;min-height:auto!important;margin:0!important;padding:8mm!important;box-shadow:none!important;border:0!important;border-radius:0!important}
+}
 </style>
 <style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style><style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style>
 <!-- Supabase Authentication -->
@@ -272,6 +287,13 @@ function clearCurrentSession(){
     </select>
     <button class="btn green" onclick="window.print()">🖨 Print/PDF</button>
     <button class="btn green" onclick="savePDF()">💾 Download / Save PDF</button>
+    <label class="orientation-control" title="Choose the paper orientation for Print/PDF">
+      <span>Orientation</span>
+      <select id="printOrientation" onchange="setPrintOrientation(this.value)" aria-label="Paper orientation">
+        <option value="landscape">Landscape</option>
+        <option value="portrait">Portrait</option>
+      </select>
+    </label>
     <span id="accountBadge">Not signed in</span>
     <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
     <button class="btn gray" onclick="openSettings()">⚙ Settings</button>
@@ -631,6 +653,25 @@ function loadLogo(e){let f=e.target.files[0];if(!f)return;let r=new FileReader()
 function removeLogo(){appState.logo="";$("logoFile").value="";save();render()}
 function loadDefaultSample(){appState={...defaultState(),...sample};save();syncForm()}
 function exportJSON(){let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
+function setPrintOrientation(value){
+  const orientation=value==="portrait"?"portrait":"landscape";
+  const paper=document.querySelector(".paper");
+  const select=document.getElementById("printOrientation");
+  if(select)select.value=orientation;
+  if(paper){
+    paper.classList.remove("orientation-landscape","orientation-portrait");
+    paper.classList.add("orientation-"+orientation);
+  }
+  let style=document.getElementById("ilawPrintOrientationStyle");
+  if(!style){style=document.createElement("style");style.id="ilawPrintOrientationStyle";document.head.appendChild(style);}
+  style.textContent="@page{size:A4 "+orientation+";margin:8mm}";
+  try{localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}
+}
+function initPrintOrientation(){
+  let orientation="landscape";
+  try{const saved=localStorage.getItem("ilaw_print_orientation");if(saved==="portrait"||saved==="landscape")orientation=saved}catch(e){}
+  setPrintOrientation(orientation);
+}
 function savePDF(){window.print()}
 function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();save();syncForm()}
 function changeLanguage(){appLanguage=$("langSelect").value;save()}
@@ -1011,6 +1052,7 @@ function downloadRawSource(){
     const t=q("aiTopic"); if(t)t.addEventListener("change",topicChange);
   });
 })();
+initPrintOrientation();
 </script>
 
 
