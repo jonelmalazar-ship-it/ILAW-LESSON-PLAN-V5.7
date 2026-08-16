@@ -103,6 +103,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
 </script>
 <style>
 .curriculum-row{align-items:flex-start}.curriculum-status{padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px dashed #cbd5e1;margin-top:6px}.session-meta-editor{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;margin:8px 0 10px;padding:10px;background:#f8fafc;border:1px solid #dbe3ee;border-radius:10px}.session-meta-print td{background:#f8fafc;font-size:.76rem;font-weight:600}.ilaw-modal{position:fixed;inset:0;z-index:25000;background:rgba(8,28,56,.62);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}.ilaw-modal.show{display:flex}.ilaw-modal-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dbe3ee;border-radius:18px;padding:20px;box-shadow:0 24px 80px rgba(5,25,55,.35)}.print-card{width:min(780px,96vw)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px}.modal-head h2{margin:0 0 4px;color:#173f78}.modal-head p{margin:0;color:#64748b;font-size:.82rem}.modal-x{border:0;background:#eef2f7;color:#334155;border-radius:10px;width:34px;height:34px;font-size:22px;cursor:pointer}.print-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.orientation-pills{display:flex;gap:8px}.orientation-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #cbd5e1;background:#f8fafc;border-radius:11px;padding:12px;cursor:pointer}.orientation-pill input{width:auto}.print-preview-note{margin-top:15px;padding:11px 12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a5f}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:18px}.pref-section{border:1px solid #e2e8f0;border-radius:12px;padding:13px;margin-bottom:12px;background:#fbfdff}.pref-section h3{margin:0 0 10px;color:#173f78;font-size:.9rem}@media(max-width:700px){.session-meta-editor,.print-grid{grid-template-columns:1fr}.orientation-pills{flex-direction:column}}@media print{.ilaw-modal{display:none!important}.session-meta-print td{background:#fff!important}}</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="auth-locked">
 
@@ -1008,8 +1009,14 @@ normalizeAppState();initPrintOrientation();
 @media print{
   body.ilaw-no-logo-print #lessonPaper img{display:none!important}
   #ilawV8ReflectionPrint{display:block!important}
+  #ilawLogoModule,#lockScreen,#authGate,#ilawV8BowModal,#ilawV8ScheduleModal,#printCenter,#preferencesModal{display:none!important}
 }
 #ilawV8ReflectionPrint{display:none}
+.ilaw-print-reflection{margin-top:12mm;border-top:2px solid #111;padding-top:5mm;page-break-inside:avoid}
+.ilaw-print-reflection h3{margin:0 0 6mm;text-align:center;font-size:12pt}
+.ilaw-ref-session{margin:0 0 5mm;page-break-inside:avoid}
+.ilaw-ref-session b{display:block;margin-bottom:2mm;font-size:10pt}
+.ilaw-ref-line{font-size:9pt;line-height:1.8;white-space:nowrap}
 </style>
 <script>
 (function(){
@@ -1055,7 +1062,7 @@ normalizeAppState();initPrintOrientation();
       const m=document.createElement('div');m.id='ilawV8ScheduleModal';m.className='v8-modal';m.innerHTML='<div class="v8-card"><h2>📅 Class Schedule</h2><div class="v8-help">Save the regular time for each Grade/Section. The lesson plan will automatically use it beside the Date.</div><div id="v8ScheduleRows" style="margin-top:14px"></div><div class="v8-actions"><button class="btn gray" onclick="closeScheduleManager()">Close</button><button class="btn primary" onclick="addScheduleRow()">＋ Add Class</button><button class="btn green" onclick="saveScheduleManager()">💾 Save Schedule</button></div></div>';document.body.appendChild(m);
     }
     if(!$('ilawV8ReflectionPrint')){
-      const p=$('lessonPaper'); if(p){const d=document.createElement('div');d.id='ilawV8ReflectionPrint';d.innerHTML='<div style="margin-top:18mm;border-top:2px solid #111;padding-top:6mm"><h3 style="margin:0 0 8px;text-align:center">FRIDAY REFLECTION</h3>'+[1,2,3,4].map(n=>'<div style="margin:10px 0 14px"><b>SESSION '+n+'</b><div>1. ________________________________________________</div><div>2. ________________________________________________</div><div>3. ________________________________________________</div><div>4. ________________________________________________</div></div>').join('')+'</div>';p.appendChild(d)}
+      const p=$('lessonPaper'); if(p){const d=document.createElement('div');d.id='ilawV8ReflectionPrint';d.innerHTML='<div class="ilaw-print-reflection"><h3>FRIDAY REFLECTION</h3>'+[1,2,3,4].map(n=>'<div class="ilaw-ref-session"><b>SESSION '+n+'</b><div class="ilaw-ref-line">1. ____________________________________________________________</div><div class="ilaw-ref-line">2. ____________________________________________________________</div><div class="ilaw-ref-line">3. ____________________________________________________________</div><div class="ilaw-ref-line">4. ____________________________________________________________</div></div>').join('')+'</div>';p.appendChild(d)}
     }
     // change curriculumVersion from readonly text to controlled select
     const cv=$('curriculumVersion'); if(cv && cv.tagName==='INPUT'){const sel=document.createElement('select');sel.id='curriculumVersion';sel.innerHTML='<option>Revised K–10 / MATATAG</option><option>MELC / Transitional</option>';cv.replaceWith(sel)}
@@ -1079,7 +1086,27 @@ normalizeAppState();initPrintOrientation();
   function renderScheduleRows(){const box=$('v8ScheduleRows');if(!box)return;box.innerHTML='';const rows=schedule();(rows.length?rows:[{grade:'Grade 10',section:'Andromeda',time:''}]).forEach(addScheduleRow)}
   function saveScheduleManager(){const rows=[...document.querySelectorAll('#v8ScheduleRows .v8-schedule-row')].map(r=>({grade:r.querySelector('.v8-sg').value,section:r.querySelector('.v8-ss').value.trim(),time:r.querySelector('.v8-st').value.trim()})).filter(x=>x.section&&x.time);saveJSON(SKEY,rows);applyScheduleToSessions();$('v8ScheduleBtn').textContent='📅 Schedule ✓';}
   function applyScheduleToSessions(){const gs=$('gradeSection')?.value||'';const m=gs.match(/(?:GRADE\s*)?(7|8|9|10)\s*[-–]\s*(.+)$/i);if(!m)return;const keyGrade='Grade '+m[1],section=m[2].trim().toLowerCase();const hit=schedule().find(x=>x.grade===keyGrade&&x.section.toLowerCase()===section);if(!hit)return;const map=window.appState?.matrix||{};Object.keys(map).forEach(d=>{if(hit.time&&!map[d].timeIn&&!map[d].timeOut){const parts=hit.time.split(/\s*[–-]\s*/);map[d].timeIn=parts[0]||hit.time;map[d].timeOut=parts[1]||''}});try{if(window.save)window.save()}catch(e){} }
-  function patchPrint(){const old=window.printFromCenter;if(typeof old!=='function'||old.__v8)return;const wrapped=function(mode){const size=$('paperSizeSelect')?.value||'a4';const orient=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||'landscape';document.body.classList.toggle('ilaw-no-logo-print',!window.appState?.logo);const style=$('ilawPrintOrientationStyle');if(style){const paper={letter:'letter',longbond:'8.5in 13in',legal:'legal',a4:'A4',a3:'A3',a5:'A5',b4:'B4',b5:'B5',tabloid:'tabloid',executive:'7.25in 10.5in',statement:'5.5in 8.5in'}[size]||'A4';style.textContent='@page{size:'+paper+' '+orient+';margin:8mm}'}return old.apply(this,arguments)};wrapped.__v8=true;window.printFromCenter=wrapped}
+  async function v8DirectPdfDownload(){
+    const paperSize=$('paperSizeSelect')?.value||'a4';
+    const orient=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||'landscape';
+    const paperMap={letter:'letter',longbond:'8.5in 13in',legal:'legal',a4:'A4',a3:'A3',a5:'A5',b4:'B4',b5:'B5',tabloid:'tabloid',executive:'7.25in 10.5in',statement:'5.5in 8.5in'};
+    const displayPaper=paperMap[paperSize]||'A4';
+    const logo=$('pvLogo');
+    const logoVisible=!!logo && !logo.classList.contains('hidden') && !!logo.getAttribute('src');
+    document.body.classList.toggle('ilaw-no-logo-print',!logoVisible);
+    if(typeof html2pdf==='undefined') throw new Error('PDF engine could not load. Please check your internet connection.');
+    const target=$('lessonPaper');
+    const clone=target.cloneNode(true);
+    clone.querySelectorAll('#ilawV8ReflectionPrint').forEach(x=>x.style.display='block');
+    if(!logoVisible) clone.querySelectorAll('img').forEach(img=>img.style.display='none');
+    clone.style.width=(orient==='landscape'?({letter:'11in',longbond:'13in',legal:'14in',a4:'297mm',a3:'420mm',a5:'210mm',b4:'353mm',b5:'250mm',tabloid:'17in',executive:'10.5in',statement:'8.5in'}[paperSize]||'297mm'):({letter:'8.5in',longbond:'8.5in',legal:'8.5in',a4:'210mm',a3:'297mm',a5:'148mm',b4:'250mm',b5:'176mm',tabloid:'11in',executive:'7.25in',statement:'5.5in'}[paperSize]||'210mm'));
+    clone.style.maxWidth='none'; clone.style.margin='0'; clone.style.boxShadow='none'; clone.style.border='0';
+    const holder=document.createElement('div'); holder.style.position='fixed'; holder.style.left='-100000px'; holder.style.top='0'; holder.style.background='#fff'; holder.style.padding='0'; holder.appendChild(clone); document.body.appendChild(holder);
+    const fileSafe=(($('pvLessonTitle')?.textContent||'ILAW-Lesson-Plan').trim().replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'')||'ILAW-Lesson-Plan');
+    const opt={margin:8,filename:fileSafe+'-'+(orient==='landscape'?'Landscape':'Portrait')+'.pdf',image:{type:'jpeg',quality:0.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#fff'},jsPDF:{unit:'mm',format:displayPaper,orientation:orient}};
+    try{await html2pdf().set(opt).from(clone).save()}finally{holder.remove();document.body.classList.remove('ilaw-no-logo-print')}
+  }
+  function patchPrint(){const old=window.printFromCenter;if(typeof old!=='function'||old.__v8)return;const wrapped=async function(mode){const size=$('paperSizeSelect')?.value||'a4';const orient=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||'landscape';const logo=$('pvLogo');const logoVisible=!!logo && !logo.classList.contains('hidden') && !!logo.getAttribute('src');document.body.classList.toggle('ilaw-no-logo-print',!logoVisible);const style=$('ilawPrintOrientationStyle');if(style){const paper={letter:'letter',longbond:'8.5in 13in',legal:'legal',a4:'A4',a3:'A3',a5:'A5',b4:'B4',b5:'B5',tabloid:'tabloid',executive:'7.25in 10.5in',statement:'5.5in 8.5in'}[size]||'A4';style.textContent='@page{size:'+paper+' '+orient+';margin:8mm}'}if(mode==='pdf')return v8DirectPdfDownload();try{return old.apply(this,arguments)}finally{setTimeout(()=>document.body.classList.remove('ilaw-no-logo-print'),2500)}};wrapped.__v8=true;window.printFromCenter=wrapped;window.v8DirectPdfDownload=v8DirectPdfDownload}
   function patchSubject(){const old=window.subjectChanged;if(typeof old!=='function'||old.__v8)return;const wrapped=function(){safe(()=>{const s=$('aiSubject')?.value||'';const m=s.match(/(?:MAPEH|TLE\/EPP)\s*(7|8|9|10)/i);if(m&&$('v8YearLevel'))$('v8YearLevel').value='Grade '+m[1];syncCurriculumUI();populateBowDropdowns()});return old.apply(this,arguments)};wrapped.__v8=true;window.subjectChanged=wrapped}
   function patchCurriculum(){const old=window.curriculumContextChanged;if(typeof old!=='function'||old.__v8)return;const wrapped=function(){const r=old.apply(this,arguments);safe(()=>{syncCurriculumUI();populateBowDropdowns()});return r};wrapped.__v8=true;window.curriculumContextChanged=wrapped}
   function init(){ensureV8Controls();patchPrint();patchSubject();patchCurriculum();setInterval(()=>{safe(()=>{ensureV8Controls();populateBowDropdowns();applyScheduleToSessions()})},2500)}
