@@ -116,6 +116,27 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
 }
 </style>
 
+
+<script id="ilaw-v8-direct-pdf-libs">
+(function(){
+  function load(src){
+    return new Promise(function(resolve,reject){
+      var s=document.createElement("script");
+      s.src=src;
+      s.onload=resolve;
+      s.onerror=function(){reject(new Error("Unable to load PDF component: "+src));};
+      document.head.appendChild(s);
+    });
+  }
+  window.ILAW_loadDirectPDF = async function(){
+    if(window.jspdf && window.html2canvas) return true;
+    if(!window.jspdf) await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    if(!window.html2canvas) await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    return !!(window.jspdf && window.html2canvas);
+  };
+})();
+</script>
+
 </head>
 <body class="auth-locked">
 
@@ -298,7 +319,7 @@ function clearCurrentSession(){
       <option value="en">English</option><option value="fil">Filipino</option>
     </select>
     <button class="btn green" onclick="openPrintCenter()">🖨 Print/PDF</button>
-    <button class="btn green" onclick="openPrintCenter()">💾 Download PDF</button>
+    <button class="btn green" onclick="savePDF()">💾 Download PDF</button>
 <span id="accountBadge">Not signed in</span>
     <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
     <button class="btn gray" onclick="openSettings()">⚙ Preferences</button>
@@ -1117,4 +1138,224 @@ normalizeAppState();initPrintOrientation();
   window.openBowManager=openBowManager;window.closeBowManager=closeBowManager;window.importBowFile=importBowFile;window.openScheduleManager=openScheduleManager;window.closeScheduleManager=closeScheduleManager;window.addScheduleRow=addScheduleRow;window.saveScheduleManager=saveScheduleManager;
 })();
 </script>
+
+<script id="ilaw-v8-final-direct-pdf">
+(function(){
+  "use strict";
+
+  function getChoice(){
+    var size=(document.getElementById("paperSizeSelect")||{}).value||"a4";
+    var orientation=(document.querySelector('input[name="printOrientationChoice"]:checked')||{}).value||"landscape";
+    var sizes={
+      letter:{label:"Short / Letter",w:8.5,h:11},
+      longbond:{label:"Long Bond",w:8.5,h:13},
+      legal:{label:"Legal",w:8.5,h:14},
+      a4:{label:"A4",w:8.27,h:11.69},
+      a3:{label:"A3",w:11.69,h:16.54},
+      a5:{label:"A5",w:5.83,h:8.27},
+      b4:{label:"B4",w:9.84,h:13.9},
+      b5:{label:"B5",w:6.93,h:9.84},
+      tabloid:{label:"Tabloid",w:11,h:17},
+      executive:{label:"Executive",w:7.25,h:10.5},
+      statement:{label:"Statement",w:5.5,h:8.5}
+    };
+    return {size:size,orientation:orientation,spec:sizes[size]||sizes.a4};
+  }
+
+  function fileName(){
+    var v=(document.getElementById("lessonTitle")||{}).value||"ILAW_Lesson_Plan";
+    v=String(v).replace(/[\\/:*?"<>|]+/g," ").replace(/\s+/g," ").trim();
+    return (v||"ILAW_Lesson_Plan").slice(0,120)+".pdf";
+  }
+
+  function logoState(){
+    var logo=document.getElementById("pvLogo");
+    return !!(logo && logo.src && !logo.classList.contains("hidden") && logo.style.display!=="none");
+  }
+
+  function buildExportClone(){
+    var source=document.getElementById("lessonPaper");
+    if(!source) throw new Error("Lesson plan preview not found.");
+
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+
+    var clone=source.cloneNode(true);
+
+    // Remove anything that is not part of the actual printable lesson paper.
+    clone.querySelectorAll("#ilawLogoModule,.toolbar,.header,.ilaw-modal,.v8-modal,.orientation-control").forEach(function(el){
+      el.remove();
+    });
+
+    // Uploaded logo appears ONLY if the current printable logo is enabled.
+    var logo=clone.querySelector("#pvLogo");
+    if(logo && !logoState()) logo.remove();
+
+    // Always rebuild the reflection inside the table cell.
+    var ref=clone.querySelector("#pvReflection");
+    if(ref){
+      ref.innerHTML=
+        '<div class="print-reflection-lines">'+
+        '<div><strong>Session 1</strong><span></span></div>'+
+        '<div><strong>Session 2</strong><span></span></div>'+
+        '<div><strong>Session 3</strong><span></span></div>'+
+        '<div><strong>Session 4</strong><span></span></div>'+
+        '</div>';
+    }
+
+    return clone;
+  }
+
+  function placeForCapture(node,widthIn){
+    var host=document.createElement("div");
+    host.id="ilawPdfCaptureHost";
+    host.style.position="absolute";
+    host.style.left="0";
+    host.style.top="0";
+    host.style.width=(widthIn+0.4)+"in";
+    host.style.background="#fff";
+    host.style.zIndex="2147483646";
+    host.style.pointerEvents="none";
+    host.style.padding="0";
+    host.appendChild(node);
+    document.body.appendChild(host);
+    return host;
+  }
+
+  function setPrintPage(choice){
+    var st=document.getElementById("ilawPrintOrientationStyle");
+    if(!st){
+      st=document.createElement("style");
+      st.id="ilawPrintOrientationStyle";
+      document.head.appendChild(st);
+    }
+    var pageMap={
+      letter:"letter",legal:"legal",a4:"A4",a3:"A3",a5:"A5",
+      b4:"B4",b5:"B5",tabloid:"tabloid"
+    };
+    var page=pageMap[choice.size] || (choice.size==="longbond"?"8.5in 13in":"8.5in 11in");
+    if(choice.size==="executive") page="7.25in 10.5in";
+    if(choice.size==="statement") page="5.5in 8.5in";
+    st.textContent="@page{size:"+page+" "+choice.orientation+";margin:8mm}";
+  }
+
+  async function downloadPDF(){
+    var c=getChoice();
+    setPrintPage(c);
+
+    if(window.ILAW_loadDirectPDF) await window.ILAW_loadDirectPDF();
+    if(!window.jspdf || !window.html2canvas){
+      throw new Error("PDF components could not be loaded. Please allow internet access and try again.");
+    }
+
+    var clone=buildExportClone();
+    var captureWidth=(c.orientation==="landscape"?c.spec.h:c.spec.w);
+    clone.style.display="block";
+    clone.style.visibility="visible";
+    clone.style.opacity="1";
+    clone.style.width=captureWidth+"in";
+    clone.style.maxWidth=captureWidth+"in";
+    clone.style.background="#fff";
+    clone.style.boxShadow="none";
+    clone.style.border="0";
+    clone.style.borderRadius="0";
+    clone.style.margin="0";
+    clone.style.padding="8mm";
+    clone.style.minHeight="auto";
+    clone.style.color="#000";
+
+    var host=placeForCapture(clone,captureWidth);
+
+    try{
+      // Wait for fonts/images before canvas capture.
+      if(document.fonts && document.fonts.ready) await document.fonts.ready;
+      var images=Array.from(clone.querySelectorAll("img"));
+      await Promise.all(images.map(function(img){
+        return img.complete ? Promise.resolve() : new Promise(function(resolve){img.onload=img.onerror=resolve;});
+      }));
+
+      var canvas=await window.html2canvas(clone,{
+        scale:2,
+        useCORS:true,
+        allowTaint:false,
+        backgroundColor:"#ffffff",
+        logging:false,
+        width:Math.ceil(clone.getBoundingClientRect().width),
+        windowWidth:Math.max(document.documentElement.clientWidth,Math.ceil(clone.getBoundingClientRect().width)),
+        scrollX:0,
+        scrollY:0
+      });
+
+      var jsPDF=window.jspdf.jsPDF;
+      var pageW=c.orientation==="landscape"?c.spec.h:c.spec.w;
+      var pageH=c.orientation==="landscape"?c.spec.w:c.spec.h;
+      var pdf=new jsPDF({
+        orientation:c.orientation,
+        unit:"in",
+        format:[pageW,pageH],
+        compress:true
+      });
+
+      var imgData=canvas.toDataURL("image/jpeg",0.98);
+      var imgW=pageW-0.55;
+      var imgH=canvas.height*(imgW/canvas.width);
+      var y=0.275;
+      var maxH=pageH-0.55;
+
+      // Split long content across pages rather than clipping it.
+      var sourceW=canvas.width;
+      var pagePxH=Math.floor(canvas.height*(maxH/imgH));
+      var offsetPx=0;
+      var first=true;
+      while(offsetPx<canvas.height){
+        var sliceH=Math.min(pagePxH,canvas.height-offsetPx);
+        var slice=document.createElement("canvas");
+        slice.width=canvas.width;
+        slice.height=sliceH;
+        slice.getContext("2d").drawImage(canvas,0,offsetPx,sourceW,sliceH,0,0,sourceW,sliceH);
+        var sliceData=slice.toDataURL("image/jpeg",0.98);
+        var renderedH=sliceH*(imgW/sourceW);
+        if(!first) pdf.addPage([pageW,pageH],c.orientation);
+        pdf.addImage(sliceData,"JPEG",0.275,y,imgW,renderedH,undefined,"FAST");
+        first=false;
+        offsetPx+=sliceH;
+      }
+
+      pdf.save(fileName());
+    } finally {
+      host.remove();
+    }
+  }
+
+  // IMPORTANT: Download PDF is direct download; it does NOT open the printer.
+  window.savePDF=function(){
+    var status=document.getElementById("aiStatus");
+    if(status) status.textContent="⏳ Preparing PDF download...";
+    downloadPDF().then(function(){
+      if(status) status.textContent="✅ PDF downloaded.";
+    }).catch(function(err){
+      console.error("[ILAW Direct PDF]",err);
+      if(status) status.textContent="❌ PDF download failed.";
+      alert("PDF download failed: "+(err && err.message ? err.message : err));
+    });
+  };
+
+  // Existing Print/PDF remains the printer workflow.
+  window.printFromCenter=function(){
+    var c=getChoice();
+    setPrintPage(c);
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+    var modal=document.getElementById("printCenter");
+    if(modal){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+    }
+    setTimeout(function(){window.print();},100);
+  };
+
+  window.addEventListener("beforeprint",function(){
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+  });
+})();
+</script>
+
 </body></html>
