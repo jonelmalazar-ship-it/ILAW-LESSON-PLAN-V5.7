@@ -1277,10 +1277,16 @@ normalizeAppState();initPrintOrientation();
         '</div>';
     }
 
+    // Keep the clone INSIDE the viewport so html2canvas can actually render it.
+    // It is visually unobtrusive but not off-screen (off-screen clones can create blank PDFs).
     clone.style.position="fixed";
-    clone.style.left="-100000px";
+    clone.style.left="0";
     clone.style.top="0";
     clone.style.display="block";
+    clone.style.visibility="visible";
+    clone.style.opacity="0.01";
+    clone.style.pointerEvents="none";
+    clone.style.zIndex="-1";
     clone.style.background="#fff";
     clone.style.boxShadow="none";
     clone.style.border="0";
@@ -1289,6 +1295,7 @@ normalizeAppState();initPrintOrientation();
     clone.style.padding="8mm";
     clone.style.width=(c.orientation==="landscape"?c.spec.h:c.spec.w)+"in";
     clone.style.maxWidth=clone.style.width;
+    clone.style.minHeight="auto";
     document.body.appendChild(clone);
 
     try{
