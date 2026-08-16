@@ -1,7 +1,7 @@
 <html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ILAW Teacher Suite V7 — Studio</title>
+<title>ILAW Teacher Suite V8 — Teacher Edition</title>
 <style>
 *{box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}
 body{margin:0;background:#f4f6f9;color:#333;height:100vh;overflow:hidden}
@@ -31,12 +31,67 @@ textarea{min-height:62px;resize:vertical}
 .banner{background:#0d47a1;color:#fff;font-weight:700;padding:5px 7px;margin:7px 0}.sub{font-style:italic;font-weight:400;font-size:.72rem;margin-left:4px}
 .signatures{display:flex;justify-content:space-between;margin-top:22px}.sig{width:30%;text-align:center}.sigline{border-bottom:1px solid #000;margin-top:22px;font-weight:700}
 .editor .sig-editor{width:100%;box-sizing:border-box}
-.sig-editor{background:#fafafa;border:1px solid #ddd;border-radius:7px;padding:10px;margin-top:8px}.print-reflection-lines>div{display:flex;align-items:flex-end;gap:7px;min-height:30px;margin:2px 0}.print-reflection-lines b{width:18px;flex:0 0 18px}.print-reflection-lines span{display:block;border-bottom:1px solid #000;flex:1;height:22px}.sig-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr auto;gap:7px;align-items:end;margin:7px 0}.sig-row label{margin:0}.sig-remove{min-width:42px}@media(max-width:700px){.sig-row{grid-template-columns:1fr}.sig-remove{width:100%}.signatures{display:block}.sig{width:100%;margin-bottom:24px}}
+.sig-editor{background:#fafafa;border:1px solid #ddd;border-radius:7px;padding:10px;margin-top:8px}.sig-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr auto;gap:7px;align-items:end;margin:7px 0}.sig-row label{margin:0}.sig-remove{min-width:42px}@media(max-width:700px){.sig-row{grid-template-columns:1fr}.sig-remove{width:100%}.signatures{display:block}.sig{width:100%;margin-bottom:24px}}
 .lock-screen{position:fixed;inset:0;background:rgba(13,71,161,.97);z-index:9999;color:#fff;display:none;align-items:center;justify-content:center}
 .lock-card{width:min(390px,92vw);background:#fff;color:#222;border-radius:10px;padding:22px;box-shadow:0 10px 35px #001b44}
 #reflectionWrap.locked{opacity:.55}.hidden{display:none!important}
 @media(max-width:900px){.main{display:block;overflow:auto}.editor,.preview{width:100%;height:auto}.preview{min-height:600px}.header{height:auto}.toolbar{justify-content:flex-end}}
-@media print{.editor,.header,#ilawLogoModule{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none}}
+@media print{.editor,.header{display:none!important}.main{display:block;height:auto}.preview{width:100%;padding:0;background:#fff}.paper{box-shadow:none;padding:0;max-width:none}}
+</style>
+<style>
+/* ILAW V7 — Premium Teacher Suite UI */
+:root{--ilaw-blue:#123b78;--ilaw-blue-2:#1e5aa8;--ilaw-ink:#172033;--ilaw-muted:#64748b;--ilaw-line:#dbe3ee;--ilaw-soft:#f6f9fd;--ilaw-accent:#7c3aed}
+body{background:linear-gradient(135deg,#f7f9fc 0%,#eef4fb 100%);color:var(--ilaw-ink)}
+.header{height:68px;padding:10px 18px;background:linear-gradient(110deg,#0b2f63,#1657a6 68%,#2468bd);box-shadow:0 4px 18px rgba(15,45,90,.22);position:relative;z-index:5}
+.header h1{font-size:1.02rem;letter-spacing:.1px;font-weight:800;white-space:nowrap}
+.toolbar{gap:6px}
+.toolbar .btn,.toolbar select{border-radius:9px!important;min-height:36px;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+.toolbar .btn:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(0,0,0,.14);filter:brightness(1.04)}
+.toolbar select{padding:7px 10px!important;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);color:#fff}
+.toolbar select option{color:#222;background:#fff}
+#accountBadge{font-size:.75rem;font-weight:700;opacity:.92;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.15)}
+.main{height:calc(100vh - 68px);gap:0}
+.editor{width:47%;padding:22px 20px 28px;background:rgba(255,255,255,.92);border-right:1px solid var(--ilaw-line);box-shadow:8px 0 28px rgba(30,55,90,.05)}
+.preview{width:53%;padding:24px;background:linear-gradient(145deg,#eaf1f9,#f5f8fc);align-items:flex-start}
+.editor h3{font-size:.94rem;color:#1e3150;margin:3px 0 11px}
+.editor>h3{font-size:1.02rem}
+.ai-box,.tool-box{border-radius:14px;padding:15px;margin-bottom:16px;box-shadow:0 5px 18px rgba(30,55,90,.06);border:1px solid var(--ilaw-line)}
+.ai-box{background:linear-gradient(145deg,#f5f9ff,#edf5ff);border-color:#c7dcf7;position:relative;overflow:hidden}
+.ai-box:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#7c3aed,#2563eb);border-radius:14px 0 0 14px}
+.tool-box{background:#fff;border-color:#e1e8f1}
+label{color:#334155;font-size:.78rem;letter-spacing:.1px}
+input,textarea,select{border:1px solid #cbd5e1;border-radius:9px;padding:9px 10px;transition:border-color .15s,box-shadow .15s;background:#fff}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-shadow:0 0 0 3px rgba(79,134,198,.12)}
+.btn{border-radius:9px;padding:9px 13px;transition:all .16s ease}
+.primary{background:linear-gradient(135deg,#174b92,#2469bd);box-shadow:0 5px 12px rgba(23,75,146,.18)}
+.purple{background:linear-gradient(135deg,#6d28d9,#8b5cf6);box-shadow:0 5px 12px rgba(109,40,217,.18)}
+.green{background:linear-gradient(135deg,#16794a,#239b63);box-shadow:0 5px 12px rgba(22,121,74,.16)}
+.gray{background:#64748b}.orange{background:#d97706}.red{background:#c0392b}
+.tabs{gap:5px;border-bottom:1px solid #cbd8e8;margin:10px 0 14px;padding-left:2px}
+.tab{border-radius:8px 8px 0 0;padding:8px 12px;background:#edf1f6;color:#475569;transition:.15s}
+.tab:hover{background:#e2e8f0}.tab.active{background:linear-gradient(135deg,#174b92,#2469bd);box-shadow:0 -1px 8px rgba(23,75,146,.12)}
+.paper{max-width:820px;border-radius:8px;padding:34px;box-shadow:0 16px 40px rgba(30,55,90,.18);border:1px solid #d8e0ea;min-height:900px}
+.doc-header{padding-bottom:10px;border-bottom:2px solid #dce5f0}
+.banner{background:linear-gradient(90deg,#173f78,#245fa8);border-radius:5px;padding:6px 9px;letter-spacing:.1px}
+.status{color:#475569}
+.lock-card{border-radius:16px;box-shadow:0 18px 55px rgba(0,27,68,.35)}
+@media(max-width:900px){.editor,.preview{width:100%}.main{height:auto}.header h1{font-size:.95rem}.paper{min-height:auto}}
+</style>
+<style>
+/* Orientation control — additive only. Existing buttons are unchanged. */
+.orientation-control{display:inline-flex;align-items:center;gap:5px;margin:2px;padding:4px 6px;border-radius:9px;font-size:.72rem;font-weight:700;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20)}
+.orientation-control span{white-space:nowrap;opacity:.95}
+.orientation-control select{min-height:30px!important;padding:5px 8px!important;border:0!important;border-radius:7px!important;background:#fff!important;color:#173b70!important;font-weight:700}
+.paper.orientation-landscape{width:297mm;max-width:297mm;min-height:210mm}
+.paper.orientation-portrait{width:210mm;max-width:210mm;min-height:297mm}
+@media(max-width:900px){.paper.orientation-landscape,.paper.orientation-portrait{width:100%;max-width:none;min-height:auto}}
+@media print{
+  .orientation-control{display:none!important}
+  html,body{background:#fff!important}
+  .main{display:block!important;height:auto!important}
+  .preview{width:100%!important;padding:0!important;background:#fff!important;display:block!important}
+  .paper{width:100%!important;max-width:none!important;height:auto!important;min-height:auto!important;margin:0!important;padding:8mm!important;box-shadow:none!important;border:0!important;border-radius:0!important}
+}
 </style>
 <style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style><style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style>
 <!-- Supabase Authentication -->
@@ -45,6 +100,81 @@ textarea{min-height:62px;resize:vertical}
   const SUPABASE_URL = "https://mbnxmwpvkzwgefkcyddp.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__m_yjde1ILHedwBG1-Ej9A_hUjr06RB";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+</script>
+<style>
+.curriculum-row{align-items:flex-start}.curriculum-status{padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px dashed #cbd5e1;margin-top:6px}.session-meta-editor{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;margin:8px 0 10px;padding:10px;background:#f8fafc;border:1px solid #dbe3ee;border-radius:10px}.session-meta-print td{background:#f8fafc;font-size:.76rem;font-weight:600}.ilaw-modal{position:fixed;inset:0;z-index:25000;background:rgba(8,28,56,.62);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}.ilaw-modal.show{display:flex}.ilaw-modal-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dbe3ee;border-radius:18px;padding:20px;box-shadow:0 24px 80px rgba(5,25,55,.35)}.print-card{width:min(780px,96vw)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px}.modal-head h2{margin:0 0 4px;color:#173f78}.modal-head p{margin:0;color:#64748b;font-size:.82rem}.modal-x{border:0;background:#eef2f7;color:#334155;border-radius:10px;width:34px;height:34px;font-size:22px;cursor:pointer}.print-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.orientation-pills{display:flex;gap:8px}.orientation-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #cbd5e1;background:#f8fafc;border-radius:11px;padding:12px;cursor:pointer}.orientation-pill input{width:auto}.print-preview-note{margin-top:15px;padding:11px 12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a5f}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:18px}.pref-section{border:1px solid #e2e8f0;border-radius:12px;padding:13px;margin-bottom:12px;background:#fbfdff}.pref-section h3{margin:0 0 10px;color:#173f78;font-size:.9rem}@media(max-width:700px){.session-meta-editor,.print-grid{grid-template-columns:1fr}.orientation-pills{flex-direction:column}}@media print{.ilaw-modal{display:none!important}.session-meta-print td{background:#fff!important}}</style>
+
+<style id="ilaw-v8-reflection-lines-clean">
+.print-reflection-lines{display:flex;flex-direction:column;gap:7px;margin:2px 0}
+.print-reflection-lines>div{display:grid;grid-template-columns:78px 1fr;align-items:end;gap:8px;min-height:20px}
+.print-reflection-lines strong{font-size:.78rem;white-space:nowrap}
+.print-reflection-lines span{display:block;height:15px;border-bottom:1px solid #777}
+@media print{
+ .print-reflection-lines{gap:9px}
+ .print-reflection-lines>div{min-height:20px}
+ .print-reflection-lines span{height:15px;border-bottom:1px solid #555}
+}
+</style>
+
+
+<script id="ilaw-v8-direct-pdf-libs">
+(function(){
+  function load(src){
+    return new Promise(function(resolve,reject){
+      var s=document.createElement("script");
+      s.src=src;
+      s.onload=resolve;
+      s.onerror=function(){reject(new Error("Unable to load PDF component: "+src));};
+      document.head.appendChild(s);
+    });
+  }
+  window.ILAW_loadDirectPDF = async function(){
+    if(window.jspdf && window.html2canvas) return true;
+    if(!window.jspdf) await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    if(!window.html2canvas) await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    return !!(window.jspdf && window.html2canvas);
+  };
+})();
+</script>
+
+<style id="ilaw-v8-print-logo-cleanup">
+@media print{
+  #ilawLogoModule,.ilaw-logo-module,#dashboardLogo,.logo-preview,.toolbar,.orientation-control{
+    display:none!important;
+  }
+}
+</style>
+<script id="ilaw-v8-print-date-time-fix">
+(function(){
+  function fmtTime(v){
+    if(!v)return "";
+    var p=String(v).split(":");
+    if(p.length<2)return v;
+    var h=parseInt(p[0],10), m=p[1], ap=h>=12?"PM":"AM";
+    h=h%12; if(h===0)h=12;
+    return h+":"+m+" "+ap;
+  }
+  function fmtDate(v){
+    if(!v)return "";
+    var d=new Date(v+"T00:00:00");
+    if(isNaN(d.getTime()))return v;
+    return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  }
+  window.ensurePrintSessionDateTimes=function(){
+    var days=["mon","tue","wed","thu"];
+    days.forEach(function(day){
+      var cell=document.getElementById("pv_"+day+"_meta");
+      if(!cell)return;
+      var st=window.appState||{};
+      var d=(st.matrix&&st.matrix[day])||{};
+      var date=fmtDate(d.date), tin=fmtTime(d.timeIn), tout=fmtTime(d.timeOut);
+      var out="";
+      if(date)out+="Date: "+date;
+      if(tin||tout)out+=(out?"<br>":"")+"Time: "+(tin||"")+" - "+(tout||"");
+      cell.innerHTML=out;
+    });
+  };
+})();
 </script>
 </head>
 <body class="auth-locked">
@@ -72,6 +202,83 @@ body.auth-locked > *:not(#authGate){display:none!important}
   </div>
 </div>
 
+
+
+<script>
+/* V7 Studio button handlers — additive patch; existing generator/auth code remains unchanged. */
+function unlockApp(){
+  const screen=document.getElementById("lockScreen");
+  const input=document.getElementById("unlockPassword");
+  const status=document.getElementById("unlockStatus");
+  if(!screen)return;
+  const saved=localStorage.getItem("ilaw_local_lock_pin");
+  if(!saved){
+    const pin=prompt("Create a local lock PIN (4–8 digits). This PIN is only for locking this browser session.");
+    if(!pin||!/^[0-9]{4,8}$/.test(pin)){
+      if(status)status.textContent="Use a 4–8 digit PIN.";
+      return;
+    }
+    localStorage.setItem("ilaw_local_lock_pin",pin);
+  }
+  const value=(input?.value||"").trim();
+  if(value!==localStorage.getItem("ilaw_local_lock_pin")){
+    if(status)status.textContent="❌ Incorrect PIN.";
+    return;
+  }
+  screen.style.display="none";
+  document.body.classList.remove("app-locked");
+  if(input)input.value="";
+  if(status)status.textContent="";
+}
+
+function lockApp(){
+  const screen=document.getElementById("lockScreen");
+  const input=document.getElementById("unlockPassword");
+  const status=document.getElementById("unlockStatus");
+  if(!screen)return;
+  if(!localStorage.getItem("ilaw_local_lock_pin")){
+    const pin=prompt("Create a local lock PIN first (4–8 digits).");
+    if(!pin||!/^[0-9]{4,8}$/.test(pin)){alert("Lock PIN must contain 4–8 digits.");return;}
+    localStorage.setItem("ilaw_local_lock_pin",pin);
+  }
+  screen.style.display="flex";
+  document.body.classList.add("app-locked");
+  if(input)input.value="";
+  if(status)status.textContent="";
+  setTimeout(()=>input?.focus(),50);
+}
+
+function openSettings(){const m=$("preferencesModal");if(!m)return;const p=getPrintPrefs();$("prefPaperSize").value=p.size;$("prefOrientation").value=p.orientation;$("prefStatus").textContent="";$("newLockPin").value="";$("confirmLockPin").value="";m.classList.add("show");m.setAttribute("aria-hidden","false")}
+function closePreferences(){const m=$("preferencesModal");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true")}}
+function savePreferences(){const size=$("prefPaperSize")?.value||"a4",orientation=$("prefOrientation")?.value||"landscape";try{localStorage.setItem("ilaw_print_size",size);localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}$("prefStatus").textContent="✅ Preferences saved."}
+function saveLockPinFromPreferences(){const pin=$("newLockPin")?.value.trim()||"",cp=$("confirmLockPin")?.value.trim()||"";if(!/^[0-9]{4,8}$/.test(pin))return $("prefStatus").textContent="❌ PIN must contain 4–8 digits.";if(pin!==cp)return $("prefStatus").textContent="❌ PIN confirmation does not match.";localStorage.setItem("ilaw_local_lock_pin",pin);$("newLockPin").value="";$("confirmLockPin").value="";$("prefStatus").textContent="✅ Lock PIN updated."}
+
+function copyCurrentToNext(){
+  const order=["mon","tue","wed","thu"];
+  const i=order.indexOf(currentDay);
+  if(i<0||i===order.length-1){alert("Session 4 is the last session; there is no next session.");return;}
+  const next=order[i+1];
+  appState.matrix[next]={...appState.matrix[currentDay]};
+  save();
+  switchDay(next,document.getElementById("tab-"+next));
+  render();
+  const label={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"};
+  const st=document.getElementById("aiStatus");
+  if(st)st.textContent="✅ "+label[currentDay]+" copied to "+label[next]+".";
+}
+
+function clearCurrentSession(){
+  const label={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay]||"current session";
+  if(!confirm("Clear all content in "+label+"?"))return;
+  appState.matrix[currentDay]={pre:"",lead:"",resources:"",integration:""};
+  save();
+  switchDay(currentDay,document.getElementById("tab-"+currentDay));
+  render();
+  const st=document.getElementById("aiStatus");
+  if(st)st.textContent="🧹 "+label+" cleared.";
+}
+
+</script>
 
 <!-- V5.4 LOGO MODULE -->
 <style>
@@ -142,18 +349,20 @@ body.auth-locked > *:not(#authGate){display:none!important}
   </div>
 </div>
 
+<div id="printCenter" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card print-card"><div class="modal-head"><div><h2>🖨 Print Center</h2><p>Choose paper size and orientation, then use the browser printer to Print or Save as PDF.</p></div><button type="button" class="modal-x" onclick="closePrintCenter()">×</button></div><div class="print-grid"><div><label>Paper Size</label><select id="paperSizeSelect"><option value="letter">Short / Letter — 8.5 × 11 in</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4 — 210 × 297 mm</option><option value="a3">A3 — 297 × 420 mm</option><option value="a5">A5 — 148 × 210 mm</option><option value="b4">B4 — 250 × 353 mm</option><option value="b5">B5 — 176 × 250 mm</option><option value="tabloid">Tabloid — 11 × 17 in</option><option value="executive">Executive — 7.25 × 10.5 in</option><option value="statement">Statement — 5.5 × 8.5 in</select></div><div><label>Orientation</label><div class="orientation-pills"><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="portrait"><span>▯ Portrait</span></label><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="landscape"><span>▭ Landscape</span></label></div></div></div><div class="print-preview-note"><strong>Preview:</strong> <span id="printSummary">A4 • Landscape</span></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePrintCenter()">Cancel</button><button type="button" class="btn green" onclick="printFromCenter('print')">🖨 Print</button></div></div></div>
+<div id="preferencesModal" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card"><div class="modal-head"><div><h2>⚙ Preferences</h2><p>Manage print defaults and local workspace lock.</p></div><button type="button" class="modal-x" onclick="closePreferences()">×</button></div><div class="pref-section"><h3>Print Defaults</h3><div class="row"><div><label>Default Paper Size</label><select id="prefPaperSize"><option value="letter">Short / Letter</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4</option><option value="a3">A3</option><option value="a5">A5</option><option value="b4">B4</option><option value="b5">B5</option><option value="tabloid">Tabloid</option><option value="executive">Executive</option><option value="statement">Statement</option></select></div><div><label>Default Orientation</label><select id="prefOrientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div></div><div class="pref-section"><h3>Local Workspace Lock</h3><div class="row"><div><label>New PIN</label><input id="newLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits"></div><div><label>Confirm PIN</label><input id="confirmLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat PIN"></div></div><button type="button" class="btn orange" onclick="saveLockPinFromPreferences()">🔐 Update Lock PIN</button></div><div id="prefStatus" class="status"></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePreferences()">Close</button><button type="button" class="btn primary" onclick="savePreferences()">💾 Save Preferences</button></div></div></div>
 <header class="header">
-  <h1>ILAW Teacher Suite V7 — Studio</h1>
+  <h1>ILAW Teacher Suite V8 — Studio</h1>
   <div class="toolbar">
     <select id="langSelect" onchange="changeLanguage()" style="width:auto">
-      <option value="en">English</option><option value="fil">Filipino</option>
+      <option value="en">English</option><option value="fil">Tagalog</option>
     </select>
-    <button class="btn green" data-i18n="print" onclick="window.print()">🖨 Print/PDF</button>
-    <button class="btn gray" data-i18n="export" onclick="exportJSON()">Export</button>
-    <span id="accountBadge">Not signed in</span>
-    <button class="btn orange" data-i18n="lock" onclick="lockApp()">🔒 Lock</button>
-    <button class="btn gray" data-i18n="settings" onclick="openSettings()">⚙ Settings</button>
-    <button class="btn red" data-i18n="logout" onclick="signOutTeacher()">Logout</button>
+    <button class="btn green" onclick="openPrintCenter()">🖨 Print/PDF</button>
+    <button class="btn green" onclick="savePDF()">💾 Download PDF</button>
+<span id="accountBadge">Not signed in</span>
+    <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
+    <button class="btn gray" onclick="openSettings()">⚙ Preferences</button>
+    <button class="btn red" onclick="signOutTeacher()">Logout</button>
   </div>
 </header>
 
@@ -172,7 +381,7 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
   <div class="row">
     <div>
-      <label data-i18n="subjectGrade">Subject &amp; Grade</label>
+      <label>Subject &amp; Grade</label>
       <select id="aiSubject" onchange="subjectChanged()"><option value="">Select subject...</option></select>
     </div>
     <div>
@@ -180,13 +389,20 @@ body.auth-locked > *:not(#authGate){display:none!important}
       <select id="mapehComponent" onchange="mapehComponentChanged()"><option value="">Select component...</option><option>Music</option><option>Arts</option><option>PE</option><option>Health</option></select>
     </div>
   </div>
+  <div class="row curriculum-row">
+    <div><label>School Year</label><select id="schoolYear" onchange="curriculumContextChanged()"><option value="2026-2027">2026–2027</option><option value="2027-2028">2027–2028</option><option value="2028-2029">2028–2029</option></select></div>
+    <div><label>Term</label><select id="academicTerm" onchange="curriculumContextChanged()"><option value="Term 1">Term 1</option><option value="Term 2">Term 2</option><option value="Term 3">Term 3</option></select></div>
+    <div><label>Curriculum Basis</label><input id="curriculumVersion" readonly placeholder="Auto-detected from grade + school year"></div>
+  </div>
+  <div class="row"><div><label>BOW Item / Competency</label><textarea id="bowItem" rows="2" placeholder="Paste or select the applicable BOW competency/item for this term."></textarea></div><div><label>BOW Reference / Source</label><input id="bowReference" placeholder="e.g. DepEd BOW / MELCs / MATATAG CG"></div></div>
+  <div id="curriculumStatus" class="small curriculum-status">Curriculum basis will be detected automatically.</div>
   <div class="row">
     <div>
-      <label data-i18n="topic">Subtopic</label>
+      <label>Subtopic</label>
       <select id="aiTopic" onchange="topicChanged()"><option value="">Select subtopic...</option><option value="__custom">Custom Subtopic...</option></select>
     </div>
     <div>
-      <label data-i18n="lessonTitle">Exact Lesson Title</label>
+      <label>Exact Lesson Title</label>
       <input id="aiLessonTitle" placeholder="The generator will follow this exact title" oninput="aiLessonTitleChanged()">
     </div>
   </div>
@@ -222,32 +438,24 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
 <h3>Lesson Information</h3>
 <div class="row">
-  <div><label data-i18n="teacherName">Teacher Name</label><input id="teacherName" oninput="updateState()"></div>
-  <div><label data-i18n="teacherTitle">Teacher Title</label><input id="teacherTitle" oninput="updateState()"></div>
+  <div><label>Teacher Name</label><input id="teacherName" oninput="updateState()"></div>
+  <div><label>Teacher Title</label><input id="teacherTitle" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label data-i18n="schoolName">School Name</label><input id="schoolName" oninput="updateState()"></div>
-  <div><label data-i18n="schoolAddress">School Address</label><input id="schoolAddress" oninput="updateState()"></div>
+  <div><label>School Name</label><input id="schoolName" oninput="updateState()"></div>
+  <div><label>School Address</label><input id="schoolAddress" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label data-i18n="learningArea">Learning Area / Subject</label><input id="subject" oninput="updateState()"></div>
-  <div><label data-i18n="gradeSection">Grade &amp; Section</label><input id="gradeSection" oninput="updateState()"></div>
+  <div><label>Learning Area / Subject</label><input id="subject" oninput="updateState()"></div>
+  <div><label>Grade &amp; Section</label><input id="gradeSection" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label data-i18n="sessions">No. of Sessions</label><input id="sessions" type="number" min="1" max="4" value="1" oninput="updateState()"><div class="small" id="sessionMinutesHint">1 session = 60 minutes</div></div>
-  <div><label data-i18n="term">Term</label><select id="term" onchange="updateState()"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select></div>
-</div>
-<div class="row">
-  <div><label data-i18n="date">Date</label><input id="planDate" type="date" oninput="updateState()"></div>
-  <div><label data-i18n="termWeek">Term Week</label><input id="termWeek" placeholder="e.g. Week 7" oninput="updateState()"></div>
-</div>
-<div class="row">
+  <div><label>Term / Week Reference</label><input id="termWeek" oninput="updateState()"></div>
   <div><label>Lesson Plan Format</label><input id="planFormat" value="ILAW Matrix" oninput="updateState()"></div>
-  <div></div>
 </div>
-<label data-i18n="lessonTitle">Lesson Title</label><input id="lessonTitle" oninput="updateState()">
-<label data-i18n="references">References</label><input id="references" oninput="updateState()">
-<label data-i18n="aiDeclaration">Declaration of AI Use</label><textarea id="aiDeclaration" oninput="updateState()"></textarea>
+<label>Lesson Title</label><input id="lessonTitle" oninput="updateState()">
+<label>References</label><input id="references" oninput="updateState()">
+<label>Declaration of AI Use</label><textarea id="aiDeclaration" oninput="updateState()"></textarea>
 <div class="tool-box"><h3>✍️ Signatories</h3><div class="small">Edit signatories here. Only the completed signatures appear in the lesson plan and Print/PDF.</div><div class="small">Set the role, name, and designation for each signatory. Add or remove rows depending on the school.</div><div id="signatoryEditor" class="sig-editor"></div><button type="button" class="btn green" onclick="addSignatory()">＋ Add Signatory</button></div>
 
 <hr>
@@ -268,6 +476,7 @@ body.auth-locked > *:not(#authGate){display:none!important}
   <button class="tab" id="tab-thu" onclick="switchDay('thu',this)">Session 4</button>
 </div>
 <div id="dayLabel">SESSION 1</div>
+<div class="session-meta-editor"><div><label>Session Date</label><input type="date" id="sessionDateInput" onchange="updateDayData()"></div><div><label>Time In</label><input type="time" id="sessionTimeIn" onchange="updateDayData()"></div><div><label>Time Out</label><input type="time" id="sessionTimeOut" onchange="updateDayData()"></div></div>
 <label>Pre-Lesson</label><textarea id="preLessonInput" oninput="updateDayData()"></textarea>
 <label>Flow / Activities &amp; Procedures</label><textarea id="leadInput" oninput="updateDayData()"></textarea>
 <label>Learning Resources</label><textarea id="resourcesInput" oninput="updateDayData()"></textarea>
@@ -327,10 +536,11 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
   <table class="doc-table">
     <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle">Levels of Classification and Biological Taxonomy</td></tr>
-    <tr><td style="font-weight:bold">Learning Area</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher"></td></tr>
-    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">No. of Sessions</td><td id="pvSessions">1 session (60 minutes)</td></tr>
-    <tr><td style="font-weight:bold">Term</td><td id="pvTerm">Term 1</td><td style="font-weight:bold">Term Week</td><td id="pvTermWeek"></td></tr>
-    <tr><td style="font-weight:bold">Date</td><td colspan="3" id="pvPlanDate"></td></tr>
+    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher"></td></tr>
+    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">Term / Week</td><td id="pvTermWeek"></td></tr>
+    <tr><td style="font-weight:bold">Curriculum Basis</td><td id="pvCurriculumVersion"></td><td style="font-weight:bold">Term</td><td id="pvAcademicTerm"></td></tr>
+    <tr><td style="font-weight:bold">BOW Item / Competency</td><td colspan="3" id="pvBowItem" style="white-space:pre-wrap"></td></tr>
+    <tr><td style="font-weight:bold">BOW Reference</td><td colspan="3" id="pvBowReference"></td></tr>
     <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
     <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
   </tbody></table>
@@ -346,7 +556,7 @@ body.auth-locked > *:not(#authGate){display:none!important}
   <div class="banner">LEARNING EXPERIENCES <span class="sub">A learning experience is like a thoughtfully designed journey.</span></div>
   <table class="doc-table">
     <thead><tr><th>Learning Experience</th><th>Session 1</th><th>Session 2</th><th>Session 3</th><th>Session 4</th></tr></thead>
-    <tbody>
+    <tbody><tr class="session-meta-print"><td style="font-weight:bold">Date / Time</td><td id="pv_mon_meta"></td><td id="pv_tue_meta"></td><td id="pv_wed_meta"></td><td id="pv_thu_meta"></td></tr>
       <tr><td style="font-weight:bold">Pre-Lesson</td><td id="pv_mon_pre">Conduct a 5-minute activity called 'Organize the Supermarket' where students group 10 everyday items into logical categories and explain their rationale.</td><td id="pv_tue_pre">Quick recall game: 'Taxonomic Ladder' where student representatives arrange jumbled cards of the taxonomic levels from broadest to most specific.</td><td id="pv_wed_pre">Present pictures of two similar-looking local plants (e.g., Sampaguita and Chichirica) and ask students how a scientist would distinguish them.</td><td id="pv_thu_pre">Peer check: Groups exchange and verify their completed dichotomous key identification worksheets from Wednesday.</td></tr>
       <tr><td style="font-weight:bold">Flow</td><td id="pv_mon_lead" style="white-space:pre-wrap">Introduce Taxonomy and Carolus Linnaeus. Discuss the concept of classifying biological diversity and present the 8 hierarchical levels (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) using the mnemonic 'Dear King Philip Came Over For Good Soup'.</td><td id="pv_tue_lead" style="white-space:pre-wrap">Discuss Binomial Nomenclature rules (Genus capitalized, species lowercase, italicized or underlined). Guide students in writing scientific names of local organisms such as Panthera pardus, Oryza sativa, and Jasminum sambac.</td><td id="pv_wed_lead" style="white-space:pre-wrap">Introduce simple Dichotomous Keys. Guide student groups in navigating a 4-step dichotomous key to identify five Philippine endemic organisms (e.g., Tamaraw, Philippine Eagle, Tarsier, Milkfish, Narra tree). Safety rule: Handle specimen cards carefully and maintain orderly group discussion.</td><td id="pv_thu_lead" style="white-space:pre-wrap">Facilitate a class synthesis connecting taxonomy to biodiversity conservation. Administer a 10-item multiple-choice formative quiz covering taxonomic ranks, scientific naming, and dichotomous key usage.</td></tr>
       <tr><td style="font-weight:bold">Learning Resources</td><td id="pv_mon_res">Taxonomy graphic organizer, Manila paper, visual diagram of taxonomic hierarchy.</td><td id="pv_tue_res">Binomial nomenclature rule chart, practice worksheets, whiteboard markers.</td><td id="pv_wed_res">Dichotomous key activity sheets, picture cards of Philippine flora and fauna.</td><td id="pv_thu_res">Formative assessment sheets, summary slides/visual chart.</td></tr>
@@ -358,12 +568,14 @@ body.auth-locked > *:not(#authGate){display:none!important}
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
   <div class="banner">WAYS FORWARD</div>
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
-  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" class="print-reflection-lines">
-    <div><b>Session 1:</b><span></span></div>
-    <div><b>Session 2:</b><span></span></div>
-    <div><b>Session 3:</b><span></span></div>
-    <div><b>Session 4:</b><span></span></div>
-  </td></tr></tbody></table>
+  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap">
+<div class="print-reflection-lines">
+  <div><strong>Session 1</strong><span></span></div>
+  <div><strong>Session 2</strong><span></span></div>
+  <div><strong>Session 3</strong><span></span></div>
+  <div><strong>Session 4</strong><span></span></div>
+</div>
+</td></tr></tbody></table>
 
   <div id="pvSignatures" class="signatures"></div>
 </div>
@@ -372,45 +584,56 @@ body.auth-locked > *:not(#authGate){display:none!important}
 
 <script>
 const SUBJECT_TOPICS={
- "Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
- "Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
- "Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
- "Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
- "Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
- "Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
- "Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
- "Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
- "English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
- "English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
- "English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
- "English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
- "Filipino 7":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
- "Filipino 8":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
- "Filipino 9":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
- "Filipino 10":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
- "Araling Panlipunan 7":["Kasaysayan","Heograpiya","Kultura","Kabihasnan","Pamahalaan"],
- "Araling Panlipunan 8":["Kasaysayan","Heograpiya","Ekonomiks","Kultura","Pamahalaan"],
- "Araling Panlipunan 9":["Ekonomiks","Produksyon","Pagkonsumo","Pamilihan","Pamahalaan"],
- "Araling Panlipunan 10":["Mga Isyung Panlipunan","Ekonomiks","Politika","Karapatang Pantao","Pandaigdigang Isyu"],
- "EsP 7":["Pagkilala sa Sarili","Pakikipagkapwa","Pananagutan","Pagpapahalaga","Pagpapasya"],
- "EsP 8":["Pagpapakatao","Pakikipag-ugnayan","Pagpapasya","Pananagutan","Pagpapahalaga"],
- "EsP 9":["Moral na Pagpapasya","Kabutihang Panlahat","Karapatan","Paninindigan","Pananagutan"],
- "EsP 10":["Pagpapahalaga sa Buhay","Etika","Moral na Paninindigan","Kabutihang Panlahat","Pananagutang Panlipunan"],
- "TLE/EPP 7":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
- "TLE/EPP 8":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
- "TLE/EPP 9":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
- "TLE/EPP 10":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
- "MAPEH 7":["Music","Arts","Physical Education","Health"],
- "MAPEH 8":["Music","Arts","Physical Education","Health"],
- "MAPEH 9":["Music","Arts","Physical Education","Health"],
- "MAPEH 10":["Music","Arts","Physical Education","Health"],
- "DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
+"Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
+"Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
+"Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
+"Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
+"Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
+"Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
+"Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
+"Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
+"English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
+"English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
+"English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
+"English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
+"Filipino":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+"Araling Panlipunan":["Kasaysayan","Heograpiya","Ekonomiks","Pamahalaan","Kultura"],
+"TLE/EPP 7":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"TLE/EPP 8":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"TLE/EPP 9":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"TLE/EPP 10":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"MAPEH 7":["Music","Arts","Physical Education","Health"],
+"MAPEH 8":["Music","Arts","Physical Education","Health"],
+"MAPEH 9":["Music","Arts","Physical Education","Health"],
+"MAPEH 10":["Music","Arts","Physical Education","Health"],
+"DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
 };
+
 const MAPEH_SUBTOPICS={
-  Music:{"MAPEH 7":["Rhythm and Meter","Melody and Texture","Philippine Folk Music","Traditional Philippine Instruments"],"MAPEH 8":["Music of Southeast Asia","Vocal and Instrumental Music","Musical Forms","Performance Practice"],"MAPEH 9":["Music of the Philippines","Western Music","20th Century Music","Music Appreciation"],"MAPEH 10":["Contemporary Music","Popular Music","Philippine Contemporary Composers","Music Production"]},
-  Arts:{"MAPEH 7":["Elements of Art","Principles of Design","Philippine Indigenous Arts","Drawing and Visual Composition"],"MAPEH 8":["Arts of Southeast Asia","Painting and Sculpture","Crafts and Design","Cultural Art Appreciation"],"MAPEH 9":["Philippine Art History","Modern Art","Visual Arts Techniques","Art Criticism"],"MAPEH 10":["Contemporary Philippine Arts","Media and Technology in Art","Public and Community Art","Art Production"]},
-  PE:{"MAPEH 7":["Physical Fitness","Locomotor Skills","Team Sports","Rhythmic Activities"],"MAPEH 8":["Fitness Training","Individual Sports","Team Sports","Dance and Recreation"],"MAPEH 9":["Physical Fitness Assessment","Sports Skills","Recreational Activities","Dance"],"MAPEH 10":["Fitness and Wellness","Sports and Games","Dance","Lifetime Physical Activities"]},
-  Health:{"MAPEH 7":["Personal Health","Nutrition","Mental and Emotional Health","Safety and First Aid"],"MAPEH 8":["Family Health","Adolescent Health","Disease Prevention","Consumer Health"],"MAPEH 9":["Community Health","Environmental Health","Health Services","Disease Prevention"],"MAPEH 10":["Health Trends","Global Health","Consumer and Environmental Health","Health Advocacy"]}
+  Music:{
+    "MAPEH 7":["Rhythm and Meter","Melody and Texture","Philippine Folk Music","Traditional Philippine Instruments"],
+    "MAPEH 8":["Music of Southeast Asia","Vocal and Instrumental Music","Musical Forms","Performance Practice"],
+    "MAPEH 9":["Music of the Philippines","Western Music","20th Century Music","Music Appreciation"],
+    "MAPEH 10":["Contemporary Music","Popular Music","Philippine Contemporary Composers","Music Production"]
+  },
+  Arts:{
+    "MAPEH 7":["Elements of Art","Principles of Design","Philippine Indigenous Arts","Drawing and Visual Composition"],
+    "MAPEH 8":["Arts of Southeast Asia","Painting and Sculpture","Crafts and Design","Cultural Art Appreciation"],
+    "MAPEH 9":["Philippine Art History","Modern Art","Visual Arts Techniques","Art Criticism"],
+    "MAPEH 10":["Contemporary Philippine Arts","Media and Technology in Art","Public and Community Art","Art Production"]
+  },
+  PE:{
+    "MAPEH 7":["Physical Fitness","Locomotor Skills","Team Sports","Rhythmic Activities"],
+    "MAPEH 8":["Fitness Training","Individual Sports","Team Sports","Dance and Recreation"],
+    "MAPEH 9":["Physical Fitness Assessment","Sports Skills","Recreational Activities","Dance"],
+    "MAPEH 10":["Fitness and Wellness","Sports and Games","Dance","Lifetime Physical Activities"]
+  },
+  Health:{
+    "MAPEH 7":["Personal Health","Nutrition","Mental and Emotional Health","Safety and First Aid"],
+    "MAPEH 8":["Family Health","Adolescent Health","Disease Prevention","Consumer Health"],
+    "MAPEH 9":["Community Health","Environmental Health","Health Services","Disease Prevention"],
+    "MAPEH 10":["Health Trends","Global Health","Consumer and Environmental Health","Health Advocacy"]
+  }
 };
 function isMapehSubject(s){return /^MAPEH (7|8|9|10)$/.test(s)}
 function mapehComponentChanged(){
@@ -418,31 +641,51 @@ function mapehComponentChanged(){
   if(!t)return;
   const arr=isMapehSubject(subject)&&component?(MAPEH_SUBTOPICS[component]?.[subject]||[]):[];
   t.innerHTML='<option value="">Select subtopic...</option>'+arr.map(x=>`<option>${x}</option>`).join('')+'<option value="__custom">Custom Subtopic...</option>';
-  $("customTopicWrap")?.classList.add('hidden');
+  $("customTopicWrap")?.classList.add("hidden");
 }
-function aiLessonTitleChanged(){const v=$("aiLessonTitle")?.value||"";appState.lessonTitle=v;setVal("lessonTitle",v);save();}
-function generationContext(){return{subject:$("aiSubject")?.value||$("subject")?.value||"",component:$("mapehComponent")?.value||"",subtopic:topicValue(),lessonTitle:$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim()||""};}
-
+function aiLessonTitleChanged(){
+  const v=$("aiLessonTitle")?.value||"";
+  appState.lessonTitle=v;
+  setVal("lessonTitle",v);
+  save();
+}
+function generationContext(){return{subject:$("aiSubject")?.value||$("subject")?.value||"",component:$("mapehComponent")?.value||"",subtopic:topicValue(),lessonTitle:$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim()||"",schoolYear:$("schoolYear")?.value||appState.schoolYear||"2026-2027",academicTerm:$("academicTerm")?.value||appState.academicTerm||"Term 1",curriculumVersion:$("curriculumVersion")?.value||appState.curriculumVersion||"",bowItem:$("bowItem")?.value.trim()||appState.bowItem||"",bowReference:$("bowReference")?.value.trim()||appState.bowReference||""}}
 let currentDay="mon", appLanguage="en", selectedModel=null;
-const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",term:"Term 1",sessions:1,planDate:"",termWeek:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{pre:"",lead:"",resources:"",integration:""},tue:{pre:"",lead:"",resources:"",integration:""},wed:{pre:"",lead:"",resources:"",integration:""},thu:{pre:"",lead:"",resources:"",integration:""}}});
+const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",termWeek:"",academicTerm:"Term 1",schoolYear:"2026-2027",curriculumVersion:"",bowItem:"",bowReference:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},tue:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},wed:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},thu:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""}}});
 let appState=defaultState();
-window.ILAW_applySchoolLogo=function(data){appState.logo=data||"";save();render();};
+function getGradeNumber(){const src=(appState.gradeSection||$("aiSubject")?.value||"").toString();const m=src.match(/(?:Grade|Science|Mathematics|English|Filipino|MAPEH|TLE\/EPP)\s*(7|8|9|10)\b/i);return m?Number(m[1]):null}
+function getCurriculumBasis(grade,sy){sy=String(sy||"2026-2027");if(grade===7||grade===8)return"MATATAG / Revised K–10 Curriculum";if(grade===9)return sy>="2026-2027"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum (transition)";if(grade===10)return sy>="2027-2028"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum / current BOW (transition)";return"Curriculum basis to be verified"}
+function updateCurriculumBasis(saveIt=false){const grade=getGradeNumber(),sy=$("schoolYear")?.value||appState.schoolYear||"2026-2027";appState.schoolYear=sy;appState.curriculumVersion=getCurriculumBasis(grade,sy);if($("curriculumVersion"))$("curriculumVersion").value=appState.curriculumVersion;if($("curriculumStatus"))$("curriculumStatus").textContent=grade?"✓ "+appState.curriculumVersion+" • "+(appState.academicTerm||"Term 1")+" • BOW-driven planning.":"Select a Grade 7–10 subject to detect the curriculum basis.";if(saveIt)save()}
+function normalizeAppState(){const b=defaultState();appState={...b,...appState,matrix:{...b.matrix,...(appState.matrix||{})}};["mon","tue","wed","thu"].forEach(d=>appState.matrix[d]={...b.matrix[d],...(appState.matrix[d]||{})});if(!["Term 1","Term 2","Term 3"].includes(appState.academicTerm))appState.academicTerm="Term 1";if(!appState.schoolYear)appState.schoolYear="2026-2027";updateCurriculumBasis(false)}
+function curriculumContextChanged(){appState.academicTerm=$("academicTerm")?.value||"Term 1";appState.schoolYear=$("schoolYear")?.value||"2026-2027";appState.bowItem=$("bowItem")?.value||"";appState.bowReference=$("bowReference")?.value||"";updateCurriculumBasis(true);render()}
+
 
 const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolName:"ALTAMARINO-CLASIO HIGH SCHOOL",schoolAddress:"Curry, Pili, Camarines Sur",gradeSection:"GRADE 10 - ANDROMEDA",subject:"Science 10",termWeek:"Week 7 - 4 Sessions (240 minutes)",lessonTitle:"Thermal Dynamics of Change: Differentiating Exothermic and Endothermic Chemical Reactions",references:"Science 10 Learner's Material & TG | DepEd MATATAG Science 10 BOW",aiDeclaration:"Generative AI (Gemini) was utilized as a co-creator tool to structure and format the lesson activities into the ILAW framework.",curriculumStandards:"CONTENT STANDARD: Learners demonstrate an understanding of chemical reactions associated with biological and industrial processes affecting life and the environment.\\nPERFORMANCE STANDARD: Learners practice safety measures in handling household chemicals based on knowledge of chemical reactions.",bowCompetency:"Differentiate exothermic and endothermic reactions and explain their applications.",objectives:"1. Knowledge: Differentiate exothermic from endothermic reactions.\\n2. Skills: Measure and record temperature changes.\\n3. Attitude: Value safety and energy efficiency.",learnerContext:"Learners are familiar with heat release but need hands-on measurement to understand heat absorption.",formativeAssessment:"Thermal Reaction Matrix and exit ticket.",extendedLearning:"Investigate instant cold packs and self-heating meal packs used in disaster relief.",matrix:{mon:{pre:"Review prior learning; hot pack vs cold pack mystery.",lead:"Session 1: Introduce thermal energy and energy changes in reactions.",resources:"Thermometers, cups, safe household materials.",integration:"Health, Environmental Science, DRR"},tue:{pre:"Recall yesterday's key idea.",lead:"Session 2: Exothermic vs endothermic reactions and energy diagrams.",resources:"Charts, board, activity sheets.",integration:"Mathematics, Environmental Science"},wed:{pre:"Predict which reaction will warm/cool.",lead:"Session 3: Hands-on temperature investigation and data recording.",resources:"Thermometers, vinegar, baking soda, water, detergent.",integration:"Math, Health, Science Process Skills"},thu:{pre:"Review findings from investigation.",lead:"Session 4: Environmental and industrial applications; formative synthesis.",resources:"Scenario cards, worksheets.",integration:"DRR, Climate, Environmental Science"}}};
 
 function $(id){return document.getElementById(id)}
 function setText(id,v){if($(id))$(id).textContent=v||""}
 function setVal(id,v){if($(id))$(id).value=v??""}
+
+function ensureReflectionTableLines(){
+  const cell=$("pvReflection");
+  if(!cell)return;
+  if(cell.querySelector(".print-reflection-lines"))return;
+  cell.innerHTML='<div class="print-reflection-lines">'+
+    '<div><strong>Session 1</strong><span></span></div>'+
+    '<div><strong>Session 2</strong><span></span></div>'+
+    '<div><strong>Session 3</strong><span></span></div>'+
+    '<div><strong>Session 4</strong><span></span></div>'+
+    '</div>';
+}
+
 function save(){
   const uid=window.ILAW_currentUser?.id;
   if(!uid)return;
   localStorage.setItem("ilaw_v3_state_"+uid,JSON.stringify(appState));
   queueProfileSave();
 }
-function formatSessions(n){const x=Math.max(1,Math.min(4,Number(n)||1));return x+" session"+(x===1?"":"s")+" ("+(x*60)+" minutes)";}
-function formatDate(v){if(!v)return "";const d=new Date(v+"T00:00:00");return d.toLocaleDateString(appLanguage==="fil"?"en-PH":"en-US",{year:"numeric",month:"long",day:"numeric"});}
 function updateState(){
-["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","sessions","planDate","term","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>appState[k]=$(k).value);
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","bowItem","bowReference"].forEach(k=>{if($(k))appState[k]=$(k).value});appState.academicTerm=$("academicTerm")?.value||appState.academicTerm||"Term 1";appState.schoolYear=$("schoolYear")?.value||appState.schoolYear||"2026-2027";updateCurriculumBasis(false);
 if($("mapehComponent"))appState.mapehComponent=$("mapehComponent").value;
 if($("aiTopic"))appState.subtopic=$("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim();
 if($("aiLessonTitle"))appState.lessonTitle=$("aiLessonTitle").value.trim()||appState.lessonTitle;
@@ -459,9 +702,8 @@ function addSignatory(){appState.signatories=normalizeSignatories(appState.signa
 function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
 function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
 function render(){
-  if(!appState.logo){try{const savedLogo=localStorage.getItem("ilaw_v54_school_logo");if(savedLogo)appState.logo=savedLogo}catch(_){}}
-setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvSessions",formatSessions(appState.sessions));setText("pvTerm",appState.term||"Term 1");setText("pvPlanDate",formatDate(appState.planDate));setText("pvTermWeek",appState.termWeek);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);
-["mon","tue","wed","thu"].forEach(d=>{setText("pv_"+d+"_pre",appState.matrix[d].pre);setText("pv_"+d+"_lead",appState.matrix[d].lead);setText("pv_"+d+"_res",appState.matrix[d].resources);setText("pv_"+d+"_integ",appState.matrix[d].integration)});
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvAcademicTerm",appState.academicTerm);setText("pvCurriculumVersion",appState.curriculumVersion);setText("pvBowItem",appState.bowItem||appState.bowCompetency);setText("pvBowReference",appState.bowReference);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);ensureReflectionTableLines();
+["mon","tue","wed","thu"].forEach(d=>{const m=appState.matrix[d]||{};setText("pv_"+d+"_pre",m.pre);setText("pv_"+d+"_lead",m.lead);setText("pv_"+d+"_res",m.resources);setText("pv_"+d+"_integ",m.integration);setText("pv_"+d+"_meta",[m.date||"",m.timeIn&&m.timeOut?m.timeIn+" – "+m.timeOut:(m.timeIn||m.timeOut||"")].filter(Boolean).join(" • "))});
 appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
 const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
 const dl=$("dashboardLogo");if(appState.logo){dl.src=appState.logo;dl.style.display="block"}else dl.style.display="none";
@@ -471,9 +713,16 @@ $("reflectionWrap").classList.toggle("locked",!appState.fridayEnabled);
 loadReflectionParts();
 }
 function syncForm(){
-["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","sessions","planDate","term","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext"].forEach(k=>setVal(k,appState[k]));
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","bowItem","bowReference"].forEach(k=>setVal(k,appState[k]));setVal("academicTerm",appState.academicTerm||"Term 1");setVal("schoolYear",appState.schoolYear||"2026-2027");setVal("curriculumVersion",appState.curriculumVersion||"");
 setVal("assessInput",appState.formativeAssessment);setVal("wayInput",appState.extendedLearning);setVal("fridayReflection",appState.fridayReflection);
-populateSubjects();$("aiSubject").value=appState.subject||"";subjectChanged();if(isMapehSubject(appState.subject)&&$("mapehComponent")){$("mapehComponent").value=appState.mapehComponent||"";mapehComponentChanged();$("aiTopic").value=appState.subtopic||"";}if($("aiLessonTitle"))$("aiLessonTitle").value=appState.lessonTitle||"";switchDay(currentDay,$("tab-"+currentDay));render();
+populateSubjects();$("aiSubject").value=appState.subject||"";subjectChanged();
+if(isMapehSubject(appState.subject)&&$("mapehComponent")){
+  $("mapehComponent").value=appState.mapehComponent||"";
+  mapehComponentChanged();
+  $("aiTopic").value=appState.subtopic||"";
+}
+if($("aiLessonTitle"))$("aiLessonTitle").value=appState.lessonTitle||"";
+switchDay(currentDay,$("tab-"+currentDay));render();
 }
 function populateSubjects(){let s=$("aiSubject");s.innerHTML='<option value="">Select subject...</option>'+Object.keys(SUBJECT_TOPICS).map(x=>`<option>${x}</option>`).join("")+'<option value="Other">Other / Custom</option>'}
 function subjectChanged(){
@@ -483,27 +732,45 @@ function subjectChanged(){
     t.innerHTML='<option value="">Select subtopic...</option><option value="__custom">Custom Subtopic...</option>';
   }else{
     $("mapehComponent") && ($("mapehComponent").value="");
-    t.innerHTML='<option value="">Select topic...</option>'+((SUBJECT_TOPICS[s]||[]).map(x=>`<option>${x}</option>`).join(''))+'<option value="__custom">Custom Topic...</option>';
+    t.innerHTML='<option value="">Select topic...</option>'+((SUBJECT_TOPICS[s]||[]).map(x=>`<option>${x}</option>`).join(""))+'<option value="__custom">Custom Topic...</option>';
   }
   if(s&&s!=="Other"){appState.subject=s;setVal("subject",s)}
   $("customTopicWrap").classList.add("hidden");
   updateState();
 }
-function topicChanged(){const custom=$("aiTopic").value==="__custom";$("customTopicWrap").classList.toggle("hidden",!custom)}
+function topicChanged(){let custom=$("aiTopic").value==="__custom";$("customTopicWrap").classList.toggle("hidden",!custom)}
 function topicValue(){return $("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim()}
-function switchDay(d,btn){currentDay=d;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");setText("dayLabel","SESSION "+({mon:1,tue:2,wed:3,thu:4}[d]));setVal("preLessonInput",appState.matrix[d].pre);setVal("leadInput",appState.matrix[d].lead);setVal("resourcesInput",appState.matrix[d].resources);setVal("integrationInput",appState.matrix[d].integration)}
-function updateDayData(){appState.matrix[currentDay]={pre:$("preLessonInput").value,lead:$("leadInput").value,resources:$("resourcesInput").value,integration:$("integrationInput").value};save();render()}
+function switchDay(d,btn){currentDay=d;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");const m=appState.matrix[d]||{};setText("dayLabel","SESSION "+({mon:1,tue:2,wed:3,thu:4}[d]));setVal("sessionDateInput",m.date);setVal("sessionTimeIn",m.timeIn);setVal("sessionTimeOut",m.timeOut);setVal("preLessonInput",m.pre);setVal("leadInput",m.lead);setVal("resourcesInput",m.resources);setVal("integrationInput",m.integration)}
+function updateDayData(){const m=appState.matrix[currentDay]||{};appState.matrix[currentDay]={...m,date:$("sessionDateInput")?.value||"",timeIn:$("sessionTimeIn")?.value||"",timeOut:$("sessionTimeOut")?.value||"",pre:$("preLessonInput").value,lead:$("leadInput").value,resources:$("resourcesInput").value,integration:$("integrationInput").value};save();render()}
 function updateFridayReflection(){appState.fridayReflection=$("fridayReflection").value;save();render()}
 function toggleReflection(){appState.fridayEnabled=$("fridayCheck").checked;save();render()}
-function loadLogo(e){const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{appState.logo=r.result;try{localStorage.setItem("ilaw_v54_school_logo",r.result)}catch(_){ }save();render()};r.readAsDataURL(f)}
-function removeLogo(){appState.logo="";$("logoFile").value="";try{localStorage.removeItem("ilaw_v54_school_logo")}catch(_){ }save();render()}
-function loadDefaultSample(){appState={...defaultState(),...sample};save();syncForm()}
-function exportJSON(){const a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
-function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();try{localStorage.removeItem("ilaw_v54_school_logo")}catch(_){ }save();syncForm()}
-function changeLanguage(){appLanguage=$("langSelect").value;applyLanguage();save()}
-function applyLanguage(){const fil=appLanguage==="fil";const labels={print:fil?"Print/PDF":"Print/PDF",export:fil?"Export":"Export",lock:fil?"I-lock":"Lock",settings:fil?"Settings":"Settings",logout:fil?"Logout":"Logout",subjectGrade:fil?"Subject at Grade":"Subject & Grade",topic:fil?"Subtopic":"Subtopic",lessonTitle:fil?"Exact Lesson Title":"Exact Lesson Title",teacherName:fil?"Pangalan ng Guro":"Teacher Name",teacherTitle:fil?"Tungkulin ng Guro":"Teacher Title",schoolName:fil?"Pangalan ng Paaralan":"School Name",schoolAddress:fil?"Address ng Paaralan":"School Address",learningArea:fil?"Learning Area / Subject":"Learning Area / Subject",gradeSection:fil?"Baitang at Seksyon":"Grade & Section",sessions:fil?"Bilang ng Sessions":"No. of Sessions",term:fil?"Termino":"Term",date:fil?"Petsa":"Date",termWeek:fil?"Term Week":"Term Week",references:fil?"Mga Sanggunian":"References",aiDeclaration:fil?"Pahayag sa Paggamit ng AI":"Declaration of AI Use"};document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(labels[k])el.textContent=labels[k]});}
-function loadReflectionParts(){const map={reflectionProgress:appState.reflectionProgress||"",reflectionWorked:appState.reflectionWorked||"",reflectionChallenges:appState.reflectionChallenges||"",reflectionAdjustments:appState.reflectionAdjustments||"",reflectionInnovation:appState.reflectionInnovation||"",fridayReflection:appState.fridayReflection||""};Object.keys(map).forEach(id=>{const e=$(id);if(e)e.value=map[id]})}
+function loadLogo(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{appState.logo=r.result;save();render()};r.readAsDataURL(f)}
+function removeLogo(){appState.logo="";$("logoFile").value="";save();render()}
+function loadDefaultSample(){appState={...defaultState(),...sample};normalizeAppState();save();syncForm()}
+function exportJSON(){let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
+const PAPER_SIZES={letter:{label:"Short / Letter",css:"letter"},longbond:{label:"Long Bond — 8.5 × 13 in",css:"8.5in 13in"},legal:{label:"Legal — 8.5 × 14 in",css:"legal"},a4:{label:"A4",css:"A4"},a3:{label:"A3",css:"A3"},a5:{label:"A5",css:"A5"},b4:{label:"B4",css:"B4"},b5:{label:"B5",css:"B5"},tabloid:{label:"Tabloid",css:"tabloid"},executive:{label:"Executive",css:"7.25in 10.5in"},statement:{label:"Statement",css:"5.5in 8.5in"}};
+function getPrintPrefs(){let size="a4",orientation="landscape";try{size=localStorage.getItem("ilaw_print_size")||size;orientation=localStorage.getItem("ilaw_print_orientation")||orientation}catch(e){}if(!PAPER_SIZES[size])size="a4";if(!["portrait","landscape"].includes(orientation))orientation="landscape";return{size,orientation}}
+function updatePrintSummary(){const size=$("paperSizeSelect")?.value||"a4",orientation=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||"landscape",el=$("printSummary");if(el)el.textContent=(PAPER_SIZES[size]?.label||"A4")+" • "+(orientation==="landscape"?"Landscape":"Portrait")}
+function openPrintCenter(){const m=$("printCenter");if(!m)return window.print();const p=getPrintPrefs();$("paperSizeSelect").value=p.size;const r=document.querySelector('input[name="printOrientationChoice"][value="'+p.orientation+'"]');if(r)r.checked=true;updatePrintSummary();$("paperSizeSelect").onchange=updatePrintSummary;document.querySelectorAll('input[name="printOrientationChoice"]').forEach(x=>x.onchange=updatePrintSummary);m.classList.add("show");m.setAttribute("aria-hidden","false")}
+function closePrintCenter(){const m=$("printCenter");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true")}}
+function printFromCenter(mode){const size=$("paperSizeSelect")?.value||"a4",orientation=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||"landscape",paper=PAPER_SIZES[size]||PAPER_SIZES.a4;try{localStorage.setItem("ilaw_print_size",size);localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}let style=$("ilawPrintOrientationStyle");if(!style){style=document.createElement("style");style.id="ilawPrintOrientationStyle";document.head.appendChild(style)}style.textContent="@page{size:"+paper.css+" "+orientation+";margin:8mm}";closePrintCenter();setTimeout(()=>window.print(),80)}
+function initPrintOrientation(){getPrintPrefs()}
+function savePDF(){openPrintCenter()}
+function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();save();syncForm()}
+function changeLanguage(){appLanguage=$("langSelect").value;save()}
 
+
+function loadReflectionParts(){
+  const map={
+    reflectionProgress:appState.reflectionProgress||"",
+    reflectionWorked:appState.reflectionWorked||"",
+    reflectionChallenges:appState.reflectionChallenges||"",
+    reflectionAdjustments:appState.reflectionAdjustments||"",
+    reflectionInnovation:appState.reflectionInnovation||"",
+    fridayReflection:appState.fridayReflection||""
+  };
+  Object.keys(map).forEach(id=>{const e=$(id);if(e)e.value=map[id]});
+}
 function saveFridayReflection(){
   appState.reflectionProgress=$("reflectionProgress").value;
   appState.reflectionWorked=$("reflectionWorked").value;
@@ -593,9 +860,10 @@ async function generateWithFallback(key,prompt,useSchema=true,responseSchemaOver
   throw Error("The AI server returned an invalid response.");
 }
 function aiPrompt(topic,subject,extra=""){
- const c=generationContext(), exactTitle=c.lessonTitle||topic;
- const hierarchy=c.component?`Component: ${c.component}. Subtopic: ${c.subtopic||"Not specified"}.`:`Topic: ${c.subtopic||topic}.`;
- return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"}. ${hierarchy} The EXACT LESSON TITLE is "${exactTitle}". Treat that exact lesson title as the primary anchor of every section of the generated plan. Do not replace it with a generic topic, do not broaden it, and do not invent a different title. ${extra} Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Return ONLY JSON.`
+  const c=generationContext(), exactTitle=c.lessonTitle||topic;
+  const hierarchy=c.component?`Component: ${c.component}. Subtopic: ${c.subtopic||"Not specified"}.`:`Topic: ${c.subtopic||topic}.`;
+  return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"}. ${hierarchy} The EXACT LESSON TITLE is "${exactTitle}". Treat that exact lesson title as the primary anchor of every section of the generated plan. Do not replace it with a generic topic, do not broaden it, and do not invent a different title. ${extra}
+Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Return ONLY JSON.`
 }
 const schema={type:"OBJECT",properties:{
 lessonTitle:{type:"STRING"},subject:{type:"STRING"},termWeek:{type:"STRING"},references:{type:"STRING"},aiDeclaration:{type:"STRING"},curriculumStandards:{type:"STRING"},bowCompetency:{type:"STRING"},objectives:{type:"STRING"},learnerContext:{type:"STRING"},formativeAssessment:{type:"STRING"},extendedLearning:{type:"STRING"},
@@ -628,10 +896,23 @@ async function testAPI(){
   }
 }
 async function generateFullLessonPlan(){
-let topic=topicValue(),subject=$("aiSubject").value||$("subject").value,exactTitle=$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim();if(!topic&&!exactTitle)return alert("Select or enter a subtopic.");if(!subject)return alert("Select a subject.");if(isMapehSubject(subject)&&!$("mapehComponent")?.value)return alert("Select a MAPEH component.");if(!exactTitle)return alert("Enter the exact Lesson Title to guide the generator.");
-$("generateBtn").disabled=true;try{let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,term:appState.term,sessions:appState.sessions,planDate:appState.planDate,termWeek:appState.termWeek,planFormat:appState.planFormat};appState={...defaultState(),...d,...keep,subject:d.subject||subject,lessonTitle:exactTitle,mapehComponent:generationContext().component,subtopic:topic};save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated."}catch(e){$("aiStatus").textContent="❌ "+e.message}finally{$("generateBtn").disabled=false}}
+let topic=topicValue(),subject=$("aiSubject").value||$("subject").value,exactTitle=$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim();
+if(!topic&&!exactTitle)return alert("Select or enter a subtopic.");
+if(!subject)return alert("Select a subject.");
+if(isMapehSubject(subject)&&!$("mapehComponent")?.value)return alert("Select a MAPEH component.");
+if(!exactTitle)return alert("Enter the exact Lesson Title to guide the generator.");
+const ctx=generationContext();appState.academicTerm=ctx.academicTerm;appState.schoolYear=ctx.schoolYear;appState.curriculumVersion=ctx.curriculumVersion;appState.bowItem=ctx.bowItem;appState.bowReference=ctx.bowReference;save();
+$("generateBtn").disabled=true;
+try{
+  let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));
+  let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};
+  appState={...defaultState(),...d,...keep,subject:d.subject||subject,lessonTitle:exactTitle,mapehComponent:generationContext().component,subtopic:topic};
+  save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated.";
+}catch(e){$("aiStatus").textContent="❌ "+e.message}
+finally{$("generateBtn").disabled=false}
+}
 async function improvePlan(){
-if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,term:appState.term,sessions:appState.sessions,planDate:appState.planDate,termWeek:appState.termWeek,planFormat:appState.planFormat};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
+if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
 async function regenerateCurrentSession(){
  if(!appState.lessonTitle)return alert("Load or generate a plan first.");
  let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
@@ -726,8 +1007,8 @@ function queueProfileSave(){
 async function loadTeacherState(user){
   try{
     const raw=localStorage.getItem("ilaw_v3_state_"+user.id);
-    appState=raw?{...defaultState(),...JSON.parse(raw)}:defaultState();
-  }catch(e){console.warn("State load:",e);appState=defaultState();}
+    appState=raw?{...defaultState(),...JSON.parse(raw)}:defaultState();normalizeAppState();
+  }catch(e){console.warn("State load:",e);appState=defaultState();normalizeAppState();}
   syncForm();
   await loadTeacherProfile(user);
   save();render();
@@ -738,7 +1019,6 @@ async function enterTeacherApp(user){
   $("authGate").style.display="none";
   $("accountBadge").textContent=user.email||"Teacher account";
   await loadTeacherState(user);
-  applyLanguage();
 }
 async function signOutTeacher(){
   if(!confirm("Log out of this teacher account?"))return;
@@ -764,20 +1044,10 @@ async function initSupabaseAuth(){
 document.addEventListener("DOMContentLoaded",initSupabaseAuth);
 </script>
 
-<div id="settingsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:11000;align-items:center;justify-content:center;padding:20px">
-  <div style="background:#fff;width:min(430px,96vw);border-radius:10px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.25)">
-    <h3>⚙ Settings</h3>
-    <label>App Lock PIN</label><input id="settingsPin" type="password" minlength="4" maxlength="12" placeholder="Set a PIN (4-12 characters)">
-    <div class="small" style="margin:5px 0 10px">This local PIN locks this browser session. It is not your Supabase password.</div>
-    <label>Language</label><select id="settingsLanguage"><option value="en">English</option><option value="fil">Filipino</option></select>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn gray" onclick="closeSettings()">Cancel</button><button class="btn primary" onclick="saveSettings()">Save Settings</button></div>
-    <div id="settingsStatus" class="status"></div>
-  </div>
-</div>
 <div id="rawSourceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;padding:24px">
   <div style="background:#fff;height:100%;border-radius:8px;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:10px 14px;background:#263238;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:8px">
-      <b>🧩 ILAW V7 — RAW SOURCE CODE</b>
+      <b>🧩 ILAW V5 — RAW SOURCE CODE</b>
       <div>
         <button class="btn green" onclick="copyRawSource()">📋 Copy Raw Code</button>
         <button class="btn gray" onclick="downloadRawSource()">💾 Save HTML</button>
@@ -804,25 +1074,471 @@ function downloadRawSource(){
   const b=document.getElementById("rawSourceBox"); if(!b)return;
   const blob=new Blob([b.value],{type:"text/html;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="ILAW_Teacher_Suite_V7_RAW_SOURCE.html";a.click();
+  a.download="ILAW_Teacher_Suite_V5_RAW_SOURCE.html";a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 </script>
 
-
-
-
-
-
-
-
 <script>
-const LOCK_KEY="ilaw_v5_lock_pin";
-function openSettings(){const m=$("settingsModal");if(!m)return;$("settingsPin").value=localStorage.getItem(LOCK_KEY)||"";$("settingsLanguage").value=appLanguage||"en";$("settingsStatus").textContent="";m.style.display="flex";}
-function closeSettings(){const m=$("settingsModal");if(m)m.style.display="none";}
-function saveSettings(){const pin=$("settingsPin").value.trim();if(pin&&pin.length<4){$("settingsStatus").textContent="PIN must be at least 4 characters.";return;}if(pin)localStorage.setItem(LOCK_KEY,pin);else localStorage.removeItem(LOCK_KEY);$("langSelect").value=$("settingsLanguage").value;changeLanguage();$("settingsStatus").textContent="Settings saved.";setTimeout(closeSettings,400);}
-function lockApp(){const pin=localStorage.getItem(LOCK_KEY);if(!pin){openSettings();$("settingsStatus").textContent="Set an App Lock PIN first.";return;}$("lockScreen").style.display="flex";$("unlockPassword").value="";$("unlockStatus").textContent="";}
-function unlockApp(){const pin=localStorage.getItem(LOCK_KEY)||"";if(!pin){$("lockScreen").style.display="none";return;}if($("unlockPassword").value===pin){$("lockScreen").style.display="none";$("unlockStatus").textContent="";}else $("unlockStatus").textContent="❌ Incorrect PIN.";}
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("settingsModal")?.style.display==="flex")closeSettings();});
+/* V5.3 RESCUE ENGINE: standalone subject/topic dropdown.
+   This is intentionally independent of the main app script. */
+;
+normalizeAppState();initPrintOrientation();
 </script>
+
+
+
+
+
+
+
+<style id="ilawV8AddonCSS">
+/* ILAW V8 additive curriculum + scheduling + print improvements */
+.v8-manager-btn{border:1px solid rgba(255,255,255,.24)!important;background:rgba(255,255,255,.12)!important;color:#fff!important}
+.v8-modal{position:fixed;inset:0;background:rgba(8,24,48,.58);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.v8-modal.show{display:flex}.v8-card{width:min(920px,96vw);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 25px 80px rgba(0,0,0,.3);padding:22px}.v8-card h2{margin:0 0 8px;color:#173f78}.v8-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v8-grid .full{grid-column:1/-1}.v8-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}.v8-help{font-size:.78rem;color:#64748b}.v8-badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef5ff;color:#174b92;font-size:.72rem;font-weight:700}.v8-import-list{max-height:240px;overflow:auto;border:1px solid #dbe3ee;border-radius:10px;margin-top:10px}.v8-import-list div{padding:8px 10px;border-bottom:1px solid #edf1f6;font-size:.8rem}.v8-import-list div:last-child{border-bottom:0}.v8-schedule-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px}.v8-inline-control{display:flex;gap:8px;align-items:end}.v8-inline-control select{flex:1}
+@media(max-width:700px){.v8-grid{grid-template-columns:1fr}.v8-grid .full{grid-column:auto}.v8-schedule-row{grid-template-columns:1fr 1fr}.v8-schedule-row button{grid-column:1/-1}}
+@media print{
+  body.ilaw-no-logo-print #lessonPaper img{display:none!important}
+  #ilawV8ReflectionPrint{display:block!important}
+}
+#ilawV8ReflectionPrint{display:none}
+</style>
+<script>
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const safe=(fn)=>{try{fn()}catch(e){console.error('[ILAW V8]',e)}};
+  const KEY='ilaw_v8_bow_catalog'; const SKEY='ilaw_v8_class_schedule';
+  const TERMS=['Term 1','Term 2','Term 3'];
+  const GRADES=['Grade 7','Grade 8','Grade 9','Grade 10'];
+  const CURR=['Revised K–10 / MATATAG','MELC / Transitional'];
+  function loadJSON(k,f){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch(e){return f}}
+  function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+  function gradeFromSection(){const v=($('gradeSection')?.value||'').toUpperCase();const m=v.match(/(?:GRADE\s*)?(7|8|9|10)/);return m?'Grade '+m[1]:''}
+  function currentGrade(){return $('v8YearLevel')?.value||gradeFromSection()||'Grade 10'}
+  function currentArea(){let v=$('aiSubject')?.value||$('subject')?.value||''; if(/^MAPEH/i.test(v))return 'MAPEH'; if(/^TLE|^EPP/i.test(v))return 'TLE/EPP'; return v}
+  function curriculumForGrade(g){const sy=$('schoolYear')?.value||'2026-2027'; if(g==='Grade 10' && sy==='2026-2027')return 'MELC / Transitional'; return 'Revised K–10 / MATATAG'}
+  function addOption(sel,val,text){if(!sel)return;const o=document.createElement('option');o.value=val;o.textContent=text;sel.appendChild(o)}
+  function ensureV8Controls(){
+    const aiBox=$('aiSubject')?.closest('.ai-box');
+    if(aiBox && !$('v8YearLevel')){
+      const row=document.createElement('div'); row.className='row'; row.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px';
+      row.innerHTML='<div><label>Year Level</label><select id="v8YearLevel"><option value="">Select year level...</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select></div><div><label>Curriculum Version</label><select id="v8Curriculum"><option>Revised K–10 / MATATAG</option><option>MELC / Transitional</option></select></div>';
+      aiBox.insertBefore(row, $('aiSubject').parentElement||$('aiSubject'));
+      $('v8YearLevel').addEventListener('change',()=>{syncCurriculumUI();filterMapehTle();});
+      $('v8Curriculum').addEventListener('change',()=>{if($('curriculumVersion'))$('curriculumVersion').value=$('v8Curriculum').value;});
+    }
+    const bow=$('bowItem');
+    if(bow && !$('v8BowSelect')){
+      const wrap=document.createElement('div'); wrap.innerHTML='<label>BOW</label><select id="v8BowSelect"><option value="">Select BOW...</option><option value="__custom">Custom / Manual Entry</option></select><label style="margin-top:7px;display:block">BOW Reference</label><select id="v8BowRef"><option value="">Select reference...</option><option value="__custom">Custom / Manual Reference</option></select>';
+      bow.parentElement.insertBefore(wrap,bow); bow.style.marginTop='6px'; bow.placeholder='Selected BOW competency/item will appear here, or enter a custom item.';
+      $('v8BowSelect').addEventListener('change',applyBowSelection); $('v8BowRef').addEventListener('change',applyBowReference);
+    }
+    if(!$('v8ScheduleBtn')){
+      const toolbar=document.querySelector('.toolbar'); if(toolbar){const b=document.createElement('button');b.id='v8ScheduleBtn';b.className='btn v8-manager-btn';b.textContent='📅 Schedule';b.onclick=openScheduleManager;toolbar.appendChild(b)}
+    }
+    if(!$('v8BowBtn')){
+      const toolbar=document.querySelector('.toolbar'); if(toolbar){const b=document.createElement('button');b.id='v8BowBtn';b.className='btn v8-manager-btn';b.textContent='📚 BOW Manager';b.onclick=openBowManager;toolbar.appendChild(b)}
+    }
+    if(!$('ilawV8BowModal')){
+      const m=document.createElement('div');m.id='ilawV8BowModal';m.className='v8-modal';m.innerHTML='<div class="v8-card"><h2>📚 BOW Manager</h2><div class="v8-help">Import BOW data into the local curriculum catalog. CSV, TSV, JSON and TXT are supported. PDF files are kept as references but are not silently parsed.</div><div class="v8-grid" style="margin-top:14px"><div><label>Year Level</label><select id="v8BowGrade">'+GRADES.map(x=>'<option>'+x+'</option>').join('')+'</select></div><div><label>Learning Area</label><input id="v8BowArea" placeholder="e.g. MAPEH, Science, Mathematics"></div><div><label>Curriculum</label><select id="v8BowCurr"><option>Revised K–10 / MATATAG</option><option>MELC / Transitional</option></select></div><div><label>Term</label><select id="v8BowTerm">'+TERMS.map(x=>'<option>'+x+'</option>').join('')+'</select></div><div class="full"><label>BOW Reference</label><input id="v8BowReferenceInput" placeholder="Official BOW/source reference"></div><div class="full"><label>Upload BOW</label><input id="v8BowFile" type="file" accept=".csv,.tsv,.json,.txt,.pdf"></div><div class="full" id="v8BowStatus" class="status"></div></div><div id="v8BowList" class="v8-import-list"></div><div class="v8-actions"><button class="btn gray" onclick="closeBowManager()">Close</button><button class="btn primary" onclick="importBowFile()">📥 Import BOW</button></div></div>';document.body.appendChild(m);
+    }
+    if(!$('ilawV8ScheduleModal')){
+      const m=document.createElement('div');m.id='ilawV8ScheduleModal';m.className='v8-modal';m.innerHTML='<div class="v8-card"><h2>📅 Class Schedule</h2><div class="v8-help">Save the regular time for each Grade/Section. The lesson plan will automatically use it beside the Date.</div><div id="v8ScheduleRows" style="margin-top:14px"></div><div class="v8-actions"><button class="btn gray" onclick="closeScheduleManager()">Close</button><button class="btn primary" onclick="addScheduleRow()">＋ Add Class</button><button class="btn green" onclick="saveScheduleManager()">💾 Save Schedule</button></div></div>';document.body.appendChild(m);
+    }
+// change curriculumVersion from readonly text to controlled select
+    const cv=$('curriculumVersion'); if(cv && cv.tagName==='INPUT'){const sel=document.createElement('select');sel.id='curriculumVersion';sel.innerHTML='<option>Revised K–10 / MATATAG</option><option>MELC / Transitional</option>';cv.replaceWith(sel)}
+    syncCurriculumUI(); populateBowDropdowns(); applyScheduleToSessions();
+  }
+  function syncCurriculumUI(){const g=currentGrade(),c=curriculumForGrade(g); if($('v8YearLevel'))$('v8YearLevel').value=g; if($('v8Curriculum'))$('v8Curriculum').value=c; if($('curriculumVersion'))$('curriculumVersion').value=c}
+  function filterMapehTle(){const g=currentGrade();const s=$('aiSubject');if(!s)return;let v=s.value; if(v==='MAPEH'||/^MAPEH\s/.test(v)){s.value=g.replace('Grade ','MAPEH ');if(typeof window.subjectChanged==='function')window.subjectChanged()} else if(v==='TLE/EPP'||/^TLE|^EPP/.test(v)){s.value=g.replace('Grade ','TLE/EPP ');if(typeof window.subjectChanged==='function')window.subjectChanged()}}
+  function catalog(){return loadJSON(KEY,[])}
+  function populateBowDropdowns(){const sel=$('v8BowSelect'),ref=$('v8BowRef');if(!sel||!ref)return;const g=currentGrade(),a=currentArea(),term=$('academicTerm')?.value||'Term 1';sel.innerHTML='<option value="">Select BOW...</option>';ref.innerHTML='<option value="">Select reference...</option>';const rows=catalog().filter(x=>(!x.grade||x.grade===g)&&(!x.area||x.area.toLowerCase()===a.toLowerCase())&&(!x.term||x.term===term));const seen=new Set();rows.forEach(x=>{const key=x.item||x.title||x.competency;if(key&&!seen.has(key)){seen.add(key);addOption(sel,key,key)}});const refs=[...new Set(rows.map(x=>x.reference).filter(Boolean))];refs.forEach(x=>addOption(ref,x,x));addOption(sel,'__custom','Custom / Manual Entry');addOption(ref,'__custom','Custom / Manual Reference')}
+  function applyBowSelection(){const v=$('v8BowSelect')?.value||'';if(v&&v!=='__custom'&&$('bowItem')){$('bowItem').value=v;if(typeof window.updateState==='function')window.updateState()}}
+  function applyBowReference(){const v=$('v8BowRef')?.value||'';if(v&&v!=='__custom'&&$('bowReference')){$('bowReference').value=v;if(typeof window.updateState==='function')window.updateState()}}
+  function openBowManager(){populateBowManagerList();$('ilawV8BowModal').classList.add('show')}
+  function closeBowManager(){$('ilawV8BowModal')?.classList.remove('show')}
+  function populateBowManagerList(){const box=$('v8BowList');if(!box)return;const rows=catalog();box.innerHTML=rows.length?rows.slice(-80).reverse().map((x,i)=>'<div><span class="v8-badge">'+(x.grade||'Any Grade')+'</span> '+(x.area||'')+' • '+(x.term||'')+' • '+(x.item||x.title||x.competency||'Imported item')+'<br><small>'+((x.reference||'No reference'))+'</small></div>').join(''):'<div>No BOW records imported yet.</div>'}
+  function parseCSV(txt){const lines=txt.split(/\r?\n/).filter(x=>x.trim());if(!lines.length)return[];const delim=lines[0].includes('\t')?'\t':',';const headers=lines[0].split(delim).map(x=>x.trim().toLowerCase().replace(/[^a-z0-9]+/g,''));return lines.slice(1).map(line=>{const cells=line.split(delim).map(x=>x.trim().replace(/^"|"$/g,''));const o={};headers.forEach((h,i)=>o[h]=cells[i]||'');return{grade:o.grade||o.yearlevel||o.year||$('v8BowGrade').value,area:o.learningarea||o.subject||$('v8BowArea').value,term:o.term||$('v8BowTerm').value,reference:o.reference||o.bowreference||$('v8BowReferenceInput').value,item:o.competency||o.bowitem||o.topic||o.lesson||o.lessontitle||cells[0]||''}}).filter(x=>x.item)}
+  function importBowFile(){const f=$('v8BowFile')?.files?.[0];if(!f)return $('v8BowStatus').textContent='❌ Choose a BOW file first.';const base={grade:$('v8BowGrade').value,area:$('v8BowArea').value.trim(),curriculum:$('v8BowCurr').value,term:$('v8BowTerm').value,reference:$('v8BowReferenceInput').value.trim()};const ext=f.name.split('.').pop().toLowerCase();if(ext==='pdf'){const rows=catalog();rows.push({...base,item:'PDF reference: '+f.name,filename:f.name,fileType:'pdf'});saveJSON(KEY,rows);$('v8BowStatus').textContent='⚠️ PDF reference saved. For structured import, use CSV/TSV/JSON/TXT.';populateBowManagerList();populateBowDropdowns();return}const r=new FileReader();r.onload=()=>{try{let parsed=[];if(ext==='json'){const data=JSON.parse(r.result);parsed=Array.isArray(data)?data:[data];parsed=parsed.map(x=>({...base,...x,grade:x.grade||base.grade,area:x.area||base.area,term:x.term||base.term,reference:x.reference||base.reference,item:x.item||x.competency||x.topic||x.lessonTitle||x.title||''})).filter(x=>x.item)}else parsed=parseCSV(String(r.result));const valid=parsed.map(x=>({...base,...x,grade:x.grade||base.grade,area:x.area||base.area,term:x.term||base.term,reference:x.reference||base.reference})).filter(x=>x.item);if(!valid.length)throw new Error('No BOW items found.');const all=catalog();const existing=new Set(all.map(x=>[x.grade,x.area,x.term,x.item].join('|')));const fresh=valid.filter(x=>!existing.has([x.grade,x.area,x.term,x.item].join('|')));saveJSON(KEY,all.concat(fresh));$('v8BowStatus').textContent='✅ Imported '+fresh.length+' new BOW item(s).';populateBowManagerList();populateBowDropdowns()}catch(e){$('v8BowStatus').textContent='❌ '+e.message}};r.readAsText(f)}
+  function schedule(){return loadJSON(SKEY,[])}
+  function openScheduleManager(){renderScheduleRows();$('ilawV8ScheduleModal').classList.add('show')}
+  function closeScheduleManager(){$('ilawV8ScheduleModal')?.classList.remove('show')}
+  function addScheduleRow(data){const box=$('v8ScheduleRows');if(!box)return;const d=data||{};const row=document.createElement('div');row.className='v8-schedule-row';row.innerHTML='<div><label>Grade</label><select class="v8-sg">'+GRADES.map(x=>'<option '+(x===(d.grade||'Grade 10')?'selected':'')+'>'+x+'</option>').join('')+'</select></div><div><label>Section</label><input class="v8-ss" value="'+(d.section||'')+'" placeholder="Andromeda"></div><div><label>Time</label><input class="v8-st" value="'+(d.time||'')+'" placeholder="10:00–11:00 AM"></div><button class="btn red" type="button" onclick="this.parentElement.remove()">Remove</button>';box.appendChild(row)}
+  function renderScheduleRows(){const box=$('v8ScheduleRows');if(!box)return;box.innerHTML='';const rows=schedule();(rows.length?rows:[{grade:'Grade 10',section:'Andromeda',time:''}]).forEach(addScheduleRow)}
+  function saveScheduleManager(){const rows=[...document.querySelectorAll('#v8ScheduleRows .v8-schedule-row')].map(r=>({grade:r.querySelector('.v8-sg').value,section:r.querySelector('.v8-ss').value.trim(),time:r.querySelector('.v8-st').value.trim()})).filter(x=>x.section&&x.time);saveJSON(SKEY,rows);applyScheduleToSessions();$('v8ScheduleBtn').textContent='📅 Schedule ✓';}
+  function applyScheduleToSessions(){const gs=$('gradeSection')?.value||'';const m=gs.match(/(?:GRADE\s*)?(7|8|9|10)\s*[-–]\s*(.+)$/i);if(!m)return;const keyGrade='Grade '+m[1],section=m[2].trim().toLowerCase();const hit=schedule().find(x=>x.grade===keyGrade&&x.section.toLowerCase()===section);if(!hit)return;const map=window.appState?.matrix||{};Object.keys(map).forEach(d=>{if(hit.time&&!map[d].timeIn&&!map[d].timeOut){const parts=hit.time.split(/\s*[–-]\s*/);map[d].timeIn=parts[0]||hit.time;map[d].timeOut=parts[1]||''}});try{if(window.save)window.save()}catch(e){} }
+  function patchPrint(){const old=window.printFromCenter;if(typeof old!=='function'||old.__v8)return;const wrapped=function(mode){const size=$('paperSizeSelect')?.value||'a4';const orient=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||'landscape';document.body.classList.toggle('ilaw-no-logo-print',!window.appState?.logo);const style=$('ilawPrintOrientationStyle');if(style){const paper={letter:'letter',longbond:'8.5in 13in',legal:'legal',a4:'A4',a3:'A3',a5:'A5',b4:'B4',b5:'B5',tabloid:'tabloid',executive:'7.25in 10.5in',statement:'5.5in 8.5in'}[size]||'A4';style.textContent='@page{size:'+paper+' '+orient+';margin:8mm}'}return old.apply(this,arguments)};wrapped.__v8=true;window.printFromCenter=wrapped}
+  function patchSubject(){const old=window.subjectChanged;if(typeof old!=='function'||old.__v8)return;const wrapped=function(){safe(()=>{const s=$('aiSubject')?.value||'';const m=s.match(/(?:MAPEH|TLE\/EPP)\s*(7|8|9|10)/i);if(m&&$('v8YearLevel'))$('v8YearLevel').value='Grade '+m[1];syncCurriculumUI();populateBowDropdowns()});return old.apply(this,arguments)};wrapped.__v8=true;window.subjectChanged=wrapped}
+  function patchCurriculum(){const old=window.curriculumContextChanged;if(typeof old!=='function'||old.__v8)return;const wrapped=function(){const r=old.apply(this,arguments);safe(()=>{syncCurriculumUI();populateBowDropdowns()});return r};wrapped.__v8=true;window.curriculumContextChanged=wrapped}
+  function init(){ensureV8Controls();patchPrint();patchSubject();patchCurriculum();setInterval(()=>{safe(()=>{ensureV8Controls();populateBowDropdowns();applyScheduleToSessions()})},2500)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  window.openBowManager=openBowManager;window.closeBowManager=closeBowManager;window.importBowFile=importBowFile;window.openScheduleManager=openScheduleManager;window.closeScheduleManager=closeScheduleManager;window.addScheduleRow=addScheduleRow;window.saveScheduleManager=saveScheduleManager;
+})();
+</script>
+
+<script id="ilaw-v8-final-direct-pdf">
+(function(){
+  "use strict";
+
+  function getChoice(){
+    var size=(document.getElementById("paperSizeSelect")||{}).value||"a4";
+    var orientation=(document.querySelector('input[name="printOrientationChoice"]:checked')||{}).value||"landscape";
+    var sizes={
+      letter:{label:"Short / Letter",w:8.5,h:11},
+      longbond:{label:"Long Bond",w:8.5,h:13},
+      legal:{label:"Legal",w:8.5,h:14},
+      a4:{label:"A4",w:8.27,h:11.69},
+      a3:{label:"A3",w:11.69,h:16.54},
+      a5:{label:"A5",w:5.83,h:8.27},
+      b4:{label:"B4",w:9.84,h:13.9},
+      b5:{label:"B5",w:6.93,h:9.84},
+      tabloid:{label:"Tabloid",w:11,h:17},
+      executive:{label:"Executive",w:7.25,h:10.5},
+      statement:{label:"Statement",w:5.5,h:8.5}
+    };
+    return {size:size,orientation:orientation,spec:sizes[size]||sizes.a4};
+  }
+
+  function fileName(){
+    var v=(document.getElementById("lessonTitle")||{}).value||"ILAW_Lesson_Plan";
+    v=String(v).replace(/[\\/:*?"<>|]+/g," ").replace(/\s+/g," ").trim();
+    return (v||"ILAW_Lesson_Plan").slice(0,120)+".pdf";
+  }
+
+  function logoState(){
+    var logo=document.getElementById("pvLogo");
+    return !!(logo && logo.src && !logo.classList.contains("hidden") && logo.style.display!=="none");
+  }
+
+  function buildExportClone(){
+    var source=document.getElementById("lessonPaper");
+    if(!source) throw new Error("Lesson plan preview not found.");
+
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+
+    var clone=source.cloneNode(true);
+
+    // Remove anything that is not part of the actual printable lesson paper.
+    clone.querySelectorAll("#ilawLogoModule,.toolbar,.header,.ilaw-modal,.v8-modal,.orientation-control").forEach(function(el){
+      el.remove();
+    });
+
+    // Uploaded logo appears ONLY if the current printable logo is enabled.
+    var logo=clone.querySelector("#pvLogo");
+    if(logo && !logoState()) logo.remove();
+
+    // Always rebuild the reflection inside the table cell.
+    var ref=clone.querySelector("#pvReflection");
+    if(ref){
+      ref.innerHTML=
+        '<div class="print-reflection-lines">'+
+        '<div><strong>Session 1</strong><span></span></div>'+
+        '<div><strong>Session 2</strong><span></span></div>'+
+        '<div><strong>Session 3</strong><span></span></div>'+
+        '<div><strong>Session 4</strong><span></span></div>'+
+        '</div>';
+    }
+
+    return clone;
+  }
+
+  function placeForCapture(node,widthIn){
+    var host=document.createElement("div");
+    host.id="ilawPdfCaptureHost";
+    host.style.position="absolute";
+    host.style.left="0";
+    host.style.top="0";
+    host.style.width=(widthIn+0.4)+"in";
+    host.style.background="#fff";
+    host.style.zIndex="2147483646";
+    host.style.pointerEvents="none";
+    host.style.padding="0";
+    host.appendChild(node);
+    document.body.appendChild(host);
+    return host;
+  }
+
+  function setPrintPage(choice){
+    var st=document.getElementById("ilawPrintOrientationStyle");
+    if(!st){
+      st=document.createElement("style");
+      st.id="ilawPrintOrientationStyle";
+      document.head.appendChild(st);
+    }
+    var pageMap={
+      letter:"letter",legal:"legal",a4:"A4",a3:"A3",a5:"A5",
+      b4:"B4",b5:"B5",tabloid:"tabloid"
+    };
+    var page=pageMap[choice.size] || (choice.size==="longbond"?"8.5in 13in":"8.5in 11in");
+    if(choice.size==="executive") page="7.25in 10.5in";
+    if(choice.size==="statement") page="5.5in 8.5in";
+    st.textContent="@page{size:"+page+" "+choice.orientation+";margin:8mm}";
+  }
+
+  async function downloadPDF(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
+    var c=getChoice();
+    setPrintPage(c);
+
+    if(window.ILAW_loadDirectPDF) await window.ILAW_loadDirectPDF();
+    if(!window.jspdf || !window.html2canvas){
+      throw new Error("PDF components could not be loaded. Please allow internet access and try again.");
+    }
+
+    var clone=buildExportClone();
+    var captureWidth=(c.orientation==="landscape"?c.spec.h:c.spec.w);
+    clone.style.display="block";
+    clone.style.visibility="visible";
+    clone.style.opacity="1";
+    clone.style.width=captureWidth+"in";
+    clone.style.maxWidth=captureWidth+"in";
+    clone.style.background="#fff";
+    clone.style.boxShadow="none";
+    clone.style.border="0";
+    clone.style.borderRadius="0";
+    clone.style.margin="0";
+    clone.style.padding="8mm";
+    clone.style.minHeight="auto";
+    clone.style.color="#000";
+
+    var host=placeForCapture(clone,captureWidth);
+
+    try{
+      // Wait for fonts/images before canvas capture.
+      if(document.fonts && document.fonts.ready) await document.fonts.ready;
+      var images=Array.from(clone.querySelectorAll("img"));
+      await Promise.all(images.map(function(img){
+        return img.complete ? Promise.resolve() : new Promise(function(resolve){img.onload=img.onerror=resolve;});
+      }));
+
+      var canvas=await window.html2canvas(clone,{
+        scale:2,
+        useCORS:true,
+        allowTaint:false,
+        backgroundColor:"#ffffff",
+        logging:false,
+        width:Math.ceil(clone.getBoundingClientRect().width),
+        windowWidth:Math.max(document.documentElement.clientWidth,Math.ceil(clone.getBoundingClientRect().width)),
+        scrollX:0,
+        scrollY:0
+      });
+
+      var jsPDF=window.jspdf.jsPDF;
+      var pageW=c.orientation==="landscape"?c.spec.h:c.spec.w;
+      var pageH=c.orientation==="landscape"?c.spec.w:c.spec.h;
+      var pdf=new jsPDF({
+        orientation:c.orientation,
+        unit:"in",
+        format:[pageW,pageH],
+        compress:true
+      });
+
+      var imgData=canvas.toDataURL("image/jpeg",0.98);
+      var imgW=pageW-0.55;
+      var imgH=canvas.height*(imgW/canvas.width);
+      var y=0.275;
+      var maxH=pageH-0.55;
+
+      // Split long content across pages rather than clipping it.
+      var sourceW=canvas.width;
+      var pagePxH=Math.floor(canvas.height*(maxH/imgH));
+      var offsetPx=0;
+      var first=true;
+      while(offsetPx<canvas.height){
+        var sliceH=Math.min(pagePxH,canvas.height-offsetPx);
+        var slice=document.createElement("canvas");
+        slice.width=canvas.width;
+        slice.height=sliceH;
+        slice.getContext("2d").drawImage(canvas,0,offsetPx,sourceW,sliceH,0,0,sourceW,sliceH);
+        var sliceData=slice.toDataURL("image/jpeg",0.98);
+        var renderedH=sliceH*(imgW/sourceW);
+        if(!first) pdf.addPage([pageW,pageH],c.orientation);
+        pdf.addImage(sliceData,"JPEG",0.275,y,imgW,renderedH,undefined,"FAST");
+        first=false;
+        offsetPx+=sliceH;
+      }
+
+      pdf.save(fileName());
+    } finally {
+      host.remove();
+    }
+  }
+
+  // IMPORTANT: Download PDF is direct download; it does NOT open the printer.
+  window.savePDF=function(){
+    var status=document.getElementById("aiStatus");
+    if(status) status.textContent="⏳ Preparing PDF download...";
+    downloadPDF().then(function(){
+      if(status) status.textContent="✅ PDF downloaded.";
+    }).catch(function(err){
+      console.error("[ILAW Direct PDF]",err);
+      if(status) status.textContent="❌ PDF download failed.";
+      alert("PDF download failed: "+(err && err.message ? err.message : err));
+    });
+  };
+
+  // Existing Print/PDF remains the printer workflow.
+  window.printFromCenter=function(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
+    var c=getChoice();
+    setPrintPage(c);
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+    var modal=document.getElementById("printCenter");
+    if(modal){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+    }
+    setTimeout(function(){window.print();},100);
+  };
+
+  window.addEventListener("beforeprint",function(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+  });
+})();
+</script>
+
+
+<script id="ilaw-v8-language-fix">
+(function(){
+  const T = {
+    en: {
+      "School Logo":"School Logo","Remove Logo":"Remove Logo","Teacher Name":"Teacher Name",
+      "Teacher Title":"Teacher Title","School Name":"School Name","School Address":"School Address",
+      "Learning Area / Subject":"Learning Area / Subject","Grade & Section":"Grade & Section",
+      "Term / Week":"Term / Week","Lesson Plan Format":"Lesson Plan Format","Lesson Title":"Lesson Title",
+      "References":"References","Declaration of AI Use":"Declaration of AI Use",
+      "Curriculum Standards":"Curriculum Standards","Learning Competency (BOW)":"Learning Competency (BOW)",
+      "Learning Objectives":"Learning Objectives","Learner Context":"Learner Context",
+      "Formative Assessment":"Formative Assessment","Extended Learning Opportunities":"Extended Learning Opportunities",
+      "Daily Schedule Editor":"Daily Schedule Editor","Session Date":"Session Date","Time In":"Time In","Time Out":"Time Out",
+      "Pre-Lesson":"Pre-Lesson","Flow / Activities & Procedures":"Flow / Activities & Procedures",
+      "Learning Resources":"Learning Resources","Opportunities for Integration":"Opportunities for Integration",
+      "Friday Reflection — Friday only":"Friday Reflection — Friday only",
+      "It is Friday / enable weekly reflection":"It is Friday / enable weekly reflection",
+      "Assessing & Ways Forward":"Assessing & Ways Forward",
+      "Upload Logo":"Upload Logo","Print/PDF":"Print/PDF","Download PDF":"Download PDF",
+      "Preferences":"Preferences","Logout":"Logout","Lock":"Lock","Test API":"Test API",
+      "Generate Full Plan":"Generate Full Plan","Improve Plan":"Improve Plan",
+      "Regenerate Session":"Regenerate Session","Copy to Next":"Copy to Next","Clear Session":"Clear Session",
+      "Generate Reflection":"Generate Reflection","Save Reflection":"Save Reflection","Clear":"Clear",
+      "Print Center":"Print Center","Paper Size":"Paper Size","Orientation":"Orientation",
+      "Portrait":"Portrait","Landscape":"Landscape","Print":"Print","Cancel":"Cancel",
+      "Term":"Term","BOW Item / Competency":"BOW Item / Competency","BOW Reference":"BOW Reference"
+    },
+    fil: {
+      "School Logo":"Logo ng Paaralan","Remove Logo":"Alisin ang Logo","Teacher Name":"Pangalan ng Guro",
+      "Teacher Title":"Posisyon ng Guro","School Name":"Pangalan ng Paaralan","School Address":"Address ng Paaralan",
+      "Learning Area / Subject":"Learning Area / Asignatura","Grade & Section":"Baitang at Seksyon",
+      "Term / Week":"Term / Linggo","Lesson Plan Format":"Format ng Lesson Plan","Lesson Title":"Pamagat ng Aralin",
+      "References":"Mga Sanggunian","Declaration of AI Use":"Pahayag sa Paggamit ng AI",
+      "Curriculum Standards":"Pamantayan ng Kurikulum","Learning Competency (BOW)":"Learning Competency (BOW)",
+      "Learning Objectives":"Mga Layunin sa Pagkatuto","Learner Context":"Konteksto ng mga Mag-aaral",
+      "Formative Assessment":"Pagtatayang Formative","Extended Learning Opportunities":"Karagdagang Pagkakataon sa Pagkatuto",
+      "Daily Schedule Editor":"Editor ng Pang-araw-araw na Iskedyul","Session Date":"Petsa ng Session",
+      "Time In":"Oras ng Simula","Time Out":"Oras ng Tapos","Pre-Lesson":"Bago ang Aralin",
+      "Flow / Activities & Procedures":"Daloy / Mga Gawain at Pamamaraan",
+      "Learning Resources":"Mga Learning Resource","Opportunities for Integration":"Mga Pagkakataon sa Integrasyon",
+      "Friday Reflection — Friday only":"Friday Reflection — Biyernes lamang",
+      "It is Friday / enable weekly reflection":"Biyernes / paganahin ang weekly reflection",
+      "Assessing & Ways Forward":"Pagtataya at Mga Susunod na Hakbang",
+      "Upload Logo":"Mag-upload ng Logo","Print/PDF":"I-print/PDF","Download PDF":"I-download ang PDF",
+      "Preferences":"Mga Setting","Logout":"Mag-logout","Lock":"I-lock","Test API":"Subukan ang API",
+      "Generate Full Plan":"Bumuo ng Buong Lesson Plan","Improve Plan":"Pagbutihin ang Lesson Plan",
+      "Regenerate Session":"Bumuo Ulit ng Session","Copy to Next":"Kopyahin sa Kasunod","Clear Session":"I-clear ang Session",
+      "Generate Reflection":"Bumuo ng Reflection","Save Reflection":"I-save ang Reflection","Clear":"I-clear",
+      "Print Center":"Print Center","Paper Size":"Laki ng Papel","Orientation":"Orientation",
+      "Portrait":"Portrait","Landscape":"Landscape","Print":"I-print","Cancel":"Kanselahin",
+      "Term":"Term","BOW Item / Competency":"BOW Item / Competency","BOW Reference":"BOW Reference"
+    }
+  };
+
+  function replaceTextNode(el, from, to){
+    if(!el || !to) return;
+    const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n=>{
+      if(n.nodeValue.trim()===from) n.nodeValue=n.nodeValue.replace(from,to);
+    });
+  }
+
+  function translateValueFields(lang){
+    // Button IDs: preserve all existing handlers; only change visible labels.
+    const byId = {
+      fil:{
+        generateBtn:"✨ Bumuo ng Buong Plan", 
+        langSelect:"Filipino"
+      },
+      en:{
+        generateBtn:"✨ Generate Full Plan",
+        langSelect:"English"
+      }
+    };
+    if($("generateBtn")) $("generateBtn").textContent=byId[lang].generateBtn;
+    if($("langSelect")) $("langSelect").value=lang;
+  }
+
+  function applyLanguage(lang){
+    lang = (lang==="fil") ? "fil" : "en";
+    appLanguage = lang;
+    try{ localStorage.setItem("ilaw_language",lang); }catch(e){}
+
+    const map=T[lang];
+
+    // Labels and headings.
+    document.querySelectorAll("label,h1,h2,h3,h4,button,.label,.small").forEach(el=>{
+      const raw = el.dataset.langOriginal || el.textContent.trim();
+      if(!el.dataset.langOriginal) el.dataset.langOriginal=raw;
+      if(map[raw]){
+        // Do not replace icon-only / complex elements; plain text only.
+        if(el.children.length===0) el.textContent=map[raw];
+      }
+    });
+
+    // Specific buttons with icons.
+    const buttons = {
+      fil:{
+        "lockApp":"🔒 I-lock","openSettings":"⚙ Mga Setting","signOutTeacher":"Mag-logout",
+        "testAPI":"🔌 Subukan ang API","generateFullLessonPlan":"✨ Bumuo ng Buong Plan",
+        "improvePlan":"🧠 Pagbutihin ang Plan","regenerateCurrentSession":"🔄 Bumuo Ulit ng Session",
+        "copyCurrentToNext":"📋 Kopyahin sa Kasunod","clearCurrentSession":"🧹 I-clear ang Session"
+      },
+      en:{
+        "lockApp":"🔒 Lock","openSettings":"⚙ Preferences","signOutTeacher":"Logout",
+        "testAPI":"🔌 Test API","generateFullLessonPlan":"✨ Generate Full Plan",
+        "improvePlan":"🧠 Improve Plan","regenerateCurrentSession":"🔄 Regenerate Session",
+        "copyCurrentToNext":"📋 Copy to Next","clearCurrentSession":"🧹 Clear Session"
+      }
+    };
+
+    document.querySelectorAll("button").forEach(btn=>{
+      const m=btn.getAttribute("onclick");
+      if(!m) return;
+      const fn=(m.match(/^\s*([A-Za-z_$][\w$]*)\s*\(/)||[])[1];
+      if(buttons[lang][fn]) btn.textContent=buttons[lang][fn];
+    });
+
+    translateValueFields(lang);
+  }
+
+  window.changeLanguage=function(){
+    const lang=$("langSelect")?.value==="fil" ? "fil" : "en";
+    applyLanguage(lang);
+  };
+
+  window.applyILAWLanguage=applyLanguage;
+
+  document.addEventListener("DOMContentLoaded",function(){
+    let lang="en";
+    try{lang=localStorage.getItem("ilaw_language")==="fil"?"fil":"en"}catch(e){}
+    const sel=$("langSelect");
+    if(sel)sel.value=lang;
+    applyLanguage(lang);
+  });
+})();
+</script>
+
 </body></html>
