@@ -103,6 +103,19 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
 </script>
 <style>
 .curriculum-row{align-items:flex-start}.curriculum-status{padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px dashed #cbd5e1;margin-top:6px}.session-meta-editor{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;margin:8px 0 10px;padding:10px;background:#f8fafc;border:1px solid #dbe3ee;border-radius:10px}.session-meta-print td{background:#f8fafc;font-size:.76rem;font-weight:600}.ilaw-modal{position:fixed;inset:0;z-index:25000;background:rgba(8,28,56,.62);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}.ilaw-modal.show{display:flex}.ilaw-modal-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dbe3ee;border-radius:18px;padding:20px;box-shadow:0 24px 80px rgba(5,25,55,.35)}.print-card{width:min(780px,96vw)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px}.modal-head h2{margin:0 0 4px;color:#173f78}.modal-head p{margin:0;color:#64748b;font-size:.82rem}.modal-x{border:0;background:#eef2f7;color:#334155;border-radius:10px;width:34px;height:34px;font-size:22px;cursor:pointer}.print-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.orientation-pills{display:flex;gap:8px}.orientation-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #cbd5e1;background:#f8fafc;border-radius:11px;padding:12px;cursor:pointer}.orientation-pill input{width:auto}.print-preview-note{margin-top:15px;padding:11px 12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a5f}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:18px}.pref-section{border:1px solid #e2e8f0;border-radius:12px;padding:13px;margin-bottom:12px;background:#fbfdff}.pref-section h3{margin:0 0 10px;color:#173f78;font-size:.9rem}@media(max-width:700px){.session-meta-editor,.print-grid{grid-template-columns:1fr}.orientation-pills{flex-direction:column}}@media print{.ilaw-modal{display:none!important}.session-meta-print td{background:#fff!important}}</style>
+
+<style id="ilaw-v8-reflection-table-fix">
+.print-reflection-lines{display:flex;flex-direction:column;gap:7px;margin:2px 0}
+.print-reflection-lines>div{display:grid;grid-template-columns:78px 1fr;align-items:end;gap:8px;min-height:20px}
+.print-reflection-lines strong{font-size:.78rem;white-space:nowrap}
+.print-reflection-lines span{display:block;height:15px;border-bottom:1px solid #777}
+@media print{
+  .print-reflection-lines{gap:9px}
+  .print-reflection-lines>div{min-height:20px}
+  .print-reflection-lines span{height:15px;border-bottom:1px solid #555}
+}
+</style>
+
 </head>
 <body class="auth-locked">
 
@@ -276,7 +289,7 @@ function clearCurrentSession(){
   </div>
 </div>
 
-<div id="printCenter" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card print-card"><div class="modal-head"><div><h2>🖨 Print Center</h2><p>Choose paper size and orientation before printing or saving.</p></div><button type="button" class="modal-x" onclick="closePrintCenter()">×</button></div><div class="print-grid"><div><label>Paper Size</label><select id="paperSizeSelect"><option value="letter">Short / Letter — 8.5 × 11 in</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4 — 210 × 297 mm</option><option value="a3">A3 — 297 × 420 mm</option><option value="a5">A5 — 148 × 210 mm</option><option value="b4">B4 — 250 × 353 mm</option><option value="b5">B5 — 176 × 250 mm</option><option value="tabloid">Tabloid — 11 × 17 in</option><option value="executive">Executive — 7.25 × 10.5 in</option><option value="statement">Statement — 5.5 × 8.5 in</select></div><div><label>Orientation</label><div class="orientation-pills"><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="portrait"><span>▯ Portrait</span></label><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="landscape"><span>▭ Landscape</span></label></div></div></div><div class="print-preview-note"><strong>Preview:</strong> <span id="printSummary">A4 • Landscape</span></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePrintCenter()">Cancel</button><button type="button" class="btn green" onclick="printFromCenter('print')">🖨 Print</button><button type="button" class="btn primary" onclick="printFromCenter('pdf')">💾 Save as PDF</button></div></div></div>
+<div id="printCenter" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card print-card"><div class="modal-head"><div><h2>🖨 Print Center</h2><p>Choose paper size and orientation, then use the browser printer to Print or Save as PDF.</p></div><button type="button" class="modal-x" onclick="closePrintCenter()">×</button></div><div class="print-grid"><div><label>Paper Size</label><select id="paperSizeSelect"><option value="letter">Short / Letter — 8.5 × 11 in</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4 — 210 × 297 mm</option><option value="a3">A3 — 297 × 420 mm</option><option value="a5">A5 — 148 × 210 mm</option><option value="b4">B4 — 250 × 353 mm</option><option value="b5">B5 — 176 × 250 mm</option><option value="tabloid">Tabloid — 11 × 17 in</option><option value="executive">Executive — 7.25 × 10.5 in</option><option value="statement">Statement — 5.5 × 8.5 in</select></div><div><label>Orientation</label><div class="orientation-pills"><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="portrait"><span>▯ Portrait</span></label><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="landscape"><span>▭ Landscape</span></label></div></div></div><div class="print-preview-note"><strong>Preview:</strong> <span id="printSummary">A4 • Landscape</span></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePrintCenter()">Cancel</button><button type="button" class="btn green" onclick="printFromCenter('print')">🖨 Print</button></div></div></div>
 <div id="preferencesModal" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card"><div class="modal-head"><div><h2>⚙ Preferences</h2><p>Manage print defaults and local workspace lock.</p></div><button type="button" class="modal-x" onclick="closePreferences()">×</button></div><div class="pref-section"><h3>Print Defaults</h3><div class="row"><div><label>Default Paper Size</label><select id="prefPaperSize"><option value="letter">Short / Letter</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4</option><option value="a3">A3</option><option value="a5">A5</option><option value="b4">B4</option><option value="b5">B5</option><option value="tabloid">Tabloid</option><option value="executive">Executive</option><option value="statement">Statement</option></select></div><div><label>Default Orientation</label><select id="prefOrientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div></div><div class="pref-section"><h3>Local Workspace Lock</h3><div class="row"><div><label>New PIN</label><input id="newLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits"></div><div><label>Confirm PIN</label><input id="confirmLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat PIN"></div></div><button type="button" class="btn orange" onclick="saveLockPinFromPreferences()">🔐 Update Lock PIN</button></div><div id="prefStatus" class="status"></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePreferences()">Close</button><button type="button" class="btn primary" onclick="savePreferences()">💾 Save Preferences</button></div></div></div>
 <header class="header">
   <h1>ILAW Teacher Suite V8 — Studio</h1>
@@ -285,7 +298,7 @@ function clearCurrentSession(){
       <option value="en">English</option><option value="fil">Filipino</option>
     </select>
     <button class="btn green" onclick="openPrintCenter()">🖨 Print/PDF</button>
-    <button class="btn green" onclick="openPrintCenter()">💾 Download / Save PDF</button>
+    <button class="btn green" onclick="openPrintCenter()">💾 Download PDF</button>
 <span id="accountBadge">Not signed in</span>
     <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
     <button class="btn gray" onclick="openSettings()">⚙ Preferences</button>
@@ -495,7 +508,14 @@ function clearCurrentSession(){
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
   <div class="banner">WAYS FORWARD</div>
   <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
-  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap"></td></tr></tbody></table>
+  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap">
+<div class="print-reflection-lines">
+  <div><strong>Session 1</strong><span></span></div>
+  <div><strong>Session 2</strong><span></span></div>
+  <div><strong>Session 3</strong><span></span></div>
+  <div><strong>Session 4</strong><span></span></div>
+</div>
+</td></tr></tbody></table>
 
   <div id="pvSignatures" class="signatures"></div>
 </div>
@@ -585,6 +605,19 @@ const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolNam
 function $(id){return document.getElementById(id)}
 function setText(id,v){if($(id))$(id).textContent=v||""}
 function setVal(id,v){if($(id))$(id).value=v??""}
+
+function ensureReflectionTableLines(){
+  const cell=$("pvReflection");
+  if(!cell)return;
+  if(cell.querySelector(".print-reflection-lines"))return;
+  cell.innerHTML='<div class="print-reflection-lines">'+
+    '<div><strong>Session 1</strong><span></span></div>'+
+    '<div><strong>Session 2</strong><span></span></div>'+
+    '<div><strong>Session 3</strong><span></span></div>'+
+    '<div><strong>Session 4</strong><span></span></div>'+
+    '</div>';
+}
+
 function save(){
   const uid=window.ILAW_currentUser?.id;
   if(!uid)return;
@@ -609,7 +642,7 @@ function addSignatory(){appState.signatories=normalizeSignatories(appState.signa
 function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
 function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
 function render(){
-setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvAcademicTerm",appState.academicTerm);setText("pvCurriculumVersion",appState.curriculumVersion);setText("pvBowItem",appState.bowItem||appState.bowCompetency);setText("pvBowReference",appState.bowReference);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);setText("pvReflection",appState.fridayEnabled?appState.fridayReflection:"");
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvAcademicTerm",appState.academicTerm);setText("pvCurriculumVersion",appState.curriculumVersion);setText("pvBowItem",appState.bowItem||appState.bowCompetency);setText("pvBowReference",appState.bowReference);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);ensureReflectionTableLines();
 ["mon","tue","wed","thu"].forEach(d=>{const m=appState.matrix[d]||{};setText("pv_"+d+"_pre",m.pre);setText("pv_"+d+"_lead",m.lead);setText("pv_"+d+"_res",m.resources);setText("pv_"+d+"_integ",m.integration);setText("pv_"+d+"_meta",[m.date||"",m.timeIn&&m.timeOut?m.timeIn+" – "+m.timeOut:(m.timeIn||m.timeOut||"")].filter(Boolean).join(" • "))});
 appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
 const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
@@ -1054,10 +1087,7 @@ normalizeAppState();initPrintOrientation();
     if(!$('ilawV8ScheduleModal')){
       const m=document.createElement('div');m.id='ilawV8ScheduleModal';m.className='v8-modal';m.innerHTML='<div class="v8-card"><h2>📅 Class Schedule</h2><div class="v8-help">Save the regular time for each Grade/Section. The lesson plan will automatically use it beside the Date.</div><div id="v8ScheduleRows" style="margin-top:14px"></div><div class="v8-actions"><button class="btn gray" onclick="closeScheduleManager()">Close</button><button class="btn primary" onclick="addScheduleRow()">＋ Add Class</button><button class="btn green" onclick="saveScheduleManager()">💾 Save Schedule</button></div></div>';document.body.appendChild(m);
     }
-    if(!$('ilawV8ReflectionPrint')){
-      const p=$('lessonPaper'); if(p){const d=document.createElement('div');d.id='ilawV8ReflectionPrint';d.innerHTML='<div style="margin-top:18mm;border-top:2px solid #111;padding-top:6mm"><h3 style="margin:0 0 8px;text-align:center">FRIDAY REFLECTION</h3>'+[1,2,3,4].map(n=>'<div style="margin:10px 0 14px"><b>SESSION '+n+'</b><div>1. ________________________________________________</div><div>2. ________________________________________________</div><div>3. ________________________________________________</div><div>4. ________________________________________________</div></div>').join('')+'</div>';p.appendChild(d)}
-    }
-    // change curriculumVersion from readonly text to controlled select
+// change curriculumVersion from readonly text to controlled select
     const cv=$('curriculumVersion'); if(cv && cv.tagName==='INPUT'){const sel=document.createElement('select');sel.id='curriculumVersion';sel.innerHTML='<option>Revised K–10 / MATATAG</option><option>MELC / Transitional</option>';cv.replaceWith(sel)}
     syncCurriculumUI(); populateBowDropdowns(); applyScheduleToSessions();
   }
@@ -1088,213 +1118,58 @@ normalizeAppState();initPrintOrientation();
 })();
 </script>
 
-<style id="ilaw-v8-reflection-fix">
-  #ilawV8ReflectionPrint{display:none!important}
-  @media print{#ilawV8ReflectionPrint{display:block!important}}
-</style>
-<script id="ilaw-v8-reflection-fix-script">
+<script id="ilaw-v8-print-workflow-fix">
 (function(){
-  "use strict";
-  function makeReflectionBlock(){
-    var paper=document.getElementById("lessonPaper");
-    if(!paper) return null;
-    var old=document.getElementById("ilawV8ReflectionPrint");
-    if(old) old.remove();
-
-    var d=document.createElement("div");
-    d.id="ilawV8ReflectionPrint";
-    d.style.cssText="display:none;margin-top:18mm;border-top:2px solid #111;padding-top:6mm;";
-    d.innerHTML =
-      '<div style="margin:0 0 10px;text-align:center;font-weight:800;font-size:14px">FRIDAY REFLECTION</div>' +
-      [1,2,3,4].map(function(n){
-        return '<div style="margin:12px 0 18px;font-size:12pt;line-height:2.1">' +
-          '<strong>Session '+n+'</strong> ________________________________________________' +
-          '</div>';
-      }).join("");
-
-    paper.appendChild(d);
-    return d;
-  }
-  window.ILAW_makeReflectionBlock=makeReflectionBlock;
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",function(){setTimeout(makeReflectionBlock,0);});
-  }else{
-    setTimeout(makeReflectionBlock,0);
-  }
-})();
-</script>
-
-
-<script id="ilaw-v8-final-save-pdf-fix">
-(function(){
-  "use strict";
-
-  var SIZES={
-    letter:{label:"Short / Letter",format:"letter",w:8.5,h:11},
-    longbond:{label:"Long Bond — 8.5 × 13 in",format:[8.5,13],w:8.5,h:13},
-    legal:{label:"Legal — 8.5 × 14 in",format:"legal",w:8.5,h:14},
-    a4:{label:"A4",format:"a4",w:8.27,h:11.69},
-    a3:{label:"A3",format:"a3",w:11.69,h:16.54},
-    a5:{label:"A5",format:"a5",w:5.83,h:8.27},
-    b4:{label:"B4",format:"b4",w:9.84,h:13.9},
-    b5:{label:"B5",format:"b5",w:6.93,h:9.84},
-    tabloid:{label:"Tabloid",format:"tabloid",w:11,h:17},
-    executive:{label:"Executive",format:[7.25,10.5],w:7.25,h:10.5},
-    statement:{label:"Statement",format:[5.5,8.5],w:5.5,h:8.5}
-  };
-
-  function chosen(){
-    var sizeEl=document.getElementById("paperSizeSelect");
-    var orientEl=document.querySelector('input[name="printOrientationChoice"]:checked');
-    var key=(sizeEl && sizeEl.value)||"a4";
-    var orientation=(orientEl && orientEl.value)||"landscape";
-    return {key:key,orientation:orientation,spec:SIZES[key]||SIZES.a4};
-  }
-
-  function lessonTitle(){
-    var el=document.getElementById("lessonTitle");
-    var title=el && el.value ? el.value : "ILAW_Lesson_Plan";
-    return String(title).replace(/[\\/:*?"<>|]+/g," ").replace(/\s+/g," ").trim().slice(0,120)||"ILAW_Lesson_Plan";
-  }
-
-  function logoEnabled(){
-    var img=document.getElementById("pvLogo");
-    return !!(img && img.src && img.src !== location.href && !img.classList.contains("hidden"));
-  }
-
-  function applyPage(){
-    var c=chosen();
-    var page=(c.spec.format==="letter"||c.spec.format==="legal"||typeof c.spec.format==="string")
-      ? c.spec.format
-      : c.spec.w+"in "+c.spec.h+"in";
-    var style=document.getElementById("ilawPrintOrientationStyle") || document.createElement("style");
-    style.id="ilawPrintOrientationStyle";
-    style.textContent="@page{size:"+page+" "+c.orientation+";margin:8mm}";
-    if(!style.parentNode) document.head.appendChild(style);
-    document.body.classList.toggle("ilaw-no-logo-print",!logoEnabled());
-    return c;
-  }
-
-  function ensureReflection(){
-    if(typeof window.ILAW_makeReflectionBlock==="function"){
-      return window.ILAW_makeReflectionBlock();
+  function applyPrintChoice(){
+    const size=(document.getElementById("paperSizeSelect")||{}).value||"a4";
+    const orientation=(document.querySelector('input[name="printOrientationChoice"]:checked')||{}).value||"landscape";
+    const map={
+      letter:"letter",
+      longbond:"8.5in 13in",
+      legal:"legal",
+      a4:"A4",
+      a3:"A3",
+      a5:"A5",
+      b4:"B4",
+      b5:"B5",
+      tabloid:"tabloid",
+      executive:"7.25in 10.5in",
+      statement:"5.5in 8.5in"
+    };
+    let style=document.getElementById("ilawPrintOrientationStyle");
+    if(!style){
+      style=document.createElement("style");
+      style.id="ilawPrintOrientationStyle";
+      document.head.appendChild(style);
     }
-    var paper=document.getElementById("lessonPaper");
-    if(!paper) return null;
-    var d=paper.querySelector("#ilawV8ReflectionPrint");
-    if(d) d.remove();
-    d=document.createElement("div");
-    d.id="ilawV8ReflectionPrint";
-    d.innerHTML='<div style="margin-top:18mm;border-top:2px solid #111;padding-top:6mm"><div style="font-weight:800;text-align:center;font-size:14px">FRIDAY REFLECTION</div>'+
-      [1,2,3,4].map(function(n){return '<div style="margin:12px 0 18px;font-size:12pt;line-height:2.1"><strong>Session '+n+'</strong> ________________________________________________</div>';}).join('')+
-      '</div>';
-    paper.appendChild(d);
-    return d;
+    style.textContent="@page{size:"+(map[size]||"A4")+" "+orientation+";margin:8mm}";
   }
 
-  async function directPDF(){
-    var c=applyPage();
-    ensureReflection();
-
-    if(!window.html2pdf && window.ILAW_loadPDFEngine){
-      await window.ILAW_loadPDFEngine();
-    }
-    if(!window.html2pdf){
-      throw new Error("PDF engine could not be loaded. Use Print > Save as PDF.");
-    }
-
-    var paper=document.getElementById("lessonPaper");
-    if(!paper) throw new Error("Lesson plan preview was not found.");
-
-    var clone=paper.cloneNode(true);
-    var logo=clone.querySelector("#pvLogo");
-
-    if(logo){
-      if(logoEnabled()){
-        logo.classList.remove("hidden");
-        logo.style.display="block";
-      }else{
-        logo.remove();
-      }
-    }
-
-    clone.querySelectorAll("#ilawLogoModule,.toolbar,.header,.ilaw-modal,.v8-modal,.orientation-control").forEach(function(e){e.remove();});
-
-    var r=clone.querySelector("#ilawV8ReflectionPrint");
-    if(!r){
-      r=document.createElement("div");
-      r.id="ilawV8ReflectionPrint";
-      clone.appendChild(r);
-    }
-    r.style.display="block";
-    r.innerHTML='<div style="margin-top:18mm;border-top:2px solid #111;padding-top:6mm"><div style="font-weight:800;text-align:center;font-size:14px">FRIDAY REFLECTION</div>'+
-      [1,2,3,4].map(function(n){return '<div style="margin:12px 0 18px;font-size:12pt;line-height:2.1"><strong>Session '+n+'</strong> ________________________________________________</div>';}).join('')+
-      '</div>';
-
-    clone.style.position="fixed";
-    clone.style.left="-100000px";
-    clone.style.top="0";
-    clone.style.display="block";
-    clone.style.width=(c.orientation==="landscape"?c.spec.h:c.spec.w)+"in";
-    clone.style.maxWidth=clone.style.width;
-    clone.style.padding="8mm";
-    clone.style.background="#fff";
-    clone.style.boxShadow="none";
-    clone.style.border="0";
-    clone.style.margin="0";
-
-    document.body.appendChild(clone);
-
-    try{
-      var options={
-        margin:0,
-        filename:lessonTitle()+".pdf",
-        image:{type:"jpeg",quality:.98},
-        html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff"},
-        jsPDF:{
-          unit:"in",
-          orientation:c.orientation,
-          format:(c.orientation==="landscape" ? [c.spec.h,c.spec.w] : [c.spec.w,c.spec.h])
-        },
-        pagebreak:{mode:["css","legacy"]}
-      };
-      await window.html2pdf().set(options).from(clone).save();
-    }finally{
-      clone.remove();
-    }
-  }
-
-  function nativePrint(){
-    applyPage();
-    ensureReflection();
-    var modal=document.getElementById("printCenter");
+  window.printFromCenter=function(){
+    ensureReflectionTableLines();
+    applyPrintChoice();
+    const modal=document.getElementById("printCenter");
     if(modal){
       modal.classList.remove("show");
       modal.setAttribute("aria-hidden","true");
     }
-    setTimeout(function(){window.print();},80);
-  }
-
-  window.printFromCenter=function(mode){
-    if(mode==="pdf"){
-      directPDF().catch(function(err){
-        console.error("[ILAW PDF]",err);
-        alert("Automatic PDF download is unavailable in this browser/session.\n\nUse Print > Save as PDF.\n\nDetails: "+(err.message||err));
-        nativePrint();
-      });
-    }else{
-      nativePrint();
-    }
+    setTimeout(function(){
+      window.print();
+    },80);
   };
 
   window.savePDF=function(){
-    if(typeof window.openPrintCenter==="function") window.openPrintCenter();
-    else nativePrint();
+    if(typeof window.openPrintCenter==="function"){
+      window.openPrintCenter();
+    }else{
+      ensureReflectionTableLines();
+      setTimeout(function(){window.print();},80);
+    }
   };
 
-  window.addEventListener("beforeprint",function(){
-    applyPage();
-    ensureReflection();
+  window.addEventListener("beforeprint", function(){
+    ensureReflectionTableLines();
+    applyPrintChoice();
   });
 })();
 </script>
