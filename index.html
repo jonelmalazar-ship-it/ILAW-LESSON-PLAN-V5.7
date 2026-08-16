@@ -137,6 +137,45 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
 })();
 </script>
 
+<style id="ilaw-v8-print-logo-cleanup">
+@media print{
+  #ilawLogoModule,.ilaw-logo-module,#dashboardLogo,.logo-preview,.toolbar,.orientation-control{
+    display:none!important;
+  }
+}
+</style>
+<script id="ilaw-v8-print-date-time-fix">
+(function(){
+  function fmtTime(v){
+    if(!v)return "";
+    var p=String(v).split(":");
+    if(p.length<2)return v;
+    var h=parseInt(p[0],10), m=p[1], ap=h>=12?"PM":"AM";
+    h=h%12; if(h===0)h=12;
+    return h+":"+m+" "+ap;
+  }
+  function fmtDate(v){
+    if(!v)return "";
+    var d=new Date(v+"T00:00:00");
+    if(isNaN(d.getTime()))return v;
+    return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  }
+  window.ensurePrintSessionDateTimes=function(){
+    var days=["mon","tue","wed","thu"];
+    days.forEach(function(day){
+      var cell=document.getElementById("pv_"+day+"_meta");
+      if(!cell)return;
+      var st=window.appState||{};
+      var d=(st.matrix&&st.matrix[day])||{};
+      var date=fmtDate(d.date), tin=fmtTime(d.timeIn), tout=fmtTime(d.timeOut);
+      var out="";
+      if(date)out+="Date: "+date;
+      if(tin||tout)out+=(out?"<br>":"")+"Time: "+(tin||"")+" - "+(tout||"");
+      cell.innerHTML=out;
+    });
+  };
+})();
+</script>
 </head>
 <body class="auth-locked">
 
@@ -316,7 +355,7 @@ function clearCurrentSession(){
   <h1>ILAW Teacher Suite V8 — Studio</h1>
   <div class="toolbar">
     <select id="langSelect" onchange="changeLanguage()" style="width:auto">
-      <option value="en">English</option><option value="fil">Filipino</option>
+      <option value="en">English</option><option value="fil">Tagalog</option>
     </select>
     <button class="btn green" onclick="openPrintCenter()">🖨 Print/PDF</button>
     <button class="btn green" onclick="savePDF()">💾 Download PDF</button>
@@ -411,7 +450,7 @@ function clearCurrentSession(){
   <div><label>Grade &amp; Section</label><input id="gradeSection" oninput="updateState()"></div>
 </div>
 <div class="row">
-  <div><label>BOW Term / Week Reference</label><input id="termWeek" oninput="updateState()"></div>
+  <div><label>Term / Week Reference</label><input id="termWeek" oninput="updateState()"></div>
   <div><label>Lesson Plan Format</label><input id="planFormat" value="ILAW Matrix" oninput="updateState()"></div>
 </div>
 <label>Lesson Title</label><input id="lessonTitle" oninput="updateState()">
@@ -498,8 +537,8 @@ function clearCurrentSession(){
   <table class="doc-table">
     <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle">Levels of Classification and Biological Taxonomy</td></tr>
     <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher"></td></tr>
-    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">BOW Term / Week</td><td id="pvTermWeek"></td></tr>
-    <tr><td style="font-weight:bold">Curriculum Basis</td><td id="pvCurriculumVersion"></td><td style="font-weight:bold">Academic Term</td><td id="pvAcademicTerm"></td></tr>
+    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">Term / Week</td><td id="pvTermWeek"></td></tr>
+    <tr><td style="font-weight:bold">Curriculum Basis</td><td id="pvCurriculumVersion"></td><td style="font-weight:bold">Term</td><td id="pvAcademicTerm"></td></tr>
     <tr><td style="font-weight:bold">BOW Item / Competency</td><td colspan="3" id="pvBowItem" style="white-space:pre-wrap"></td></tr>
     <tr><td style="font-weight:bold">BOW Reference</td><td colspan="3" id="pvBowReference"></td></tr>
     <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
@@ -1239,6 +1278,7 @@ normalizeAppState();initPrintOrientation();
   }
 
   async function downloadPDF(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
     var c=getChoice();
     setPrintPage(c);
 
@@ -1341,6 +1381,7 @@ normalizeAppState();initPrintOrientation();
 
   // Existing Print/PDF remains the printer workflow.
   window.printFromCenter=function(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
     var c=getChoice();
     setPrintPage(c);
     if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
@@ -1353,7 +1394,149 @@ normalizeAppState();initPrintOrientation();
   };
 
   window.addEventListener("beforeprint",function(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
     if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+  });
+})();
+</script>
+
+
+<script id="ilaw-v8-language-fix">
+(function(){
+  const T = {
+    en: {
+      "School Logo":"School Logo","Remove Logo":"Remove Logo","Teacher Name":"Teacher Name",
+      "Teacher Title":"Teacher Title","School Name":"School Name","School Address":"School Address",
+      "Learning Area / Subject":"Learning Area / Subject","Grade & Section":"Grade & Section",
+      "Term / Week":"Term / Week","Lesson Plan Format":"Lesson Plan Format","Lesson Title":"Lesson Title",
+      "References":"References","Declaration of AI Use":"Declaration of AI Use",
+      "Curriculum Standards":"Curriculum Standards","Learning Competency (BOW)":"Learning Competency (BOW)",
+      "Learning Objectives":"Learning Objectives","Learner Context":"Learner Context",
+      "Formative Assessment":"Formative Assessment","Extended Learning Opportunities":"Extended Learning Opportunities",
+      "Daily Schedule Editor":"Daily Schedule Editor","Session Date":"Session Date","Time In":"Time In","Time Out":"Time Out",
+      "Pre-Lesson":"Pre-Lesson","Flow / Activities & Procedures":"Flow / Activities & Procedures",
+      "Learning Resources":"Learning Resources","Opportunities for Integration":"Opportunities for Integration",
+      "Friday Reflection — Friday only":"Friday Reflection — Friday only",
+      "It is Friday / enable weekly reflection":"It is Friday / enable weekly reflection",
+      "Assessing & Ways Forward":"Assessing & Ways Forward",
+      "Upload Logo":"Upload Logo","Print/PDF":"Print/PDF","Download PDF":"Download PDF",
+      "Preferences":"Preferences","Logout":"Logout","Lock":"Lock","Test API":"Test API",
+      "Generate Full Plan":"Generate Full Plan","Improve Plan":"Improve Plan",
+      "Regenerate Session":"Regenerate Session","Copy to Next":"Copy to Next","Clear Session":"Clear Session",
+      "Generate Reflection":"Generate Reflection","Save Reflection":"Save Reflection","Clear":"Clear",
+      "Print Center":"Print Center","Paper Size":"Paper Size","Orientation":"Orientation",
+      "Portrait":"Portrait","Landscape":"Landscape","Print":"Print","Cancel":"Cancel",
+      "Term":"Term","BOW Item / Competency":"BOW Item / Competency","BOW Reference":"BOW Reference"
+    },
+    fil: {
+      "School Logo":"Logo ng Paaralan","Remove Logo":"Alisin ang Logo","Teacher Name":"Pangalan ng Guro",
+      "Teacher Title":"Posisyon ng Guro","School Name":"Pangalan ng Paaralan","School Address":"Address ng Paaralan",
+      "Learning Area / Subject":"Learning Area / Asignatura","Grade & Section":"Baitang at Seksyon",
+      "Term / Week":"Term / Linggo","Lesson Plan Format":"Format ng Lesson Plan","Lesson Title":"Pamagat ng Aralin",
+      "References":"Mga Sanggunian","Declaration of AI Use":"Pahayag sa Paggamit ng AI",
+      "Curriculum Standards":"Pamantayan ng Kurikulum","Learning Competency (BOW)":"Learning Competency (BOW)",
+      "Learning Objectives":"Mga Layunin sa Pagkatuto","Learner Context":"Konteksto ng mga Mag-aaral",
+      "Formative Assessment":"Pagtatayang Formative","Extended Learning Opportunities":"Karagdagang Pagkakataon sa Pagkatuto",
+      "Daily Schedule Editor":"Editor ng Pang-araw-araw na Iskedyul","Session Date":"Petsa ng Session",
+      "Time In":"Oras ng Simula","Time Out":"Oras ng Tapos","Pre-Lesson":"Bago ang Aralin",
+      "Flow / Activities & Procedures":"Daloy / Mga Gawain at Pamamaraan",
+      "Learning Resources":"Mga Learning Resource","Opportunities for Integration":"Mga Pagkakataon sa Integrasyon",
+      "Friday Reflection — Friday only":"Friday Reflection — Biyernes lamang",
+      "It is Friday / enable weekly reflection":"Biyernes / paganahin ang weekly reflection",
+      "Assessing & Ways Forward":"Pagtataya at Mga Susunod na Hakbang",
+      "Upload Logo":"Mag-upload ng Logo","Print/PDF":"I-print/PDF","Download PDF":"I-download ang PDF",
+      "Preferences":"Mga Setting","Logout":"Mag-logout","Lock":"I-lock","Test API":"Subukan ang API",
+      "Generate Full Plan":"Bumuo ng Buong Lesson Plan","Improve Plan":"Pagbutihin ang Lesson Plan",
+      "Regenerate Session":"Bumuo Ulit ng Session","Copy to Next":"Kopyahin sa Kasunod","Clear Session":"I-clear ang Session",
+      "Generate Reflection":"Bumuo ng Reflection","Save Reflection":"I-save ang Reflection","Clear":"I-clear",
+      "Print Center":"Print Center","Paper Size":"Laki ng Papel","Orientation":"Orientation",
+      "Portrait":"Portrait","Landscape":"Landscape","Print":"I-print","Cancel":"Kanselahin",
+      "Term":"Term","BOW Item / Competency":"BOW Item / Competency","BOW Reference":"BOW Reference"
+    }
+  };
+
+  function replaceTextNode(el, from, to){
+    if(!el || !to) return;
+    const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n=>{
+      if(n.nodeValue.trim()===from) n.nodeValue=n.nodeValue.replace(from,to);
+    });
+  }
+
+  function translateValueFields(lang){
+    // Button IDs: preserve all existing handlers; only change visible labels.
+    const byId = {
+      fil:{
+        generateBtn:"✨ Bumuo ng Buong Plan", 
+        langSelect:"Filipino"
+      },
+      en:{
+        generateBtn:"✨ Generate Full Plan",
+        langSelect:"English"
+      }
+    };
+    if($("generateBtn")) $("generateBtn").textContent=byId[lang].generateBtn;
+    if($("langSelect")) $("langSelect").value=lang;
+  }
+
+  function applyLanguage(lang){
+    lang = (lang==="fil") ? "fil" : "en";
+    appLanguage = lang;
+    try{ localStorage.setItem("ilaw_language",lang); }catch(e){}
+
+    const map=T[lang];
+
+    // Labels and headings.
+    document.querySelectorAll("label,h1,h2,h3,h4,button,.label,.small").forEach(el=>{
+      const raw = el.dataset.langOriginal || el.textContent.trim();
+      if(!el.dataset.langOriginal) el.dataset.langOriginal=raw;
+      if(map[raw]){
+        // Do not replace icon-only / complex elements; plain text only.
+        if(el.children.length===0) el.textContent=map[raw];
+      }
+    });
+
+    // Specific buttons with icons.
+    const buttons = {
+      fil:{
+        "lockApp":"🔒 I-lock","openSettings":"⚙ Mga Setting","signOutTeacher":"Mag-logout",
+        "testAPI":"🔌 Subukan ang API","generateFullLessonPlan":"✨ Bumuo ng Buong Plan",
+        "improvePlan":"🧠 Pagbutihin ang Plan","regenerateCurrentSession":"🔄 Bumuo Ulit ng Session",
+        "copyCurrentToNext":"📋 Kopyahin sa Kasunod","clearCurrentSession":"🧹 I-clear ang Session"
+      },
+      en:{
+        "lockApp":"🔒 Lock","openSettings":"⚙ Preferences","signOutTeacher":"Logout",
+        "testAPI":"🔌 Test API","generateFullLessonPlan":"✨ Generate Full Plan",
+        "improvePlan":"🧠 Improve Plan","regenerateCurrentSession":"🔄 Regenerate Session",
+        "copyCurrentToNext":"📋 Copy to Next","clearCurrentSession":"🧹 Clear Session"
+      }
+    };
+
+    document.querySelectorAll("button").forEach(btn=>{
+      const m=btn.getAttribute("onclick");
+      if(!m) return;
+      const fn=(m.match(/^\s*([A-Za-z_$][\w$]*)\s*\(/)||[])[1];
+      if(buttons[lang][fn]) btn.textContent=buttons[lang][fn];
+    });
+
+    translateValueFields(lang);
+  }
+
+  window.changeLanguage=function(){
+    const lang=$("langSelect")?.value==="fil" ? "fil" : "en";
+    applyLanguage(lang);
+  };
+
+  window.applyILAWLanguage=applyLanguage;
+
+  document.addEventListener("DOMContentLoaded",function(){
+    let lang="en";
+    try{lang=localStorage.getItem("ilaw_language")==="fil"?"fil":"en"}catch(e){}
+    const sel=$("langSelect");
+    if(sel)sel.value=lang;
+    applyLanguage(lang);
   });
 })();
 </script>
