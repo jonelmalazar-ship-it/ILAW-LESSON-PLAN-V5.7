@@ -104,38 +104,17 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
 <style>
 .curriculum-row{align-items:flex-start}.curriculum-status{padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px dashed #cbd5e1;margin-top:6px}.session-meta-editor{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;margin:8px 0 10px;padding:10px;background:#f8fafc;border:1px solid #dbe3ee;border-radius:10px}.session-meta-print td{background:#f8fafc;font-size:.76rem;font-weight:600}.ilaw-modal{position:fixed;inset:0;z-index:25000;background:rgba(8,28,56,.62);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}.ilaw-modal.show{display:flex}.ilaw-modal-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dbe3ee;border-radius:18px;padding:20px;box-shadow:0 24px 80px rgba(5,25,55,.35)}.print-card{width:min(780px,96vw)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px}.modal-head h2{margin:0 0 4px;color:#173f78}.modal-head p{margin:0;color:#64748b;font-size:.82rem}.modal-x{border:0;background:#eef2f7;color:#334155;border-radius:10px;width:34px;height:34px;font-size:22px;cursor:pointer}.print-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.orientation-pills{display:flex;gap:8px}.orientation-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #cbd5e1;background:#f8fafc;border-radius:11px;padding:12px;cursor:pointer}.orientation-pill input{width:auto}.print-preview-note{margin-top:15px;padding:11px 12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a5f}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:18px}.pref-section{border:1px solid #e2e8f0;border-radius:12px;padding:13px;margin-bottom:12px;background:#fbfdff}.pref-section h3{margin:0 0 10px;color:#173f78;font-size:.9rem}@media(max-width:700px){.session-meta-editor,.print-grid{grid-template-columns:1fr}.orientation-pills{flex-direction:column}}@media print{.ilaw-modal{display:none!important}.session-meta-print td{background:#fff!important}}</style>
 
-<style id="ilaw-v8-reflection-table-fix">
+<style id="ilaw-v8-reflection-lines-clean">
 .print-reflection-lines{display:flex;flex-direction:column;gap:7px;margin:2px 0}
 .print-reflection-lines>div{display:grid;grid-template-columns:78px 1fr;align-items:end;gap:8px;min-height:20px}
 .print-reflection-lines strong{font-size:.78rem;white-space:nowrap}
 .print-reflection-lines span{display:block;height:15px;border-bottom:1px solid #777}
 @media print{
-  .print-reflection-lines{gap:9px}
-  .print-reflection-lines>div{min-height:20px}
-  .print-reflection-lines span{height:15px;border-bottom:1px solid #555}
+ .print-reflection-lines{gap:9px}
+ .print-reflection-lines>div{min-height:20px}
+ .print-reflection-lines span{height:15px;border-bottom:1px solid #555}
 }
 </style>
-
-
-<script id="ilaw-v8-pdf-engine">
-(function(){
-  function load(src){
-    return new Promise(function(resolve,reject){
-      var s=document.createElement("script");
-      s.src=src;
-      s.onload=resolve;
-      s.onerror=function(){reject(new Error("PDF engine failed to load."));};
-      document.head.appendChild(s);
-    });
-  }
-  window.ILAW_loadPDFEngine = async function(){
-    if(window.html2pdf) return window.html2pdf;
-    await load("https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js");
-    if(!window.html2pdf) throw new Error("PDF engine unavailable.");
-    return window.html2pdf;
-  };
-})();
-</script>
 
 </head>
 <body class="auth-locked">
@@ -319,7 +298,7 @@ function clearCurrentSession(){
       <option value="en">English</option><option value="fil">Filipino</option>
     </select>
     <button class="btn green" onclick="openPrintCenter()">🖨 Print/PDF</button>
-    <button class="btn green" onclick="savePDF()">💾 Download PDF</button>
+    <button class="btn green" onclick="openPrintCenter()">💾 Download PDF</button>
 <span id="accountBadge">Not signed in</span>
     <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
     <button class="btn gray" onclick="openSettings()">⚙ Preferences</button>
@@ -1138,212 +1117,4 @@ normalizeAppState();initPrintOrientation();
   window.openBowManager=openBowManager;window.closeBowManager=closeBowManager;window.importBowFile=importBowFile;window.openScheduleManager=openScheduleManager;window.closeScheduleManager=closeScheduleManager;window.addScheduleRow=addScheduleRow;window.saveScheduleManager=saveScheduleManager;
 })();
 </script>
-
-<script id="ilaw-v8-print-workflow-fix">
-(function(){
-  function applyPrintChoice(){
-    const size=(document.getElementById("paperSizeSelect")||{}).value||"a4";
-    const orientation=(document.querySelector('input[name="printOrientationChoice"]:checked')||{}).value||"landscape";
-    const map={
-      letter:"letter",
-      longbond:"8.5in 13in",
-      legal:"legal",
-      a4:"A4",
-      a3:"A3",
-      a5:"A5",
-      b4:"B4",
-      b5:"B5",
-      tabloid:"tabloid",
-      executive:"7.25in 10.5in",
-      statement:"5.5in 8.5in"
-    };
-    let style=document.getElementById("ilawPrintOrientationStyle");
-    if(!style){
-      style=document.createElement("style");
-      style.id="ilawPrintOrientationStyle";
-      document.head.appendChild(style);
-    }
-    style.textContent="@page{size:"+(map[size]||"A4")+" "+orientation+";margin:8mm}";
-  }
-
-  window.printFromCenter=function(){
-    ensureReflectionTableLines();
-    applyPrintChoice();
-    const modal=document.getElementById("printCenter");
-    if(modal){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden","true");
-    }
-    setTimeout(function(){
-      window.print();
-    },80);
-  };
-
-  window.savePDF=function(){
-    if(typeof window.openPrintCenter==="function"){
-      window.openPrintCenter();
-    }else{
-      ensureReflectionTableLines();
-      setTimeout(function(){window.print();},80);
-    }
-  };
-
-  window.addEventListener("beforeprint", function(){
-    ensureReflectionTableLines();
-    applyPrintChoice();
-  });
-})();
-</script>
-
-
-<script id="ilaw-v8-direct-download">
-(function(){
-  "use strict";
-
-  function choice(){
-    var size=(document.getElementById("paperSizeSelect")||{}).value||"a4";
-    var orientation=(document.querySelector('input[name="printOrientationChoice"]:checked')||{}).value||"landscape";
-    var specs={
-      letter:{label:"Short / Letter",format:"letter",w:8.5,h:11},
-      longbond:{label:"Long Bond — 8.5 × 13 in",format:[8.5,13],w:8.5,h:13},
-      legal:{label:"Legal — 8.5 × 14 in",format:"legal",w:8.5,h:14},
-      a4:{label:"A4",format:"a4",w:8.27,h:11.69},
-      a3:{label:"A3",format:"a3",w:11.69,h:16.54},
-      a5:{label:"A5",format:"a5",w:5.83,h:8.27},
-      b4:{label:"B4",format:"b4",w:9.84,h:13.9},
-      b5:{label:"B5",format:"b5",w:6.93,h:9.84},
-      tabloid:{label:"Tabloid",format:"tabloid",w:11,h:17},
-      executive:{label:"Executive",format:[7.25,10.5],w:7.25,h:10.5},
-      statement:{label:"Statement",format:[5.5,8.5],w:5.5,h:8.5}
-    };
-    return {size:size,orientation:orientation,spec:specs[size]||specs.a4};
-  }
-
-  function applyPage(c){
-    var page=c.spec.format;
-    var pageCSS;
-    if(Array.isArray(page)) pageCSS=page[0]+"in "+page[1]+"in";
-    else pageCSS=page;
-    var st=document.getElementById("ilawPrintOrientationStyle");
-    if(!st){
-      st=document.createElement("style");
-      st.id="ilawPrintOrientationStyle";
-      document.head.appendChild(st);
-    }
-    st.textContent="@page{size:"+pageCSS+" "+c.orientation+";margin:8mm}";
-  }
-
-  function pdfName(){
-    var title=(document.getElementById("lessonTitle")||{}).value||"ILAW_Lesson_Plan";
-    title=String(title).replace(/[\\/:*?"<>|]+/g," ").replace(/\s+/g," ").trim();
-    return (title||"ILAW_Lesson_Plan").slice(0,120)+".pdf";
-  }
-
-  function hasLogo(){
-    var img=document.getElementById("pvLogo");
-    return !!(img && img.src && !img.classList.contains("hidden"));
-  }
-
-  async function doDownload(){
-    var c=choice();
-    applyPage(c);
-    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
-
-    if(!window.html2pdf){
-      await window.ILAW_loadPDFEngine();
-    }
-    if(!window.html2pdf) throw new Error("PDF engine unavailable.");
-
-    var paper=document.getElementById("lessonPaper");
-    if(!paper) throw new Error("Lesson plan preview not found.");
-
-    var clone=paper.cloneNode(true);
-
-    // Remove UI-only items but keep the actual printable paper.
-    clone.querySelectorAll("#ilawLogoModule,.header,.toolbar,.ilaw-modal,.v8-modal,.orientation-control").forEach(function(el){el.remove();});
-
-    var logo=clone.querySelector("#pvLogo");
-    if(logo && !hasLogo()) logo.remove();
-
-    // Ensure the reflection stays INSIDE the Reflections table cell.
-    var refCell=clone.querySelector("#pvReflection");
-    if(refCell){
-      refCell.innerHTML=
-        '<div class="print-reflection-lines" style="display:flex;flex-direction:column;gap:8px;margin:2px 0">'+
-        '<div style="display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:end;min-height:20px"><strong>Session 1</strong><span style="display:block;height:15px;border-bottom:1px solid #555"></span></div>'+
-        '<div style="display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:end;min-height:20px"><strong>Session 2</strong><span style="display:block;height:15px;border-bottom:1px solid #555"></span></div>'+
-        '<div style="display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:end;min-height:20px"><strong>Session 3</strong><span style="display:block;height:15px;border-bottom:1px solid #555"></span></div>'+
-        '<div style="display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:end;min-height:20px"><strong>Session 4</strong><span style="display:block;height:15px;border-bottom:1px solid #555"></span></div>'+
-        '</div>';
-    }
-
-    // Keep the clone INSIDE the viewport so html2canvas can actually render it.
-    // It is visually unobtrusive but not off-screen (off-screen clones can create blank PDFs).
-    clone.style.position="fixed";
-    clone.style.left="0";
-    clone.style.top="0";
-    clone.style.display="block";
-    clone.style.visibility="visible";
-    clone.style.opacity="0.01";
-    clone.style.pointerEvents="none";
-    clone.style.zIndex="-1";
-    clone.style.background="#fff";
-    clone.style.boxShadow="none";
-    clone.style.border="0";
-    clone.style.borderRadius="0";
-    clone.style.margin="0";
-    clone.style.padding="8mm";
-    clone.style.width=(c.orientation==="landscape"?c.spec.h:c.spec.w)+"in";
-    clone.style.maxWidth=clone.style.width;
-    clone.style.minHeight="auto";
-    document.body.appendChild(clone);
-
-    try{
-      var options={
-        margin:0,
-        filename:pdfName(),
-        image:{type:"jpeg",quality:.98},
-        html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff"},
-        jsPDF:{
-          unit:"in",
-          format:(c.orientation==="landscape"?[c.spec.h,c.spec.w]:[c.spec.w,c.spec.h]),
-          orientation:c.orientation
-        },
-        pagebreak:{mode:["css","legacy"]}
-      };
-      await window.html2pdf().set(options).from(clone).save();
-    }finally{
-      clone.remove();
-    }
-  }
-
-  // Keep the existing function name, but make THIS function perform the direct download.
-  window.savePDF=function(){
-    doDownload().catch(function(err){
-      console.error("[ILAW PDF]",err);
-      alert("Download PDF failed: "+(err && err.message ? err.message : err));
-    });
-  };
-
-  // Existing Print/PDF button remains a printer workflow.
-  window.printFromCenter=function(){
-    var c=choice();
-    applyPage(c);
-    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
-
-    var modal=document.getElementById("printCenter");
-    if(modal){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden","true");
-    }
-
-    setTimeout(function(){window.print();},80);
-  };
-
-  window.addEventListener("beforeprint",function(){
-    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
-  });
-})();
-</script>
-
 </body></html>
