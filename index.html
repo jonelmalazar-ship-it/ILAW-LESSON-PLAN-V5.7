@@ -146,14 +146,6 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--navy-600
   font-size:.81rem;line-height:1.4;color:#1c2333;border-radius:6px;border:1px solid #e7e2d4;
   position:relative;min-height:900px;
 }
-.paper::before{
-  content:"";position:absolute;top:26px;right:30px;width:96px;height:96px;border-radius:50%;
-  border:1.4px solid var(--gold-500);opacity:.16;pointer-events:none;
-}
-.paper::after{
-  content:"";position:absolute;top:36px;right:40px;width:76px;height:76px;border-radius:50%;
-  border:1px dashed var(--gold-500);opacity:.13;pointer-events:none;
-}
 .doc-header{text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--navy-800)}
 .doc-header img{width:70px;max-height:70px;object-fit:contain}
 .doc-header h2{font-family:"Fraunces",Georgia,serif;font-weight:600;color:var(--navy-900);margin:3px;font-size:1.15rem}
@@ -589,7 +581,9 @@ function clearCurrentSession(){
 <label>Curriculum Standards</label><textarea id="curriculumStandards" oninput="updateState()"></textarea>
 <label>Learning Competency (BOW)</label><textarea id="bowCompetency" oninput="updateState()"></textarea>
 <label>Learning Objectives</label><textarea id="objectives" oninput="updateState()"></textarea>
-<label>Learner Context</label><textarea id="learnerContext" oninput="updateState()"></textarea>
+<label>Learner Context <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">— your real classroom situation</span></label>
+<textarea id="learnerContext" rows="4" oninput="updateState()" placeholder="Example: ACHS has 34 Grade 10 students. 50% are struggling in Math and 30% are struggling in English. Most families rely on agricultural/farming livelihood. Limited access to gadgets/internet at home."></textarea>
+<div class="small" style="margin:-6px 0 4px">Ilagay dito ang totoong konteksto ng iyong klase — bilang ng mag-aaral, mahihinang lugar (subject/skills), at karaniwang hanapbuhay ng mga pamilya. Gagamitin ito ng AI generator para i-contextualize ang mga aktibidad, halimbawa, at wika ng buong lesson plan.</div>
 
 <div style="margin:10px 0"><button class="btn gray" onclick="loadDefaultSample()">Thermal Dynamics Sample</button></div>
 
@@ -1024,7 +1018,9 @@ async function generateWithFallback(key,prompt,useSchema=true,responseSchemaOver
 function aiPrompt(topic,subject,extra=""){
   const c=generationContext(), exactTitle=c.lessonTitle||topic;
   const hierarchy=c.component?`Component: ${c.component}. Subtopic: ${c.subtopic||"Not specified"}.`:`Topic: ${c.subtopic||topic}.`;
-  return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"}. ${hierarchy} The EXACT LESSON TITLE is "${exactTitle}". Treat that exact lesson title as the primary anchor of every section of the generated plan. Do not replace it with a generic topic, do not broaden it, and do not invent a different title. ${extra}
+  const teacherContext=($("learnerContext")?.value||appState.learnerContext||"").trim();
+  const contextBlock=teacherContext?`\nREAL CLASSROOM CONTEXT PROVIDED BY THE TEACHER (must be used to contextualize the plan): "${teacherContext}". Actively adapt the activities, examples, resources, and language to this context — e.g. reference the actual class size, address the stated weak areas with scaffolded/differentiated tasks, and use examples drawn from the stated livelihood/community context where relevant. Keep the learnerContext output field equal to this teacher-provided context, do not replace or genericize it.`:"";
+  return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"}. ${hierarchy} The EXACT LESSON TITLE is "${exactTitle}". Treat that exact lesson title as the primary anchor of every section of the generated plan. Do not replace it with a generic topic, do not broaden it, and do not invent a different title. ${extra}${contextBlock}
 Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Never use the word "Quarter" anywhere in the output (including termWeek) — use "Term" and/or specific week/session numbers instead. Return ONLY JSON.`
 }
 const schema={type:"OBJECT",properties:{
@@ -1067,14 +1063,15 @@ const ctx=generationContext();appState.academicTerm=ctx.academicTerm;appState.sc
 $("generateBtn").disabled=true;
 try{
   let d=deepNoQuarter(await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess.")));
-  let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};
+  const teacherContext=($("learnerContext")?.value||appState.learnerContext||"").trim();
+  let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,...(teacherContext?{learnerContext:teacherContext}:{})};
   appState={...defaultState(),...d,...keep,subject:d.subject||subject,lessonTitle:exactTitle,mapehComponent:generationContext().component,subtopic:topic};
   save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated.";
 }catch(e){$("aiStatus").textContent="❌ "+e.message}
 finally{$("generateBtn").disabled=false}
 }
 async function improvePlan(){
-if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=deepNoQuarter(await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState))));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
+if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=deepNoQuarter(await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState))));const teacherContext=($("learnerContext")?.value||appState.learnerContext||"").trim();let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,...(teacherContext?{learnerContext:teacherContext}:{})};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
 async function regenerateCurrentSession(){
  if(!appState.lessonTitle)return alert("Load or generate a plan first.");
  let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
