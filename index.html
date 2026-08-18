@@ -163,6 +163,18 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--navy-600
 .doc-table{width:100%;border-collapse:collapse;margin-bottom:12px}
 .doc-table th,.doc-table td{border:1px solid #d8d2c0;padding:6px 7px;vertical-align:top}
 .doc-table th{text-align:center;background:var(--gold-100);font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.03em;color:var(--navy-900)}
+[contenteditable="true"]{cursor:text;border-radius:3px;transition:background-color .15s}
+[contenteditable="true"]:hover{background:rgba(195,154,85,.10)}
+[contenteditable="true"]:focus{outline:1.5px dashed var(--gold-600);background:rgba(195,154,85,.14);outline-offset:1px}
+.paper[data-editable-ready="true"]::after{
+  content:"✎ Editable — click any line to fine-tune before printing";
+  display:block;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:.62rem;
+  color:var(--gold-700);letter-spacing:.03em;margin-top:16px;opacity:.75;
+}
+@media print{
+  [contenteditable="true"]:focus{outline:none;background:transparent}
+  .paper[data-editable-ready="true"]::after{display:none}
+}
 .banner{
   background:linear-gradient(90deg,var(--navy-900),var(--navy-700));color:#fdfaf3;font-weight:700;
   padding:7px 10px;margin:9px 0;border-radius:4px;border-left:4px solid var(--gold-500);
@@ -506,10 +518,9 @@ function clearCurrentSession(){
   </div>
   <div class="row curriculum-row">
     <div><label>School Year</label><select id="schoolYear" onchange="curriculumContextChanged()"><option value="2026-2027">2026–2027</option><option value="2027-2028">2027–2028</option><option value="2028-2029">2028–2029</option></select></div>
-    <div><label>Term</label><select id="academicTerm" onchange="curriculumContextChanged()"><option value="Term 1">Term 1</option><option value="Term 2">Term 2</option><option value="Term 3">Term 3</option></select></div>
     <div><label>Curriculum Basis</label><input id="curriculumVersion" readonly placeholder="Auto-detected from grade + school year"></div>
   </div>
-  <div class="row"><div><label>BOW Item / Competency</label><textarea id="bowItem" rows="2" placeholder="Paste or select the applicable BOW competency/item for this term."></textarea></div><div><label>BOW Reference / Source</label><input id="bowReference" placeholder="e.g. DepEd BOW / MELCs / MATATAG CG"></div></div>
+  <div class="row"><div><label>BOW Item / Competency</label><textarea id="bowItem" rows="2" placeholder="Paste or select the applicable BOW competency/item for this term."></textarea></div></div>
   <div id="curriculumStatus" class="small curriculum-status">Curriculum basis will be detected automatically.</div>
   <div class="row">
     <div>
@@ -646,43 +657,42 @@ function clearCurrentSession(){
     <h4>Republic of the Philippines</h4>
     <h3>Department of Education</h3>
     <h4>REGION V — SCHOOLS DIVISION OF CAMARINES SUR</h4>
-    <h2 id="pvSchoolName"></h2><p id="pvSchoolAddress"></p>
+    <h2 id="pvSchoolName" contenteditable="true"></h2><p id="pvSchoolAddress" contenteditable="true"></p>
   </div>
 
   <table class="doc-table">
-    <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle">Levels of Classification and Biological Taxonomy</td></tr>
-    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher"></td></tr>
-    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection"></td><td style="font-weight:bold">Term / Week</td><td id="pvTermWeek"></td></tr>
-    <tr><td style="font-weight:bold">Curriculum Basis</td><td id="pvCurriculumVersion"></td><td style="font-weight:bold">Term</td><td id="pvAcademicTerm"></td></tr>
-    <tr><td style="font-weight:bold">BOW Item / Competency</td><td colspan="3" id="pvBowItem" style="white-space:pre-wrap"></td></tr>
-    <tr><td style="font-weight:bold">BOW Reference</td><td colspan="3" id="pvBowReference"></td></tr>
-    <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
-    <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
+    <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle" contenteditable="true">Levels of Classification and Biological Taxonomy</td></tr>
+    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject" contenteditable="true">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher" contenteditable="true"></td></tr>
+    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection" contenteditable="true"></td><td style="font-weight:bold">Term / Week</td><td id="pvTermWeek" contenteditable="true"></td></tr>
+    <tr><td style="font-weight:bold">Curriculum Basis</td><td colspan="3" id="pvCurriculumVersion"></td></tr>
+    <tr><td style="font-weight:bold">BOW Item / Competency</td><td colspan="3" id="pvBowItem" style="white-space:pre-wrap" contenteditable="true"></td></tr>
+    <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences" contenteditable="true">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
+    <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration" contenteditable="true">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
   </tbody></table>
 
   <div class="banner">INTENTIONS <span class="sub">Meaningful learning experiences are anchored in how we frame them.</span></div>
   <table class="doc-table">
-    <tbody><tr><td style="width:25%;font-weight:bold">Curriculum Standards</td><td id="pvStandards" style="white-space:pre-wrap">The learners demonstrate an understanding of the concept of a species and the hierarchical system of classification of organisms.</td></tr>
-    <tr><td style="font-weight:bold">Learning Competency</td><td id="pvBow">Explain the hierarchical system of classification of organisms (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) and the rules of binomial nomenclature (Competency-aligned statement).</td></tr>
-    <tr><td style="font-weight:bold">Learning Objectives</td><td id="pvObjectives" style="white-space:pre-wrap">At the end of the 4-session module, learners will be able to: 1. Describe the eight taxonomic ranks in biological classification; 2. Apply the rules of binomial nomenclature when writing scientific names; 3. Use a simple dichotomous key to identify and classify local Philippine organisms; and 4. Recognize the importance of systematic classification in biodiversity conservation.</td></tr>
-    <tr><td style="font-weight:bold">Learner Context</td><td id="pvLearnerContext" style="white-space:pre-wrap">Grade 8 public high school learners with mixed academic readiness, working in small groups with access to print modules, visual charts, and localized plant/animal picture cards.</td></tr>
+    <tbody><tr><td style="width:25%;font-weight:bold">Curriculum Standards</td><td id="pvStandards" contenteditable="true" style="white-space:pre-wrap">The learners demonstrate an understanding of the concept of a species and the hierarchical system of classification of organisms.</td></tr>
+    <tr><td style="font-weight:bold">Learning Competency</td><td id="pvBow" contenteditable="true">Explain the hierarchical system of classification of organisms (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) and the rules of binomial nomenclature (Competency-aligned statement).</td></tr>
+    <tr><td style="font-weight:bold">Learning Objectives</td><td id="pvObjectives" contenteditable="true" style="white-space:pre-wrap">At the end of the 4-session module, learners will be able to: 1. Describe the eight taxonomic ranks in biological classification; 2. Apply the rules of binomial nomenclature when writing scientific names; 3. Use a simple dichotomous key to identify and classify local Philippine organisms; and 4. Recognize the importance of systematic classification in biodiversity conservation.</td></tr>
+    <tr><td style="font-weight:bold">Learner Context</td><td id="pvLearnerContext" contenteditable="true" style="white-space:pre-wrap">Grade 8 public high school learners with mixed academic readiness, working in small groups with access to print modules, visual charts, and localized plant/animal picture cards.</td></tr>
   </tbody></table>
 
   <div class="banner">LEARNING EXPERIENCES <span class="sub">A learning experience is like a thoughtfully designed journey.</span></div>
   <table class="doc-table">
     <thead><tr><th>Learning Experience</th><th>Session 1</th><th>Session 2</th><th>Session 3</th><th>Session 4</th></tr></thead>
     <tbody><tr class="session-meta-print"><td style="font-weight:bold">Date / Time</td><td id="pv_mon_meta"></td><td id="pv_tue_meta"></td><td id="pv_wed_meta"></td><td id="pv_thu_meta"></td></tr>
-      <tr><td style="font-weight:bold">Pre-Lesson</td><td id="pv_mon_pre">Conduct a 5-minute activity called 'Organize the Supermarket' where students group 10 everyday items into logical categories and explain their rationale.</td><td id="pv_tue_pre">Quick recall game: 'Taxonomic Ladder' where student representatives arrange jumbled cards of the taxonomic levels from broadest to most specific.</td><td id="pv_wed_pre">Present pictures of two similar-looking local plants (e.g., Sampaguita and Chichirica) and ask students how a scientist would distinguish them.</td><td id="pv_thu_pre">Peer check: Groups exchange and verify their completed dichotomous key identification worksheets from Wednesday.</td></tr>
-      <tr><td style="font-weight:bold">Flow</td><td id="pv_mon_lead" style="white-space:pre-wrap">Introduce Taxonomy and Carolus Linnaeus. Discuss the concept of classifying biological diversity and present the 8 hierarchical levels (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) using the mnemonic 'Dear King Philip Came Over For Good Soup'.</td><td id="pv_tue_lead" style="white-space:pre-wrap">Discuss Binomial Nomenclature rules (Genus capitalized, species lowercase, italicized or underlined). Guide students in writing scientific names of local organisms such as Panthera pardus, Oryza sativa, and Jasminum sambac.</td><td id="pv_wed_lead" style="white-space:pre-wrap">Introduce simple Dichotomous Keys. Guide student groups in navigating a 4-step dichotomous key to identify five Philippine endemic organisms (e.g., Tamaraw, Philippine Eagle, Tarsier, Milkfish, Narra tree). Safety rule: Handle specimen cards carefully and maintain orderly group discussion.</td><td id="pv_thu_lead" style="white-space:pre-wrap">Facilitate a class synthesis connecting taxonomy to biodiversity conservation. Administer a 10-item multiple-choice formative quiz covering taxonomic ranks, scientific naming, and dichotomous key usage.</td></tr>
-      <tr><td style="font-weight:bold">Learning Resources</td><td id="pv_mon_res">Taxonomy graphic organizer, Manila paper, visual diagram of taxonomic hierarchy.</td><td id="pv_tue_res">Binomial nomenclature rule chart, practice worksheets, whiteboard markers.</td><td id="pv_wed_res">Dichotomous key activity sheets, picture cards of Philippine flora and fauna.</td><td id="pv_thu_res">Formative assessment sheets, summary slides/visual chart.</td></tr>
-      <tr><td style="font-weight:bold">Opportunities for integration</td><td id="pv_mon_integ">Values Integration: Orderliness, systematic thinking, and organization in daily life.</td><td id="pv_tue_integ">Language Arts: Applying proper capitalization, typography rules, and Latin root word awareness.</td><td id="pv_wed_integ">Environmental Education &amp; Nationalism: Appreciating endemic Philippine species and biodiversity hotspots.</td><td id="pv_thu_integ">Critical Thinking: Evaluating how accurate scientific naming aids global conservation efforts and medical research.</td></tr>
+      <tr><td style="font-weight:bold">Pre-Lesson</td><td id="pv_mon_pre" contenteditable="true">Conduct a 5-minute activity called 'Organize the Supermarket' where students group 10 everyday items into logical categories and explain their rationale.</td><td id="pv_tue_pre" contenteditable="true">Quick recall game: 'Taxonomic Ladder' where student representatives arrange jumbled cards of the taxonomic levels from broadest to most specific.</td><td id="pv_wed_pre" contenteditable="true">Present pictures of two similar-looking local plants (e.g., Sampaguita and Chichirica) and ask students how a scientist would distinguish them.</td><td id="pv_thu_pre" contenteditable="true">Peer check: Groups exchange and verify their completed dichotomous key identification worksheets from Wednesday.</td></tr>
+      <tr><td style="font-weight:bold">Flow</td><td id="pv_mon_lead" contenteditable="true" style="white-space:pre-wrap">Introduce Taxonomy and Carolus Linnaeus. Discuss the concept of classifying biological diversity and present the 8 hierarchical levels (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) using the mnemonic 'Dear King Philip Came Over For Good Soup'.</td><td id="pv_tue_lead" contenteditable="true" style="white-space:pre-wrap">Discuss Binomial Nomenclature rules (Genus capitalized, species lowercase, italicized or underlined). Guide students in writing scientific names of local organisms such as Panthera pardus, Oryza sativa, and Jasminum sambac.</td><td id="pv_wed_lead" contenteditable="true" style="white-space:pre-wrap">Introduce simple Dichotomous Keys. Guide student groups in navigating a 4-step dichotomous key to identify five Philippine endemic organisms (e.g., Tamaraw, Philippine Eagle, Tarsier, Milkfish, Narra tree). Safety rule: Handle specimen cards carefully and maintain orderly group discussion.</td><td id="pv_thu_lead" contenteditable="true" style="white-space:pre-wrap">Facilitate a class synthesis connecting taxonomy to biodiversity conservation. Administer a 10-item multiple-choice formative quiz covering taxonomic ranks, scientific naming, and dichotomous key usage.</td></tr>
+      <tr><td style="font-weight:bold">Learning Resources</td><td id="pv_mon_res" contenteditable="true">Taxonomy graphic organizer, Manila paper, visual diagram of taxonomic hierarchy.</td><td id="pv_tue_res" contenteditable="true">Binomial nomenclature rule chart, practice worksheets, whiteboard markers.</td><td id="pv_wed_res" contenteditable="true">Dichotomous key activity sheets, picture cards of Philippine flora and fauna.</td><td id="pv_thu_res" contenteditable="true">Formative assessment sheets, summary slides/visual chart.</td></tr>
+      <tr><td style="font-weight:bold">Opportunities for integration</td><td id="pv_mon_integ" contenteditable="true">Values Integration: Orderliness, systematic thinking, and organization in daily life.</td><td id="pv_tue_integ" contenteditable="true">Language Arts: Applying proper capitalization, typography rules, and Latin root word awareness.</td><td id="pv_wed_integ" contenteditable="true">Environmental Education &amp; Nationalism: Appreciating endemic Philippine species and biodiversity hotspots.</td><td id="pv_thu_integ" contenteditable="true">Critical Thinking: Evaluating how accurate scientific naming aids global conservation efforts and medical research.</td></tr>
     </tbody>
   </table>
 
   <div class="banner">ASSESSING LEARNING</div>
-  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
+  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" contenteditable="true" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
   <div class="banner">WAYS FORWARD</div>
-  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
+  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" contenteditable="true" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
   <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap">
 <div class="print-reflection-lines">
   <div><strong>Session 1</strong><span></span></div>
@@ -770,7 +780,7 @@ const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddr
 let appState=defaultState();
 function getGradeNumber(){const src=(appState.gradeSection||$("aiSubject")?.value||"").toString();const m=src.match(/(?:Grade|Science|Mathematics|English|Filipino|MAPEH|TLE\/EPP)\s*(7|8|9|10)\b/i);return m?Number(m[1]):null}
 function getCurriculumBasis(grade,sy){sy=String(sy||"2026-2027");if(grade===7||grade===8)return"MATATAG / Revised K–10 Curriculum";if(grade===9)return sy>="2026-2027"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum (transition)";if(grade===10)return sy>="2027-2028"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum / current BOW (transition)";return"Curriculum basis to be verified"}
-function updateCurriculumBasis(saveIt=false){const grade=getGradeNumber(),sy=$("schoolYear")?.value||appState.schoolYear||"2026-2027";appState.schoolYear=sy;appState.curriculumVersion=getCurriculumBasis(grade,sy);if($("curriculumVersion"))$("curriculumVersion").value=appState.curriculumVersion;if($("curriculumStatus"))$("curriculumStatus").textContent=grade?"✓ "+appState.curriculumVersion+" • "+(appState.academicTerm||"Term 1")+" • BOW-driven planning.":"Select a Grade 7–10 subject to detect the curriculum basis.";if(saveIt)save()}
+function updateCurriculumBasis(saveIt=false){const grade=getGradeNumber(),sy=$("schoolYear")?.value||appState.schoolYear||"2026-2027";appState.schoolYear=sy;appState.curriculumVersion=getCurriculumBasis(grade,sy);if($("curriculumVersion"))$("curriculumVersion").value=appState.curriculumVersion;if($("curriculumStatus"))$("curriculumStatus").textContent=grade?"✓ "+appState.curriculumVersion+" • BOW-driven planning.":"Select a Grade 7–10 subject to detect the curriculum basis.";if(saveIt)save()}
 function normalizeAppState(){const b=defaultState();appState={...b,...appState,matrix:{...b.matrix,...(appState.matrix||{})}};["mon","tue","wed","thu"].forEach(d=>appState.matrix[d]={...b.matrix[d],...(appState.matrix[d]||{})});if(!["Term 1","Term 2","Term 3"].includes(appState.academicTerm))appState.academicTerm="Term 1";if(!appState.schoolYear)appState.schoolYear="2026-2027";updateCurriculumBasis(false)}
 function curriculumContextChanged(){appState.academicTerm=$("academicTerm")?.value||"Term 1";appState.schoolYear=$("schoolYear")?.value||"2026-2027";appState.bowItem=$("bowItem")?.value||"";appState.bowReference=$("bowReference")?.value||"";updateCurriculumBasis(true);render()}
 
@@ -780,6 +790,13 @@ const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolNam
 function $(id){return document.getElementById(id)}
 function setText(id,v){if($(id))$(id).textContent=v||""}
 function setVal(id,v){if($(id))$(id).value=v??""}
+function noQuarter(v){return typeof v==="string"?v.replace(/quarter/gi,"Term"):v}
+function deepNoQuarter(obj){
+  if(typeof obj==="string")return noQuarter(obj);
+  if(Array.isArray(obj))return obj.map(deepNoQuarter);
+  if(obj&&typeof obj==="object"){const o={};for(const k in obj)o[k]=deepNoQuarter(obj[k]);return o}
+  return obj;
+}
 
 function ensureReflectionTableLines(){
   const cell=$("pvReflection");
@@ -817,7 +834,7 @@ function addSignatory(){appState.signatories=normalizeSignatories(appState.signa
 function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
 function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
 function render(){
-setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",appState.termWeek);setText("pvAcademicTerm",appState.academicTerm);setText("pvCurriculumVersion",appState.curriculumVersion);setText("pvBowItem",appState.bowItem||appState.bowCompetency);setText("pvBowReference",appState.bowReference);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);ensureReflectionTableLines();
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",noQuarter(appState.termWeek));setText("pvCurriculumVersion",appState.curriculumVersion);setText("pvBowItem",appState.bowItem||appState.bowCompetency);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);ensureReflectionTableLines();
 ["mon","tue","wed","thu"].forEach(d=>{const m=appState.matrix[d]||{};setText("pv_"+d+"_pre",m.pre);setText("pv_"+d+"_lead",m.lead);setText("pv_"+d+"_res",m.resources);setText("pv_"+d+"_integ",m.integration);setText("pv_"+d+"_meta",[m.date||"",m.timeIn&&m.timeOut?m.timeIn+" – "+m.timeOut:(m.timeIn||m.timeOut||"")].filter(Boolean).join(" • "))});
 appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
 const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
@@ -826,6 +843,36 @@ $("fridayCheck").checked=!!appState.fridayEnabled;
 $("reflectionFields").style.display=appState.fridayEnabled?"block":"none";
 $("reflectionWrap").classList.toggle("locked",!appState.fridayEnabled);
 loadReflectionParts();
+}
+const PV_FIELD_MAP={pvSchoolName:"schoolName",pvSchoolAddress:"schoolAddress",pvLessonTitle:"lessonTitle",pvSubject:"subject",pvTeacher:"teacherName",pvGradeSection:"gradeSection",pvTermWeek:"termWeek",pvBowItem:"bowItem",pvReferences:"references",pvAiDeclaration:"aiDeclaration",pvStandards:"curriculumStandards",pvBow:"bowCompetency",pvObjectives:"objectives",pvLearnerContext:"learnerContext",pvAssess:"formativeAssessment",pvWay:"extendedLearning"};
+const PV_DAY_FIELD_MAP={pre:"pre",lead:"lead",res:"resources",integ:"integration"};
+let editablePreviewReady=false;
+function initEditablePreview(){
+  const paper=$("lessonPaper");
+  if(!paper||editablePreviewReady)return;
+  editablePreviewReady=true;
+  paper.setAttribute("data-editable-ready","true");
+  paper.addEventListener("input",function(e){
+    const el=e.target.closest("[contenteditable='true']");
+    if(!el||!el.id)return;
+    const text=el.innerText;
+    if(PV_FIELD_MAP[el.id]){
+      appState[PV_FIELD_MAP[el.id]]=text;
+      save();
+      return;
+    }
+    const m=el.id.match(/^pv_(mon|tue|wed|thu)_(pre|lead|res|integ)$/);
+    if(m){
+      const day=m[1],field=PV_DAY_FIELD_MAP[m[2]];
+      if(!appState.matrix[day])appState.matrix[day]={};
+      appState.matrix[day][field]=text;
+      save();
+    }
+  });
+  paper.addEventListener("focusout",function(e){
+    const el=e.target.closest("[contenteditable='true']");
+    if(el&&PV_FIELD_MAP[el.id]==="lessonTitle"&&$("aiLessonTitle"))$("aiLessonTitle").value=appState.lessonTitle;
+  });
 }
 function syncForm(){
 ["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","bowItem","bowReference"].forEach(k=>setVal(k,appState[k]));setVal("academicTerm",appState.academicTerm||"Term 1");setVal("schoolYear",appState.schoolYear||"2026-2027");setVal("curriculumVersion",appState.curriculumVersion||"");
@@ -978,7 +1025,7 @@ function aiPrompt(topic,subject,extra=""){
   const c=generationContext(), exactTitle=c.lessonTitle||topic;
   const hierarchy=c.component?`Component: ${c.component}. Subtopic: ${c.subtopic||"Not specified"}.`:`Topic: ${c.subtopic||topic}.`;
   return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"}. ${hierarchy} The EXACT LESSON TITLE is "${exactTitle}". Treat that exact lesson title as the primary anchor of every section of the generated plan. Do not replace it with a generic topic, do not broaden it, and do not invent a different title. ${extra}
-Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Return ONLY JSON.`
+Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Never use the word "Quarter" anywhere in the output (including termWeek) — use "Term" and/or specific week/session numbers instead. Return ONLY JSON.`
 }
 const schema={type:"OBJECT",properties:{
 lessonTitle:{type:"STRING"},subject:{type:"STRING"},termWeek:{type:"STRING"},references:{type:"STRING"},aiDeclaration:{type:"STRING"},curriculumStandards:{type:"STRING"},bowCompetency:{type:"STRING"},objectives:{type:"STRING"},learnerContext:{type:"STRING"},formativeAssessment:{type:"STRING"},extendedLearning:{type:"STRING"},
@@ -1019,7 +1066,7 @@ if(!exactTitle)return alert("Enter the exact Lesson Title to guide the generator
 const ctx=generationContext();appState.academicTerm=ctx.academicTerm;appState.schoolYear=ctx.schoolYear;appState.curriculumVersion=ctx.curriculumVersion;appState.bowItem=ctx.bowItem;appState.bowReference=ctx.bowReference;save();
 $("generateBtn").disabled=true;
 try{
-  let d=await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess."));
+  let d=deepNoQuarter(await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess.")));
   let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};
   appState={...defaultState(),...d,...keep,subject:d.subject||subject,lessonTitle:exactTitle,mapehComponent:generationContext().component,subtopic:topic};
   save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated.";
@@ -1027,13 +1074,13 @@ try{
 finally{$("generateBtn").disabled=false}
 }
 async function improvePlan(){
-if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState)));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
+if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=deepNoQuarter(await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState))));let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories};appState={...defaultState(),...d,...keep};save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
 async function regenerateCurrentSession(){
  if(!appState.lessonTitle)return alert("Load or generate a plan first.");
  let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
  try{
    const p=`Create ONLY a replacement ${dayName} for a DepEd ILAW lesson plan on "${appState.lessonTitle}" (${appState.subject}). It must logically follow the previous session and prepare for the next. Return JSON with pre,lead,resources,integration strings. Existing current session: ${JSON.stringify(appState.matrix[currentDay])}`;
-   const x=await generateWithFallback("",p,false);
+   const x=deepNoQuarter(await generateWithFallback("",p,false));
    if(!x||typeof x!=="object")throw Error("The model returned invalid session data.");
    appState.matrix[currentDay]=x;save();switchDay(currentDay,$("tab-"+currentDay));render();
    $("aiStatus").textContent="✅ "+dayName+" regenerated using "+selectedModel+".";
@@ -1198,7 +1245,7 @@ function downloadRawSource(){
 /* V5.3 RESCUE ENGINE: standalone subject/topic dropdown.
    This is intentionally independent of the main app script. */
 ;
-normalizeAppState();initPrintOrientation();
+normalizeAppState();initPrintOrientation();initEditablePreview();
 </script>
 
 
