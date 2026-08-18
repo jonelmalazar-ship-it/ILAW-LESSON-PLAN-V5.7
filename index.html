@@ -1,7 +1,7 @@
 <html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ILAW Teacher Suite V8 — Teacher Edition</title>
+<title>ILAW Teacher Suite V8 — Professional Studio</title>
 <style>
 *{box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif}
 body{margin:0;background:#f4f6f9;color:#333;height:100vh;overflow:hidden}
@@ -176,6 +176,54 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:#4f86c6;box-sh
   };
 })();
 </script>
+
+<style id="ilaw-v8-professional-ui">
+:root{
+  --studio-navy:#0b2342;--studio-blue:#1b5ea7;--studio-blue2:#2c7bd6;
+  --studio-ink:#15233a;--studio-muted:#65748b;--studio-line:#d8e2ee;
+  --studio-bg:#eef3f8;--studio-card:#ffffff;--studio-accent:#6d4aff;
+  --studio-success:#1f8b5c;--studio-shadow:0 14px 36px rgba(18,46,83,.12)
+}
+html,body{background:var(--studio-bg)!important;color:var(--studio-ink)!important}
+.header{height:72px!important;padding:10px 20px!important;background:linear-gradient(115deg,#092448 0%,#123f78 55%,#1b5ea7 100%)!important;box-shadow:0 8px 24px rgba(8,32,66,.20)!important}
+.header h1{font-size:1.05rem!important;font-weight:800!important;letter-spacing:.01em!important}
+.toolbar{gap:7px!important}
+.toolbar .btn,.toolbar select{min-height:38px!important;border-radius:10px!important}
+#accountBadge{background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,255,255,.16)!important;backdrop-filter:blur(4px)}
+.main{height:calc(100vh - 72px)!important}
+.editor{width:49%!important;padding:22px 22px 34px!important;background:#f8fafc!important;border-right:1px solid var(--studio-line)!important;box-shadow:10px 0 28px rgba(16,48,82,.05)!important}
+.preview{width:51%!important;padding:22px!important;background:linear-gradient(145deg,#e6edf5,#f7f9fc)!important;align-items:flex-start!important;position:relative!important}
+.editor>h3{font-size:1.05rem!important;color:#18365f!important;margin:4px 0 13px!important}
+.ai-box,.tool-box{border-radius:15px!important;border:1px solid #dbe4ef!important;box-shadow:var(--studio-shadow)!important}
+.ai-box{background:linear-gradient(145deg,#f6f9ff,#edf5ff)!important}
+.tool-box{background:#fff!important}
+label{font-size:.77rem!important;color:#34445d!important;font-weight:750!important}
+input,textarea,select{border:1px solid #c7d3e2!important;border-radius:10px!important;padding:10px 11px!important;background:#fff!important;color:#18253b!important}
+input:focus,textarea:focus,select:focus{border-color:#4e83bf!important;box-shadow:0 0 0 3px rgba(78,131,191,.12)!important}
+.btn{border-radius:10px!important;font-weight:750!important;min-height:38px!important}
+.primary{background:linear-gradient(135deg,#174b92,#2469bd)!important}
+.purple{background:linear-gradient(135deg,#6740d7,#7c5cff)!important}
+.green{background:linear-gradient(135deg,#19764f,#239461)!important}
+.orange{background:linear-gradient(135deg,#b86a06,#d27a08)!important}
+.red{background:linear-gradient(135deg,#a5322b,#c2463d)!important}
+.gray{background:#5d6d81!important}
+.tabs{border-bottom:1px solid #cbd8e8!important;margin:10px 0 14px!important}
+.tab{background:#e8edf3!important;color:#41526a!important;border-radius:9px 9px 0 0!important}
+.tab.active{background:linear-gradient(135deg,#174b92,#2469bd)!important;color:#fff!important}
+.paper{max-width:850px!important;min-height:980px!important;padding:36px!important;border-radius:10px!important;border:1px solid #d4deea!important;box-shadow:0 22px 55px rgba(21,53,91,.18)!important;position:relative!important}
+.doc-header{border-bottom:2px solid #dbe4ef!important;padding-bottom:13px!important}
+.banner{background:linear-gradient(90deg,#173f78,#245fa8)!important;border-radius:6px!important;padding:7px 10px!important}
+.doc-table th{background:#eff3f7!important;color:#20334f!important}
+.preview:before{content:'EDITABLE PREVIEW  •  Click text in the lesson plan to revise before printing';display:block;position:absolute;top:8px;left:24px;right:24px;padding:8px 12px;border:1px solid #cfdbea;border-radius:10px;background:rgba(255,255,255,.88);color:#46617f;font-size:.72rem;font-weight:700;letter-spacing:.02em;backdrop-filter:blur(5px);z-index:2}
+.preview .paper{margin-top:38px}
+.ilaw-editable-preview{outline:1px dashed transparent!important;border-radius:4px!important;cursor:text!important;transition:.15s ease!important}
+.ilaw-editable-preview:hover{outline-color:#aac2df!important;background:#fbfdff!important}
+.ilaw-editable-preview:focus{outline:2px solid #6d9ed5!important;background:#fff!important;box-shadow:0 0 0 3px rgba(78,131,191,.10)!important}
+.ilaw-editable-preview[contenteditable="true"]{min-height:1.1em}
+@media(max-width:900px){.editor,.preview{width:100%!important}.main{height:auto!important}.preview{min-height:760px!important}.preview:before{position:sticky;top:0;z-index:4;margin-bottom:8px}}
+@media print{.preview:before{display:none!important}.ilaw-editable-preview{outline:0!important;background:transparent!important}.paper{margin-top:0!important}}
+</style>
+
 </head>
 <body class="auth-locked">
 
@@ -352,7 +400,7 @@ function clearCurrentSession(){
 <div id="printCenter" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card print-card"><div class="modal-head"><div><h2>🖨 Print Center</h2><p>Choose paper size and orientation, then use the browser printer to Print or Save as PDF.</p></div><button type="button" class="modal-x" onclick="closePrintCenter()">×</button></div><div class="print-grid"><div><label>Paper Size</label><select id="paperSizeSelect"><option value="letter">Short / Letter — 8.5 × 11 in</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4 — 210 × 297 mm</option><option value="a3">A3 — 297 × 420 mm</option><option value="a5">A5 — 148 × 210 mm</option><option value="b4">B4 — 250 × 353 mm</option><option value="b5">B5 — 176 × 250 mm</option><option value="tabloid">Tabloid — 11 × 17 in</option><option value="executive">Executive — 7.25 × 10.5 in</option><option value="statement">Statement — 5.5 × 8.5 in</select></div><div><label>Orientation</label><div class="orientation-pills"><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="portrait"><span>▯ Portrait</span></label><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="landscape"><span>▭ Landscape</span></label></div></div></div><div class="print-preview-note"><strong>Preview:</strong> <span id="printSummary">A4 • Landscape</span></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePrintCenter()">Cancel</button><button type="button" class="btn green" onclick="printFromCenter('print')">🖨 Print</button></div></div></div>
 <div id="preferencesModal" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card"><div class="modal-head"><div><h2>⚙ Preferences</h2><p>Manage print defaults and local workspace lock.</p></div><button type="button" class="modal-x" onclick="closePreferences()">×</button></div><div class="pref-section"><h3>Print Defaults</h3><div class="row"><div><label>Default Paper Size</label><select id="prefPaperSize"><option value="letter">Short / Letter</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4</option><option value="a3">A3</option><option value="a5">A5</option><option value="b4">B4</option><option value="b5">B5</option><option value="tabloid">Tabloid</option><option value="executive">Executive</option><option value="statement">Statement</option></select></div><div><label>Default Orientation</label><select id="prefOrientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div></div><div class="pref-section"><h3>Local Workspace Lock</h3><div class="row"><div><label>New PIN</label><input id="newLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits"></div><div><label>Confirm PIN</label><input id="confirmLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat PIN"></div></div><button type="button" class="btn orange" onclick="saveLockPinFromPreferences()">🔐 Update Lock PIN</button></div><div id="prefStatus" class="status"></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePreferences()">Close</button><button type="button" class="btn primary" onclick="savePreferences()">💾 Save Preferences</button></div></div></div>
 <header class="header">
-  <h1>ILAW Teacher Suite V8 — Studio</h1>
+  <h1>ILAW Teacher Suite V8 — Professional Studio</h1>
   <div class="toolbar">
     <select id="langSelect" onchange="changeLanguage()" style="width:auto">
       <option value="en">English</option><option value="fil">Tagalog</option>
@@ -1538,6 +1586,60 @@ normalizeAppState();initPrintOrientation();
     if(sel)sel.value=lang;
     applyLanguage(lang);
   });
+})();
+</script>
+
+
+<script id="ilaw-v8-editable-preview-script">
+(function(){
+  "use strict";
+  const MAP={
+    pvSchoolName:"schoolName",pvSchoolAddress:"schoolAddress",pvLessonTitle:"lessonTitle",
+    pvSubject:"subject",pvGradeSection:"gradeSection",pvTermWeek:"termWeek",pvAcademicTerm:"academicTerm",
+    pvCurriculumVersion:"curriculumVersion",pvBowItem:"bowItem",pvBowReference:"bowReference",
+    pvReferences:"references",pvAiDeclaration:"aiDeclaration",pvStandards:"curriculumStandards",
+    pvBow:"bowCompetency",pvObjectives:"objectives",pvLearnerContext:"learnerContext",
+    pvAssess:"formativeAssessment",pvWay:"extendedLearning",pvTeacher:"teacherName"
+  };
+  const SESSION_MAP={
+    pv_mon_pre:["mon","pre"],pv_mon_lead:["mon","lead"],pv_mon_res:["mon","resources"],pv_mon_integ:["mon","integration"],
+    pv_tue_pre:["tue","pre"],pv_tue_lead:["tue","lead"],pv_tue_res:["tue","resources"],pv_tue_integ:["tue","integration"],
+    pv_wed_pre:["wed","pre"],pv_wed_lead:["wed","lead"],pv_wed_res:["wed","resources"],pv_wed_integ:["wed","integration"],
+    pv_thu_pre:["thu","pre"],pv_thu_lead:["thu","lead"],pv_thu_res:["thu","resources"],pv_thu_integ:["thu","integration"]
+  };
+  function saveState(){try{if(typeof window.save==='function')window.save()}catch(e){}}
+  function setModelValue(key,val){
+    if(!window.appState)return;
+    window.appState[key]=val;
+    const editor=document.getElementById(key);
+    if(editor && editor.value!==val && editor.tagName!=='SELECT') editor.value=val;
+    saveState();
+  }
+  function decorate(){
+    Object.keys(MAP).forEach(function(id){
+      const el=document.getElementById(id);if(!el||el.dataset.ilawEditable==='1')return;
+      // Don't make select/meta widgets editable; these are controlled fields.
+      if(el.tagName==='SELECT')return;
+      el.contentEditable='true';el.dataset.ilawEditable='1';el.classList.add('ilaw-editable-preview');el.spellcheck=true;
+      el.addEventListener('blur',function(){setModelValue(MAP[id],this.innerText.trim())});
+    });
+    Object.keys(SESSION_MAP).forEach(function(id){
+      const el=document.getElementById(id);if(!el||el.dataset.ilawEditable==='1')return;
+      el.contentEditable='true';el.dataset.ilawEditable='1';el.classList.add('ilaw-editable-preview');el.spellcheck=true;
+      el.addEventListener('blur',function(){
+        const pair=SESSION_MAP[id];
+        if(window.appState&&window.appState.matrix&&window.appState.matrix[pair[0]]){
+          window.appState.matrix[pair[0]][pair[1]]=this.innerText.trim();saveState();
+        }
+      });
+    });
+    // Signature preview: edit text then click away; update matching editor on next render is intentionally not automatic.
+    // Existing signatory editor remains the source of truth so original functionality is untouched.
+  }
+  window.ILAW_enableEditablePreview=decorate;
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',decorate);else decorate();
+  // Re-apply after AI generation or render cycles without replacing existing render logic.
+  setInterval(function(){try{decorate()}catch(e){}},1800);
 })();
 </script>
 
