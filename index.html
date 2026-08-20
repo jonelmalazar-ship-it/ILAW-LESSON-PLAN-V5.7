@@ -224,13 +224,21 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--navy-600
 
 <style id="ilaw-v8-reflection-lines-clean">
 .print-reflection-lines{display:flex;flex-direction:column;gap:7px;margin:2px 0}
-.print-reflection-lines>div{display:grid;grid-template-columns:78px 1fr;align-items:end;gap:8px;min-height:20px}
-.print-reflection-lines strong{font-size:.78rem;white-space:nowrap}
-.print-reflection-lines span{display:block;height:15px;border-bottom:1px solid #777}
+.print-reflection-lines>div{display:grid;grid-template-columns:78px 1fr 22px;align-items:end;gap:8px;min-height:20px}
+.print-reflection-lines strong{font-size:.78rem;white-space:nowrap;border-radius:3px}
+.print-reflection-lines span{display:block;min-height:15px;border-bottom:1px solid #777;border-radius:2px}
+.reflect-remove{border:0;background:transparent;color:#b1372a;font-size:.78rem;cursor:pointer;padding:0 2px;line-height:1;opacity:.55}
+.reflect-remove:hover{opacity:1}
+.reflect-add-line{
+  margin-top:8px;border:1px dashed #c39a55;background:#faf7ef;color:#8c6a2f;border-radius:8px;
+  padding:5px 11px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:"IBM Plex Mono",monospace;
+}
+.reflect-add-line:hover{background:#f5ecd8}
 @media print{
  .print-reflection-lines{gap:9px}
- .print-reflection-lines>div{min-height:20px}
+ .print-reflection-lines>div{min-height:20px;grid-template-columns:78px 1fr}
  .print-reflection-lines span{height:15px;border-bottom:1px solid #555}
+ .reflect-remove,.reflect-add-line{display:none!important}
 }
 </style>
 
@@ -770,10 +778,10 @@ function aiLessonTitleChanged(){
 }
 function generationContext(){return{subject:$("aiSubject")?.value||$("subject")?.value||"",component:$("mapehComponent")?.value||"",subtopic:topicValue(),lessonTitle:$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim()||"",schoolYear:$("schoolYear")?.value||appState.schoolYear||"2026-2027",academicTerm:$("academicTerm")?.value||appState.academicTerm||"Term 1",curriculumVersion:$("curriculumVersion")?.value||appState.curriculumVersion||"",bowItem:$("bowItem")?.value.trim()||appState.bowItem||"",bowReference:$("bowReference")?.value.trim()||appState.bowReference||""}}
 let currentDay="mon", appLanguage="en", selectedModel=null;
-const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",termWeek:"",academicTerm:"Term 1",schoolYear:"2026-2027",curriculumVersion:"",bowItem:"",bowReference:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},tue:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},wed:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},thu:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""}}});
+const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",termWeek:"",academicTerm:"Term 1",schoolYear:"2026-2027",curriculumVersion:"",bowItem:"",bowReference:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",reflectionLines:[{label:"Session 1",text:""},{label:"Session 2",text:""},{label:"Session 3",text:""},{label:"Session 4",text:""}],logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},tue:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},wed:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},thu:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""}}});
 let appState=defaultState();
 function getGradeNumber(){const src=(appState.gradeSection||$("aiSubject")?.value||"").toString();const m=src.match(/(?:Grade|Science|Mathematics|English|Filipino|MAPEH|TLE\/EPP)\s*(7|8|9|10)\b/i);return m?Number(m[1]):null}
-function getCurriculumBasis(grade,sy){sy=String(sy||"2026-2027");if(grade===7||grade===8)return"MATATAG / Revised K–10 Curriculum";if(grade===9)return sy>="2026-2027"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum (transition)";if(grade===10)return sy>="2027-2028"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum / current BOW (transition)";return"Curriculum basis to be verified"}
+function getCurriculumBasis(grade,sy){sy=String(sy||"2026-2027");if(grade===7||grade===8)return"MATATAG / Revised K–10 Curriculum";if(grade===9||grade===10)return sy>="2026-2027"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum (transition)";return"Curriculum basis to be verified"}
 function updateCurriculumBasis(saveIt=false){const grade=getGradeNumber(),sy=$("schoolYear")?.value||appState.schoolYear||"2026-2027";appState.schoolYear=sy;appState.curriculumVersion=getCurriculumBasis(grade,sy);if($("curriculumVersion"))$("curriculumVersion").value=appState.curriculumVersion;if($("curriculumStatus"))$("curriculumStatus").textContent=grade?"✓ "+appState.curriculumVersion+" • BOW-driven planning.":"Select a Grade 7–10 subject to detect the curriculum basis.";if(saveIt)save()}
 function normalizeAppState(){const b=defaultState();appState={...b,...appState,matrix:{...b.matrix,...(appState.matrix||{})}};["mon","tue","wed","thu"].forEach(d=>appState.matrix[d]={...b.matrix[d],...(appState.matrix[d]||{})});if(!["Term 1","Term 2","Term 3"].includes(appState.academicTerm))appState.academicTerm="Term 1";if(!appState.schoolYear)appState.schoolYear="2026-2027";updateCurriculumBasis(false)}
 function curriculumContextChanged(){appState.academicTerm=$("academicTerm")?.value||"Term 1";appState.schoolYear=$("schoolYear")?.value||"2026-2027";appState.bowItem=$("bowItem")?.value||"";appState.bowReference=$("bowReference")?.value||"";updateCurriculumBasis(true);render()}
@@ -795,13 +803,29 @@ function deepNoQuarter(obj){
 function ensureReflectionTableLines(){
   const cell=$("pvReflection");
   if(!cell)return;
-  if(cell.querySelector(".print-reflection-lines"))return;
-  cell.innerHTML='<div class="print-reflection-lines">'+
-    '<div><strong>Session 1</strong><span></span></div>'+
-    '<div><strong>Session 2</strong><span></span></div>'+
-    '<div><strong>Session 3</strong><span></span></div>'+
-    '<div><strong>Session 4</strong><span></span></div>'+
-    '</div>';
+  if(!Array.isArray(appState.reflectionLines)||!appState.reflectionLines.length){
+    appState.reflectionLines=[{label:"Session 1",text:""},{label:"Session 2",text:""},{label:"Session 3",text:""},{label:"Session 4",text:""}];
+  }
+  const existing=cell.querySelectorAll("#pvReflectionLines > div").length;
+  if(existing===appState.reflectionLines.length)return;
+  cell.innerHTML='<div class="print-reflection-lines" id="pvReflectionLines">'+
+    appState.reflectionLines.map((l,i)=>
+      '<div><strong contenteditable="true" data-reflect-label="'+i+'">'+esc(l.label||"")+'</strong>'+
+      '<span contenteditable="true" data-reflect-text="'+i+'">'+esc(l.text||"")+'</span>'+
+      '<button type="button" class="reflect-remove" data-reflect-remove="'+i+'" title="Remove this line" aria-label="Remove this line">✕</button></div>'
+    ).join("")+
+    '</div>'+
+    '<button type="button" class="reflect-add-line" onclick="addReflectionLine()">＋ Add reflection space</button>';
+}
+function addReflectionLine(){
+  if(!Array.isArray(appState.reflectionLines))appState.reflectionLines=[];
+  appState.reflectionLines.push({label:"Extra Note",text:""});
+  save();ensureReflectionTableLines();
+}
+function removeReflectionLine(i){
+  if(!Array.isArray(appState.reflectionLines)||appState.reflectionLines.length<=1)return;
+  appState.reflectionLines.splice(i,1);
+  save();ensureReflectionTableLines();
 }
 
 function save(){
@@ -848,7 +872,18 @@ function initEditablePreview(){
   paper.setAttribute("data-editable-ready","true");
   paper.addEventListener("input",function(e){
     const el=e.target.closest("[contenteditable='true']");
-    if(!el||!el.id)return;
+    if(!el)return;
+    if(el.hasAttribute("data-reflect-label")){
+      const i=Number(el.getAttribute("data-reflect-label"));
+      if(appState.reflectionLines[i]){appState.reflectionLines[i].label=el.innerText;save();}
+      return;
+    }
+    if(el.hasAttribute("data-reflect-text")){
+      const i=Number(el.getAttribute("data-reflect-text"));
+      if(appState.reflectionLines[i]){appState.reflectionLines[i].text=el.innerText;save();}
+      return;
+    }
+    if(!el.id)return;
     const text=el.innerText;
     if(PV_FIELD_MAP[el.id]){
       appState[PV_FIELD_MAP[el.id]]=text;
@@ -862,6 +897,12 @@ function initEditablePreview(){
       appState.matrix[day][field]=text;
       save();
     }
+  });
+  paper.addEventListener("click",function(e){
+    const btn=e.target.closest("[data-reflect-remove]");
+    if(!btn)return;
+    e.preventDefault();
+    removeReflectionLine(Number(btn.getAttribute("data-reflect-remove")));
   });
   paper.addEventListener("focusout",function(e){
     const el=e.target.closest("[contenteditable='true']");
@@ -1277,7 +1318,7 @@ normalizeAppState();initPrintOrientation();initEditablePreview();
   function gradeFromSection(){const v=($('gradeSection')?.value||'').toUpperCase();const m=v.match(/(?:GRADE\s*)?(7|8|9|10)/);return m?'Grade '+m[1]:''}
   function currentGrade(){return $('v8YearLevel')?.value||gradeFromSection()||'Grade 10'}
   function currentArea(){let v=$('aiSubject')?.value||$('subject')?.value||''; if(/^MAPEH/i.test(v))return 'MAPEH'; if(/^TLE|^EPP/i.test(v))return 'TLE/EPP'; return v}
-  function curriculumForGrade(g){const sy=$('schoolYear')?.value||'2026-2027'; if(g==='Grade 10' && sy==='2026-2027')return 'MELC / Transitional'; return 'Revised K–10 / MATATAG'}
+  function curriculumForGrade(g){ if(g==='Grade 10' && typeof getCurriculumBasis==='function')return getCurriculumBasis(10,$('schoolYear')?.value||'2026-2027'); return 'Revised K–10 / MATATAG'}
   function addOption(sel,val,text){if(!sel)return;const o=document.createElement('option');o.value=val;o.textContent=text;sel.appendChild(o)}
   function ensureV8Controls(){
     const aiBox=$('aiSubject')?.closest('.ai-box');
@@ -1388,16 +1429,12 @@ normalizeAppState();initPrintOrientation();initEditablePreview();
     var logo=clone.querySelector("#pvLogo");
     if(logo && !logoState()) logo.remove();
 
-    // Always rebuild the reflection inside the table cell.
+    // Clean up the reflection area for export: keep actual lines/content, strip editing controls.
     var ref=clone.querySelector("#pvReflection");
     if(ref){
-      ref.innerHTML=
-        '<div class="print-reflection-lines">'+
-        '<div><strong>Session 1</strong><span></span></div>'+
-        '<div><strong>Session 2</strong><span></span></div>'+
-        '<div><strong>Session 3</strong><span></span></div>'+
-        '<div><strong>Session 4</strong><span></span></div>'+
-        '</div>';
+      ref.querySelectorAll(".reflect-remove,.reflect-add-line").forEach(function(el){el.remove()});
+      ref.querySelectorAll("[contenteditable]").forEach(function(el){el.removeAttribute("contenteditable")});
+      ref.querySelectorAll(".print-reflection-lines>div").forEach(function(el){el.style.gridTemplateColumns="78px 1fr"});
     }
 
     return clone;
