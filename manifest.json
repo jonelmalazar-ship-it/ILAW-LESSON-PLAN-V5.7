@@ -1,0 +1,1771 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ILAW Teacher Suite V8 — Teacher Edition</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0c2038">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ILAW Suite">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --ink:#161b28;
+  --ink-soft:#3c4657;
+  --navy-900:#0c2038;
+  --navy-800:#123258;
+  --navy-700:#1a4576;
+  --navy-600:#245793;
+  --gold-700:#8c6a2f;
+  --gold-600:#a8813f;
+  --gold-500:#c39a55;
+  --gold-300:#e3cd9c;
+  --gold-100:#f5ecd8;
+  --paper:#faf8f2;
+  --surface:#ffffff;
+  --line:#e5dfd0;
+  --line-cool:#dde3ee;
+  --muted:#6b7280;
+  --success-700:#175c3c;
+  --success-500:#1f7a4d;
+  --danger-700:#8c2b21;
+  --danger-500:#b1372a;
+  --warning-700:#8c5a17;
+  --warning-500:#b1741f;
+  --plum-700:#4c2f74;
+  --plum-500:#6b3fa0;
+  --radius-sm:8px;
+  --radius-md:12px;
+  --radius-lg:18px;
+  --shadow-sm:0 1px 2px rgba(15,32,56,.06),0 1px 1px rgba(15,32,56,.04);
+  --shadow-md:0 6px 20px rgba(15,32,56,.10);
+  --shadow-lg:0 18px 48px rgba(12,32,56,.16);
+}
+
+*{box-sizing:border-box;font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--paper);color:var(--ink);height:100vh;overflow:hidden}
+
+/* ---------- Header ---------- */
+.header{
+  height:66px;background:linear-gradient(112deg,var(--navy-900) 0%,var(--navy-800) 55%,var(--navy-700) 100%);
+  color:#fff;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  position:relative;z-index:6;box-shadow:0 4px 20px rgba(8,22,42,.28);
+  border-bottom:2px solid var(--gold-500);
+}
+.header::before{
+  content:"";position:absolute;left:20px;top:50%;transform:translateY(-50%);
+  width:34px;height:34px;border-radius:50%;
+  border:1.6px solid var(--gold-400,var(--gold-500));
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.05),inset 0 0 0 5px rgba(211,175,109,.35);
+  opacity:.9;pointer-events:none;
+}
+.header h1{
+  font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.12rem;letter-spacing:.2px;
+  margin:0 0 0 44px;white-space:nowrap;color:#fdfaf3;
+}
+.toolbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.toolbar select{width:auto}
+.toolbar .btn,.toolbar select{border-radius:9px!important;min-height:36px}
+.toolbar select{padding:7px 10px!important;border:1px solid rgba(255,255,255,.30)!important;background:rgba(255,255,255,.10)!important;color:#fff!important}
+.toolbar select option{color:var(--ink);background:#fff}
+#accountBadge{
+  font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.02em;font-weight:600;
+  color:#fdfaf3;opacity:.92;padding:7px 11px;border-radius:999px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(211,175,109,.35);max-width:220px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ---------- Layout ---------- */
+.main{display:flex;height:calc(100vh - 66px)}
+.editor{width:46%;background:var(--surface);padding:22px 22px 32px;overflow:auto;border-right:1px solid var(--line-cool);box-shadow:6px 0 24px rgba(15,32,56,.04)}
+.preview{width:54%;background:
+    radial-gradient(1200px 500px at 10% -10%,rgba(26,69,118,.05),transparent 60%),
+    linear-gradient(160deg,#eef2f7 0%,#f4f2ea 100%);
+  padding:26px;overflow:auto;display:flex;justify-content:center}
+
+/* ---------- Cards ---------- */
+.ai-box,.tool-box{
+  background:var(--surface);border:1px solid var(--line-cool);border-radius:var(--radius-md);
+  padding:16px 16px 15px;margin-bottom:16px;box-shadow:var(--shadow-sm);position:relative;
+}
+.ai-box{
+  background:linear-gradient(155deg,#f6f9ff 0%,#eef4fd 100%);border-color:#c9dcf3;overflow:hidden;padding-left:19px;
+}
+.ai-box::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--plum-500),var(--navy-600))}
+.tool-box{border-color:#e6e1d3;background:#fffefb}
+
+h3{font-family:"Fraunces",Georgia,serif;font-weight:600;margin:2px 0 12px;color:var(--navy-900);font-size:1rem;letter-spacing:.1px}
+.editor>h3{font-size:1.06rem;padding-top:2px;border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+.editor>h3:first-child{border-top:0;padding-top:0;margin-top:0}
+
+label{
+  display:block;font-family:"IBM Plex Mono",monospace;font-size:.66rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:10px 0 5px;
+}
+input,textarea,select{
+  width:100%;padding:9px 10px;border:1px solid #d7d2c2;border-radius:8px;font-size:.87rem;
+  background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s;font-family:"Plus Jakarta Sans",sans-serif;
+}
+textarea{min-height:64px;resize:vertical;line-height:1.42}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--navy-600);box-shadow:0 0 0 3px rgba(36,87,147,.14)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+
+/* ---------- Buttons ---------- */
+.btn{
+  border:0;border-radius:9px;padding:9px 14px;font-weight:700;font-size:.83rem;cursor:pointer;margin:2px;
+  color:#fff;letter-spacing:.1px;transition:transform .14s ease,box-shadow .14s ease,filter .14s ease;
+  box-shadow:var(--shadow-sm);
+}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);filter:brightness(1.03)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.primary{background:linear-gradient(135deg,var(--navy-800),var(--navy-600))}
+.purple{background:linear-gradient(135deg,var(--plum-700),var(--plum-500))}
+.green{background:linear-gradient(135deg,var(--success-700),var(--success-500))}
+.gray{background:linear-gradient(135deg,#4b5563,#6b7280)}
+.red{background:linear-gradient(135deg,var(--danger-700),var(--danger-500))}
+.orange{background:linear-gradient(135deg,var(--warning-700),var(--gold-600))}
+
+.small{font-size:.75rem;color:var(--muted);line-height:1.4}
+.status{font-size:.78rem;font-weight:600;margin-top:6px;min-height:18px;color:var(--ink-soft)}
+
+/* ---------- Tabs ---------- */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:10px 0}
+.tab{
+  padding:8px 14px;border:0;background:transparent;font-weight:700;font-size:.78rem;cursor:pointer;
+  color:var(--muted);border-radius:8px 8px 0 0;position:relative;font-family:"IBM Plex Mono",monospace;
+  letter-spacing:.03em;
+}
+.tab:hover{background:var(--line-cool);color:var(--navy-800)}
+.tab.active{color:var(--navy-900);background:var(--gold-100)}
+.tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold-500)}
+
+.logo-preview{width:54px;height:54px;object-fit:contain;border:1px dashed #c8c0a8;background:#fff;display:none;border-radius:8px}
+
+/* ---------- Document Preview ---------- */
+.paper{
+  background:#fff;max-width:820px;width:100%;padding:38px 36px;
+  box-shadow:0 20px 50px rgba(12,32,56,.16),0 2px 8px rgba(12,32,56,.06);
+  font-size:.81rem;line-height:1.4;color:#1c2333;border-radius:6px;border:1px solid #e7e2d4;
+  position:relative;min-height:900px;
+}
+.doc-header{text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--navy-800)}
+.doc-header img{width:70px;max-height:70px;object-fit:contain}
+.doc-header h2{font-family:"Fraunces",Georgia,serif;font-weight:600;color:var(--navy-900);margin:3px;font-size:1.15rem}
+.doc-header h3{font-family:"Fraunces",Georgia,serif;font-weight:600;margin:3px;color:var(--navy-800);font-size:1rem}
+.doc-header h4{margin:2px;color:var(--ink-soft);font-weight:600;font-size:.82rem;letter-spacing:.02em}
+.doc-header p{margin:2px;color:var(--muted)}
+.doc-table{width:100%;border-collapse:collapse;margin-bottom:12px}
+.doc-table th,.doc-table td{border:1px solid #d8d2c0;padding:6px 7px;vertical-align:top}
+.doc-table th{text-align:center;background:var(--gold-100);font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.03em;color:var(--navy-900)}
+[contenteditable="true"]{cursor:text;border-radius:3px;transition:background-color .15s}
+[contenteditable="true"]:hover{background:rgba(195,154,85,.10)}
+[contenteditable="true"]:focus{outline:1.5px dashed var(--gold-600);background:rgba(195,154,85,.14);outline-offset:1px}
+.paper[data-editable-ready="true"]::after{
+  content:"✎ Editable — click any line to fine-tune before printing";
+  display:block;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:.62rem;
+  color:var(--gold-700);letter-spacing:.03em;margin-top:16px;opacity:.75;
+}
+@media print{
+  [contenteditable="true"]:focus{outline:none;background:transparent}
+  .paper[data-editable-ready="true"]::after{display:none}
+}
+.banner{
+  background:linear-gradient(90deg,var(--navy-900),var(--navy-700));color:#fdfaf3;font-weight:700;
+  padding:7px 10px;margin:9px 0;border-radius:4px;border-left:4px solid var(--gold-500);
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;
+}
+.sub{font-style:italic;font-weight:400;font-size:.7rem;margin-left:6px;text-transform:none;letter-spacing:0;opacity:.85}
+.signatures{display:flex;justify-content:space-between;margin-top:26px}
+.sig{width:30%;text-align:center}
+.sigline{border-bottom:1px solid #000;margin-top:26px;font-weight:700}
+
+.editor .sig-editor{width:100%;box-sizing:border-box}
+.sig-editor{background:#fbfaf6;border:1px solid #e6e1d3;border-radius:10px;padding:11px;margin-top:9px}
+.sig-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr auto;gap:8px;align-items:end;margin:8px 0}
+.sig-row label{margin:0}
+.sig-remove{min-width:42px}
+@media(max-width:700px){.sig-row{grid-template-columns:1fr}.sig-remove{width:100%}.signatures{display:block}.sig{width:100%;margin-bottom:24px}}
+
+.lock-screen{position:fixed;inset:0;background:rgba(12,32,56,.94);z-index:9999;color:#fff;display:none;align-items:center;justify-content:center}
+.lock-card{width:min(390px,92vw);background:#fff;color:var(--ink);border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,10,26,.5);border-top:4px solid var(--gold-500)}
+#reflectionWrap.locked{opacity:.55}
+.hidden{display:none!important}
+
+@media(max-width:900px){
+  .main{display:block;overflow:auto}
+  .editor,.preview{width:100%;height:auto}
+  .preview{min-height:600px}
+  .header{height:auto;padding:12px 16px}
+  .header::before{display:none}
+  .header h1{margin-left:0}
+  .toolbar{justify-content:flex-end}
+}
+@media print{
+  .editor,.header{display:none!important}
+  .main{display:block;height:auto}
+  .preview{width:100%;padding:0;background:#fff}
+  .paper{box-shadow:none;padding:0;max-width:none;border:0}
+}
+</style>
+<style>
+/* superseded by consolidated design system above */
+</style>
+<style>
+/* superseded by consolidated design system above */
+</style>
+<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style><style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style>
+<!-- Supabase Authentication -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://mbnxmwpvkzwgefkcyddp.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__m_yjde1ILHedwBG1-Ej9A_hUjr06RB";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+</script>
+<style>
+.curriculum-row{align-items:flex-start}.curriculum-status{padding:8px 10px;border-radius:9px;background:#faf7ef;border:1px dashed #cbb98a;margin-top:6px}.session-meta-editor{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;margin:8px 0 10px;padding:10px;background:#faf7ef;border:1px solid #e6e1d3;border-radius:10px}.session-meta-print td{background:#faf7ef;font-size:.76rem;font-weight:600}.ilaw-modal{position:fixed;inset:0;z-index:25000;background:rgba(10,24,44,.68);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}.ilaw-modal.show{display:flex}.ilaw-modal-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #e6e1d3;border-radius:18px;padding:22px;box-shadow:0 24px 80px rgba(5,25,55,.35);border-top:4px solid #c39a55}.print-card{width:min(780px,96vw)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px}.modal-head h2{margin:0 0 4px;color:#0c2038;font-family:"Fraunces",Georgia,serif;font-weight:600}.modal-head p{margin:0;color:#64748b;font-size:.82rem}.modal-x{border:0;background:#f2ede0;color:#334155;border-radius:10px;width:34px;height:34px;font-size:22px;cursor:pointer}.print-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.orientation-pills{display:flex;gap:8px}.orientation-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #d7d2c2;background:#faf7ef;border-radius:11px;padding:12px;cursor:pointer;transition:.15s}.orientation-pill:has(input:checked){border-color:#c39a55;background:#f5ecd8}.orientation-pill input{width:auto}.print-preview-note{margin-top:15px;padding:11px 12px;border-radius:10px;background:#f5ecd8;border:1px solid #e3cd9c;color:#0c2038}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:18px}.pref-section{border:1px solid #e6e1d3;border-radius:12px;padding:13px;margin-bottom:12px;background:#fffefb}.pref-section h3{margin:0 0 10px;color:#0c2038;font-size:.9rem}@media(max-width:700px){.session-meta-editor,.print-grid{grid-template-columns:1fr}.orientation-pills{flex-direction:column}}@media print{.ilaw-modal{display:none!important}.session-meta-print td{background:#fff!important}}</style>
+
+<style id="ilaw-v8-reflection-lines-clean">
+.print-reflection-lines{display:flex;flex-direction:column;gap:7px;margin:2px 0}
+.print-reflection-lines>div{display:grid;grid-template-columns:78px 1fr 22px;align-items:end;gap:8px;min-height:20px}
+.print-reflection-lines strong{font-size:.78rem;white-space:nowrap;border-radius:3px}
+.print-reflection-lines span{display:block;min-height:15px;border-bottom:1px solid #777;border-radius:2px}
+.reflect-remove{border:0;background:transparent;color:#b1372a;font-size:.78rem;cursor:pointer;padding:0 2px;line-height:1;opacity:.55}
+.reflect-remove:hover{opacity:1}
+.reflect-add-line{
+  margin-top:8px;border:1px dashed #c39a55;background:#faf7ef;color:#8c6a2f;border-radius:8px;
+  padding:5px 11px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:"IBM Plex Mono",monospace;
+}
+.reflect-add-line:hover{background:#f5ecd8}
+@media print{
+ .print-reflection-lines{gap:9px}
+ .print-reflection-lines>div{min-height:20px;grid-template-columns:78px 1fr}
+ .print-reflection-lines span{height:15px;border-bottom:1px solid #555}
+ .reflect-remove,.reflect-add-line{display:none!important}
+}
+</style>
+
+
+<script id="ilaw-v8-direct-pdf-libs">
+(function(){
+  function load(src){
+    return new Promise(function(resolve,reject){
+      var s=document.createElement("script");
+      s.src=src;
+      s.onload=resolve;
+      s.onerror=function(){reject(new Error("Unable to load PDF component: "+src));};
+      document.head.appendChild(s);
+    });
+  }
+  window.ILAW_loadDirectPDF = async function(){
+    if(window.jspdf && window.html2canvas) return true;
+    if(!window.jspdf) await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    if(!window.html2canvas) await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    return !!(window.jspdf && window.html2canvas);
+  };
+})();
+</script>
+
+<style id="ilaw-v8-print-logo-cleanup">
+@media print{
+  #ilawLogoModule,.ilaw-logo-module,#dashboardLogo,.logo-preview,.toolbar,.orientation-control{
+    display:none!important;
+  }
+}
+</style>
+<script id="ilaw-v8-print-date-time-fix">
+(function(){
+  function fmtTime(v){
+    if(!v)return "";
+    var p=String(v).split(":");
+    if(p.length<2)return v;
+    var h=parseInt(p[0],10), m=p[1], ap=h>=12?"PM":"AM";
+    h=h%12; if(h===0)h=12;
+    return h+":"+m+" "+ap;
+  }
+  function fmtDate(v){
+    if(!v)return "";
+    var d=new Date(v+"T00:00:00");
+    if(isNaN(d.getTime()))return v;
+    return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  }
+  window.ensurePrintSessionDateTimes=function(){
+    var days=["mon","tue","wed","thu"];
+    days.forEach(function(day){
+      var cell=document.getElementById("pv_"+day+"_meta");
+      if(!cell)return;
+      var st=window.appState||{};
+      var d=(st.matrix&&st.matrix[day])||{};
+      var date=fmtDate(d.date), tin=fmtTime(d.timeIn), tout=fmtTime(d.timeOut);
+      var out="";
+      if(date)out+="Date: "+date;
+      if(tin||tout)out+=(out?"<br>":"")+"Time: "+(tin||"")+" - "+(tout||"");
+      cell.innerHTML=out;
+    });
+  };
+})();
+</script>
+</head>
+<body class="auth-locked">
+
+<style>
+body.auth-locked > *:not(#authGate){display:none!important}
+#authGate{position:fixed;inset:0;z-index:30000;background:linear-gradient(135deg,#0c2038,#1a4576);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.auth-card{width:min(430px,96vw);background:#fff;border-radius:16px;padding:28px;box-shadow:0 24px 70px rgba(0,10,26,.4);border-top:4px solid #c39a55;font-family:"Plus Jakarta Sans",sans-serif}
+.auth-card h1{margin:0 0 4px;color:#0c2038;font-size:1.4rem;font-family:"Fraunces",Georgia,serif;font-weight:600}.auth-sub{margin:0 0 18px;color:#6b7280;font-size:.86rem}
+.auth-tabs{display:flex;gap:4px;margin-bottom:14px}.auth-tab{flex:1;border:0;border-radius:8px;padding:9px;font-weight:700;cursor:pointer;background:#f2ede0;color:#3c4657}.auth-tab.active{background:linear-gradient(135deg,#123258,#245793);color:#fff}
+.auth-card input{margin-bottom:8px}.auth-actions{display:flex;gap:8px;margin-top:8px}.auth-actions .btn{flex:1}.auth-status{min-height:20px;margin-top:10px;font-size:.8rem;font-weight:700}.auth-note{font-size:.72rem;color:#667;margin-top:12px;line-height:1.4}
+#accountBadge{font-size:.72rem;background:#e3f2fd;color:#0d47a1;padding:6px 8px;border-radius:12px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.auth-note{font-size:.72rem;color:#8a94a6;margin-top:12px;line-height:1.5}
+@media(max-width:700px){.auth-card{padding:18px}.auth-actions{flex-direction:column}}
+</style>
+<div id="authGate">
+  <div class="auth-card">
+    <h1>ILAW Teacher Suite</h1><p class="auth-sub">Individual teacher account</p>
+    <div class="auth-tabs"><button type="button" id="loginTab" class="auth-tab active" onclick="showAuthMode('login')">Login</button><button type="button" id="registerTab" class="auth-tab" onclick="showAuthMode('register')">Register</button></div>
+    <div id="registerNameWrap" class="hidden"><label>Full Name</label><input id="authName" type="text" autocomplete="name" placeholder="Your full name"></div>
+    <label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+    <label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters">
+    <div id="authConfirmWrap" class="hidden"><label>Confirm Password</label><input id="authConfirmPassword" type="password" autocomplete="new-password" placeholder="Repeat your password"></div>
+    <div class="auth-actions"><button type="button" id="authSubmitBtn" class="btn primary" onclick="submitAuth()">Login</button><button type="button" id="authForgotBtn" class="btn gray" onclick="resetPassword()">Forgot Password</button></div>
+    <div id="authStatus" class="auth-status"></div><div class="auth-note">Your teacher profile is stored in your individual account. Keep your password private.</div>
+  </div>
+</div>
+
+
+
+<script>
+/* V7 Studio button handlers — additive patch; existing generator/auth code remains unchanged. */
+function unlockApp(){
+  const screen=document.getElementById("lockScreen");
+  const input=document.getElementById("unlockPassword");
+  const status=document.getElementById("unlockStatus");
+  if(!screen)return;
+  const saved=localStorage.getItem("ilaw_local_lock_pin");
+  if(!saved){
+    const pin=prompt("Create a local lock PIN (4–8 digits). This PIN is only for locking this browser session.");
+    if(!pin||!/^[0-9]{4,8}$/.test(pin)){
+      if(status)status.textContent="Use a 4–8 digit PIN.";
+      return;
+    }
+    localStorage.setItem("ilaw_local_lock_pin",pin);
+  }
+  const value=(input?.value||"").trim();
+  if(value!==localStorage.getItem("ilaw_local_lock_pin")){
+    if(status)status.textContent="❌ Incorrect PIN.";
+    return;
+  }
+  screen.style.display="none";
+  document.body.classList.remove("app-locked");
+  if(input)input.value="";
+  if(status)status.textContent="";
+}
+
+function lockApp(){
+  const screen=document.getElementById("lockScreen");
+  const input=document.getElementById("unlockPassword");
+  const status=document.getElementById("unlockStatus");
+  if(!screen)return;
+  if(!localStorage.getItem("ilaw_local_lock_pin")){
+    const pin=prompt("Create a local lock PIN first (4–8 digits).");
+    if(!pin||!/^[0-9]{4,8}$/.test(pin)){alert("Lock PIN must contain 4–8 digits.");return;}
+    localStorage.setItem("ilaw_local_lock_pin",pin);
+  }
+  screen.style.display="flex";
+  document.body.classList.add("app-locked");
+  if(input)input.value="";
+  if(status)status.textContent="";
+  setTimeout(()=>input?.focus(),50);
+}
+
+function openSettings(){const m=$("preferencesModal");if(!m)return;const p=getPrintPrefs();$("prefPaperSize").value=p.size;$("prefOrientation").value=p.orientation;$("prefStatus").textContent="";$("newLockPin").value="";$("confirmLockPin").value="";m.classList.add("show");m.setAttribute("aria-hidden","false")}
+function closePreferences(){const m=$("preferencesModal");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true")}}
+function savePreferences(){const size=$("prefPaperSize")?.value||"a4",orientation=$("prefOrientation")?.value||"landscape";try{localStorage.setItem("ilaw_print_size",size);localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}$("prefStatus").textContent="✅ Preferences saved."}
+function saveLockPinFromPreferences(){const pin=$("newLockPin")?.value.trim()||"",cp=$("confirmLockPin")?.value.trim()||"";if(!/^[0-9]{4,8}$/.test(pin))return $("prefStatus").textContent="❌ PIN must contain 4–8 digits.";if(pin!==cp)return $("prefStatus").textContent="❌ PIN confirmation does not match.";localStorage.setItem("ilaw_local_lock_pin",pin);$("newLockPin").value="";$("confirmLockPin").value="";$("prefStatus").textContent="✅ Lock PIN updated."}
+
+function copyCurrentToNext(){
+  const order=["mon","tue","wed","thu"];
+  const i=order.indexOf(currentDay);
+  if(i<0||i===order.length-1){alert("Session 4 is the last session; there is no next session.");return;}
+  const next=order[i+1];
+  appState.matrix[next]={...appState.matrix[currentDay]};
+  save();
+  switchDay(next,document.getElementById("tab-"+next));
+  render();
+  const label={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"};
+  const st=document.getElementById("aiStatus");
+  if(st)st.textContent="✅ "+label[currentDay]+" copied to "+label[next]+".";
+}
+
+function clearCurrentSession(){
+  const label={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay]||"current session";
+  if(!confirm("Clear all content in "+label+"?"))return;
+  appState.matrix[currentDay]={pre:"",lead:"",resources:"",integration:""};
+  save();
+  switchDay(currentDay,document.getElementById("tab-"+currentDay));
+  render();
+  const st=document.getElementById("aiStatus");
+  if(st)st.textContent="🧹 "+label+" cleared.";
+}
+
+</script>
+
+<!-- V5.4 LOGO MODULE -->
+<style>
+.ilaw-logo-module{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+.ilaw-logo-preview{width:44px;height:44px;border:1px dashed #c8c0a8;border-radius:8px;object-fit:contain;background:#faf7ef;display:none}
+.ilaw-logo-btn{cursor:pointer}
+.ilaw-logo-status{font-size:12px;opacity:.8}
+</style>
+<div id="ilawLogoModule" class="ilaw-logo-module">
+  <img id="ilawLogoPreview" class="ilaw-logo-preview" alt="School logo preview" style="display: none;">
+  <label class="btn blue ilaw-logo-btn" for="ilawLogoInput">🖼️ Upload Logo</label>
+  <input id="ilawLogoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden="">
+  <button type="button" class="btn gray" id="ilawLogoRemove">Remove Logo</button>
+  <span id="ilawLogoStatus" class="ilaw-logo-status">No logo selected</span>
+</div>
+<script>
+(function(){
+  const KEY="ilaw_v54_school_logo";
+  const input=document.getElementById("ilawLogoInput");
+  const preview=document.getElementById("ilawLogoPreview");
+  const status=document.getElementById("ilawLogoStatus");
+  const remove=document.getElementById("ilawLogoRemove");
+
+  function show(data){
+    if(!data){ preview.removeAttribute("src"); preview.style.display="none"; status.textContent="No logo selected"; return; }
+    preview.src=data; preview.style.display="block"; status.textContent="Logo saved";
+  }
+  try{ show(localStorage.getItem(KEY)); }catch(e){ status.textContent="Logo storage unavailable"; }
+
+  input && input.addEventListener("change", function(){
+    const f=this.files && this.files[0];
+    if(!f)return;
+    if(f.size > 2*1024*1024){ alert("Please choose a logo smaller than 2 MB."); this.value=""; return; }
+    if(!/^image\/(png|jpeg|webp)$/.test(f.type)){ alert("Please use PNG, JPG/JPEG, or WEBP."); this.value=""; return; }
+    const r=new FileReader();
+    r.onload=function(){
+      try{
+        localStorage.setItem(KEY,r.result);
+        show(r.result);
+      }catch(e){
+        alert("The logo could not be saved in this browser. Try a smaller image.");
+      }
+    };
+    r.readAsDataURL(f);
+  });
+
+  remove && remove.addEventListener("click",function(){
+    try{localStorage.removeItem(KEY)}catch(e){}
+    if(input)input.value="";
+    show(null);
+  });
+
+  window.ILAW_getSchoolLogo=function(){
+    try{return localStorage.getItem(KEY)||""}catch(e){return ""}
+  };
+})();
+</script>
+<!-- END V5.4 LOGO MODULE -->
+
+
+<div id="lockScreen" class="lock-screen">
+  <div class="lock-card">
+    <h2>🔐 ILAW Teacher Suite</h2>
+    <p id="lockMessage">Enter your password to continue.</p>
+    <input id="unlockPassword" type="password" placeholder="Password" autocomplete="current-password">
+    <button class="btn primary" style="width:100%;margin-top:9px" onclick="unlockApp()">Unlock</button>
+    <div id="unlockStatus" class="status"></div>
+  </div>
+</div>
+
+<div id="printCenter" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card print-card"><div class="modal-head"><div><h2>🖨 Print Center</h2><p>Choose paper size and orientation, then use the browser printer to Print or Save as PDF.</p></div><button type="button" class="modal-x" onclick="closePrintCenter()">×</button></div><div class="print-grid"><div><label>Paper Size</label><select id="paperSizeSelect"><option value="letter">Short / Letter — 8.5 × 11 in</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4 — 210 × 297 mm</option><option value="a3">A3 — 297 × 420 mm</option><option value="a5">A5 — 148 × 210 mm</option><option value="b4">B4 — 250 × 353 mm</option><option value="b5">B5 — 176 × 250 mm</option><option value="tabloid">Tabloid — 11 × 17 in</option><option value="executive">Executive — 7.25 × 10.5 in</option><option value="statement">Statement — 5.5 × 8.5 in</select></div><div><label>Orientation</label><div class="orientation-pills"><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="portrait"><span>▯ Portrait</span></label><label class="orientation-pill"><input type="radio" name="printOrientationChoice" value="landscape"><span>▭ Landscape</span></label></div></div></div><div class="print-preview-note"><strong>Preview:</strong> <span id="printSummary">A4 • Landscape</span></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePrintCenter()">Cancel</button><button type="button" class="btn green" onclick="printFromCenter('print')">🖨 Print</button></div></div></div>
+<div id="preferencesModal" class="ilaw-modal" aria-hidden="true"><div class="ilaw-modal-card"><div class="modal-head"><div><h2>⚙ Preferences</h2><p>Manage print defaults and local workspace lock.</p></div><button type="button" class="modal-x" onclick="closePreferences()">×</button></div><div class="pref-section"><h3>Print Defaults</h3><div class="row"><div><label>Default Paper Size</label><select id="prefPaperSize"><option value="letter">Short / Letter</option><option value="longbond">Long Bond — 8.5 × 13 in</option><option value="legal">Legal — 8.5 × 14 in</option><option value="a4">A4</option><option value="a3">A3</option><option value="a5">A5</option><option value="b4">B4</option><option value="b5">B5</option><option value="tabloid">Tabloid</option><option value="executive">Executive</option><option value="statement">Statement</option></select></div><div><label>Default Orientation</label><select id="prefOrientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div></div><div class="pref-section"><h3>Local Workspace Lock</h3><div class="row"><div><label>New PIN</label><input id="newLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits"></div><div><label>Confirm PIN</label><input id="confirmLockPin" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat PIN"></div></div><button type="button" class="btn orange" onclick="saveLockPinFromPreferences()">🔐 Update Lock PIN</button></div><div id="prefStatus" class="status"></div><div class="modal-actions"><button type="button" class="btn gray" onclick="closePreferences()">Close</button><button type="button" class="btn primary" onclick="savePreferences()">💾 Save Preferences</button></div></div></div>
+<header class="header">
+  <h1>ILAW Teacher Suite V8 — Studio</h1>
+  <div class="toolbar">
+    <button class="btn primary hidden" id="installAppBtn" onclick="installPwa()">⬇ Install App</button>
+    <select id="langSelect" onchange="changeLanguage()" style="width:auto">
+      <option value="en">English</option><option value="fil">Tagalog</option>
+    </select>
+    <button class="btn green" onclick="openPrintCenter()">🖨 Print/PDF</button>
+    <button class="btn green" onclick="savePDF()">💾 Download PDF</button>
+<span id="accountBadge">Not signed in</span>
+    <button class="btn orange" onclick="lockApp()">🔒 Lock</button>
+    <button class="btn gray" onclick="openSettings()">⚙ Preferences</button>
+    <button class="btn red" onclick="signOutTeacher()">Logout</button>
+  </div>
+</header>
+
+<div class="main">
+<section class="editor">
+
+<div class="ai-box">
+  <h3>⚡ 1-Click AI Lesson Plan Generator</h3>
+  <div class="row">
+    <div class="small" style="align-self:center">🔒 Secure AI connection: the Gemini API key is stored on the server and is not entered by users.</div>
+    <div style="max-width:160px">
+      <label>API</label>
+      <button class="btn primary" style="width:100%" onclick="testAPI()">🔌 Test API</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label>Subject &amp; Grade</label>
+      <select id="aiSubject" onchange="subjectChanged()"><option value="">Select subject...</option></select>
+    </div>
+    <div>
+      <label>MAPEH Component</label>
+      <select id="mapehComponent" onchange="mapehComponentChanged()"><option value="">Select component...</option><option>Music</option><option>Arts</option><option>PE</option><option>Health</option></select>
+    </div>
+  </div>
+  <div class="row curriculum-row">
+    <div><label>School Year</label><select id="schoolYear" onchange="curriculumContextChanged()"><option value="2026-2027">2026–2027</option><option value="2027-2028">2027–2028</option><option value="2028-2029">2028–2029</option></select></div>
+    <div><label>Curriculum Basis</label><input id="curriculumVersion" readonly placeholder="Auto-detected from grade + school year"></div>
+  </div>
+  <div class="row"><div><label>BOW Item / Competency</label><textarea id="bowItem" rows="2" placeholder="Paste or select the applicable BOW competency/item for this term."></textarea></div></div>
+  <div id="curriculumStatus" class="small curriculum-status">Curriculum basis will be detected automatically.</div>
+  <div class="row">
+    <div>
+      <label>Subtopic</label>
+      <select id="aiTopic" onchange="topicChanged()"><option value="">Select subtopic...</option><option value="__custom">Custom Subtopic...</option></select>
+    </div>
+    <div>
+      <label>Exact Lesson Title</label>
+      <input id="aiLessonTitle" placeholder="The generator will follow this exact title" oninput="aiLessonTitleChanged()">
+    </div>
+  </div>
+  <div id="customTopicWrap" class="hidden">
+    <label>Custom Topic</label>
+    <input id="customTopic" placeholder="Type your topic">
+  </div>
+
+  <div class="row">
+    <button class="btn purple" id="generateBtn" onclick="generateFullLessonPlan()">✨ Generate Full Plan</button>
+    <button class="btn primary" onclick="improvePlan()">🧠 Improve Plan</button>
+  </div>
+  <div class="row">
+    <button class="btn orange" onclick="regenerateCurrentSession()">🔄 Regenerate Session</button>
+    <button class="btn gray" onclick="copyCurrentToNext()">📋 Copy to Next</button>
+    <button class="btn red" onclick="clearCurrentSession()">🧹 Clear Session</button>
+  </div>
+  <div id="aiStatus" class="status">⏳ Trying gemini-3.6-flash...</div>
+  <div class="small">The app checks available Gemini models first and uses one that supports generateContent.</div>
+</div>
+
+<div class="tool-box">
+  <h3>🖼️ School / Dashboard</h3>
+  <div class="row" style="align-items:center">
+    <div>
+      <label>School Logo</label>
+      <input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onchange="loadLogo(event)">
+      <button class="btn gray" onclick="removeLogo()">Remove Logo</button>
+    </div>
+    <img id="dashboardLogo" class="logo-preview" alt="School logo" style="display: none;">
+  </div>
+</div>
+
+<h3>Lesson Information</h3>
+<div class="row">
+  <div><label>Teacher Name</label><input id="teacherName" oninput="updateState()"></div>
+  <div><label>Teacher Title</label><input id="teacherTitle" oninput="updateState()"></div>
+</div>
+<div class="row">
+  <div><label>School Name</label><input id="schoolName" oninput="updateState()"></div>
+  <div><label>School Address</label><input id="schoolAddress" oninput="updateState()"></div>
+</div>
+<div class="row">
+  <div><label>Learning Area / Subject</label><input id="subject" oninput="updateState()"></div>
+  <div><label>Grade &amp; Section</label><input id="gradeSection" oninput="updateState()" placeholder="e.g. Grade 10 - Sampaguita"></div>
+</div>
+<div class="row">
+  <div><label>Term / Week Reference</label><input id="termWeek" oninput="updateState()"></div>
+  <div><label>Lesson Plan Format</label><input id="planFormat" value="ILAW Matrix" oninput="updateState()"></div>
+</div>
+<label>Lesson Title</label><input id="lessonTitle" oninput="updateState()">
+<label>References</label><input id="references" oninput="updateState()">
+<label>Declaration of AI Use</label><textarea id="aiDeclaration" oninput="updateState()"></textarea>
+<div class="tool-box"><h3>✍️ Signatories</h3><div class="small">Edit signatories here. Only the completed signatures appear in the lesson plan and Print/PDF.</div><div class="small">Set the role, name, and designation for each signatory. Add or remove rows depending on the school.</div><div id="signatoryEditor" class="sig-editor"></div><button type="button" class="btn green" onclick="addSignatory()">＋ Add Signatory</button></div>
+
+<hr>
+<h3>I - INTENTIONS</h3>
+<label>Curriculum Standards</label><textarea id="curriculumStandards" oninput="updateState()"></textarea>
+<label>Learning Competency (BOW)</label><textarea id="bowCompetency" oninput="updateState()"></textarea>
+<label>Learning Objectives</label><textarea id="objectives" oninput="updateState()"></textarea>
+<label>Learner Context <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">— your real classroom situation</span></label>
+<textarea id="learnerContext" rows="4" oninput="updateState()" placeholder="Example: ACHS has 34 Grade 10 students. 50% are struggling in Math and 30% are struggling in English. Most families rely on agricultural/farming livelihood. Limited access to gadgets/internet at home."></textarea>
+<div class="small" style="margin:-6px 0 4px">Ilagay dito ang totoong konteksto ng iyong klase — bilang ng mag-aaral, mahihinang lugar (subject/skills), at karaniwang hanapbuhay ng mga pamilya. Gagamitin ito ng AI generator para i-contextualize ang mga aktibidad, halimbawa, at wika ng buong lesson plan.</div>
+
+<div style="margin:10px 0"><button class="btn gray" onclick="loadDefaultSample()">Thermal Dynamics Sample</button></div>
+
+<hr>
+<h3>Daily Schedule Editor</h3>
+<div class="tabs">
+  <button class="tab active" id="tab-mon" onclick="switchDay('mon',this)">Session 1</button>
+  <button class="tab" id="tab-tue" onclick="switchDay('tue',this)">Session 2</button>
+  <button class="tab" id="tab-wed" onclick="switchDay('wed',this)">Session 3</button>
+  <button class="tab" id="tab-thu" onclick="switchDay('thu',this)">Session 4</button>
+</div>
+<div id="dayLabel">SESSION 1</div>
+<div class="session-meta-editor"><div><label>Session Date</label><input type="date" id="sessionDateInput" onchange="updateDayData()"></div><div><label>Time In</label><input type="time" id="sessionTimeIn" onchange="updateDayData()"></div><div><label>Time Out</label><input type="time" id="sessionTimeOut" onchange="updateDayData()"></div></div>
+<label>Pre-Lesson</label><textarea id="preLessonInput" oninput="updateDayData()"></textarea>
+<label>Flow / Activities &amp; Procedures</label><textarea id="leadInput" oninput="updateDayData()"></textarea>
+<label>Learning Resources</label><textarea id="resourcesInput" oninput="updateDayData()"></textarea>
+<label>Opportunities for Integration</label><textarea id="integrationInput" oninput="updateDayData()"></textarea>
+
+<hr>
+<h3>Assessing &amp; Ways Forward</h3>
+<label>Formative Assessment</label><textarea id="assessInput" oninput="updateState()"></textarea>
+<label>Extended Learning Opportunities</label><textarea id="wayInput" oninput="updateState()"></textarea>
+
+<div id="reflectionWrap" class="tool-box">
+  <label>📅 Friday Reflection — Friday only</label>
+  <label style="font-weight:400">
+    <input type="checkbox" id="fridayCheck" onchange="toggleReflection()" style="width:auto">
+    It is Friday / enable weekly reflection
+  </label>
+
+  <div id="reflectionFields" style="display: block; margin-top: 12px;">
+    <label>1. Learner Progress</label>
+    <textarea id="reflectionProgress" placeholder="What evidence showed that learners achieved the target? Who may need additional support?"></textarea>
+
+    <label>2. What Worked Well</label>
+    <textarea id="reflectionWorked" placeholder="Which strategy, activity, or resource worked well? How did learners respond?"></textarea>
+
+    <label>3. Challenges Encountered</label>
+    <textarea id="reflectionChallenges" placeholder="What difficulties were encountered during teaching, participation, resources, or assessment?"></textarea>
+
+    <label>4. Adjustments for Next Week</label>
+    <textarea id="reflectionAdjustments" placeholder="What will you change, improve, reteach, or provide next week?"></textarea>
+
+    <label>5. Innovation / Localization</label>
+    <textarea id="reflectionInnovation" placeholder="What contextualized, localized, ICT-based, or innovative practice did you use?"></textarea>
+
+    <label>6. Weekly Summary</label>
+    <textarea id="fridayReflection" placeholder="Your overall Friday reflection..." oninput="updateFridayReflection()"></textarea>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <button type="button" class="btn purple" onclick="generateFridayReflection()">✨ Generate Reflection</button>
+      <button type="button" class="btn green" onclick="saveFridayReflection()">💾 Save Reflection</button>
+      <button type="button" class="btn gray" onclick="clearFridayReflection()">🗑️ Clear</button>
+      <span id="reflectionStatus" style="font-size:12px;align-self:center">✅ Reflection generated. Review it before finalizing.</span>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<section class="preview">
+<div class="paper" id="lessonPaper">
+  <div class="doc-header">
+    <img id="pvLogo" class="hidden" alt="School Logo">
+    <h4>Republic of the Philippines</h4>
+    <h3>Department of Education</h3>
+    <h4>REGION V — SCHOOLS DIVISION OF CAMARINES SUR</h4>
+    <h2 id="pvSchoolName" contenteditable="true"></h2><p id="pvSchoolAddress" contenteditable="true"></p>
+  </div>
+
+  <table class="doc-table">
+    <tbody><tr><td style="width:22%;font-weight:bold">LESSON TITLE</td><td colspan="3" id="pvLessonTitle" contenteditable="true">Levels of Classification and Biological Taxonomy</td></tr>
+    <tr><td style="font-weight:bold">Learning Area/s</td><td id="pvSubject" contenteditable="true">Science 8</td><td style="font-weight:bold">Name of Teacher</td><td id="pvTeacher" contenteditable="true"></td></tr>
+    <tr><td style="font-weight:bold">Grade Level and Section</td><td id="pvGradeSection" contenteditable="true"></td><td style="font-weight:bold">Term / Week</td><td id="pvTermWeek" contenteditable="true"></td></tr>
+    <tr><td style="font-weight:bold">Curriculum Basis</td><td colspan="3" id="pvCurriculumVersion"></td></tr>
+    <tr><td style="font-weight:bold">BOW Item / Competency</td><td colspan="3" id="pvBowItem" style="white-space:pre-wrap" contenteditable="true"></td></tr>
+    <tr><td style="font-weight:bold">References</td><td colspan="3" id="pvReferences" contenteditable="true">DepEd Science 8 Learner's Material, K to 12 Science Curriculum Guide, Campbell Biology (11th Ed.)</td></tr>
+    <tr><td style="font-weight:bold">Declaration of AI use</td><td colspan="3" id="pvAiDeclaration" contenteditable="true">This lesson plan was generated with the assistance of AI to structure activities according to DepEd pedagogical standards.</td></tr>
+  </tbody></table>
+
+  <div class="banner">INTENTIONS <span class="sub">Meaningful learning experiences are anchored in how we frame them.</span></div>
+  <table class="doc-table">
+    <tbody><tr><td style="width:25%;font-weight:bold">Curriculum Standards</td><td id="pvStandards" contenteditable="true" style="white-space:pre-wrap">The learners demonstrate an understanding of the concept of a species and the hierarchical system of classification of organisms.</td></tr>
+    <tr><td style="font-weight:bold">Learning Competency</td><td id="pvBow" contenteditable="true">Explain the hierarchical system of classification of organisms (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) and the rules of binomial nomenclature (Competency-aligned statement).</td></tr>
+    <tr><td style="font-weight:bold">Learning Objectives</td><td id="pvObjectives" contenteditable="true" style="white-space:pre-wrap">At the end of the 4-session module, learners will be able to: 1. Describe the eight taxonomic ranks in biological classification; 2. Apply the rules of binomial nomenclature when writing scientific names; 3. Use a simple dichotomous key to identify and classify local Philippine organisms; and 4. Recognize the importance of systematic classification in biodiversity conservation.</td></tr>
+    <tr><td style="font-weight:bold">Learner Context</td><td id="pvLearnerContext" contenteditable="true" style="white-space:pre-wrap">Grade 8 public high school learners with mixed academic readiness, working in small groups with access to print modules, visual charts, and localized plant/animal picture cards.</td></tr>
+  </tbody></table>
+
+  <div class="banner">LEARNING EXPERIENCES <span class="sub">A learning experience is like a thoughtfully designed journey.</span></div>
+  <table class="doc-table">
+    <thead><tr><th>Learning Experience</th><th>Session 1</th><th>Session 2</th><th>Session 3</th><th>Session 4</th></tr></thead>
+    <tbody><tr class="session-meta-print"><td style="font-weight:bold">Date / Time</td><td id="pv_mon_meta"></td><td id="pv_tue_meta"></td><td id="pv_wed_meta"></td><td id="pv_thu_meta"></td></tr>
+      <tr><td style="font-weight:bold">Pre-Lesson</td><td id="pv_mon_pre" contenteditable="true">Conduct a 5-minute activity called 'Organize the Supermarket' where students group 10 everyday items into logical categories and explain their rationale.</td><td id="pv_tue_pre" contenteditable="true">Quick recall game: 'Taxonomic Ladder' where student representatives arrange jumbled cards of the taxonomic levels from broadest to most specific.</td><td id="pv_wed_pre" contenteditable="true">Present pictures of two similar-looking local plants (e.g., Sampaguita and Chichirica) and ask students how a scientist would distinguish them.</td><td id="pv_thu_pre" contenteditable="true">Peer check: Groups exchange and verify their completed dichotomous key identification worksheets from Wednesday.</td></tr>
+      <tr><td style="font-weight:bold">Flow</td><td id="pv_mon_lead" contenteditable="true" style="white-space:pre-wrap">Introduce Taxonomy and Carolus Linnaeus. Discuss the concept of classifying biological diversity and present the 8 hierarchical levels (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species) using the mnemonic 'Dear King Philip Came Over For Good Soup'.</td><td id="pv_tue_lead" contenteditable="true" style="white-space:pre-wrap">Discuss Binomial Nomenclature rules (Genus capitalized, species lowercase, italicized or underlined). Guide students in writing scientific names of local organisms such as Panthera pardus, Oryza sativa, and Jasminum sambac.</td><td id="pv_wed_lead" contenteditable="true" style="white-space:pre-wrap">Introduce simple Dichotomous Keys. Guide student groups in navigating a 4-step dichotomous key to identify five Philippine endemic organisms (e.g., Tamaraw, Philippine Eagle, Tarsier, Milkfish, Narra tree). Safety rule: Handle specimen cards carefully and maintain orderly group discussion.</td><td id="pv_thu_lead" contenteditable="true" style="white-space:pre-wrap">Facilitate a class synthesis connecting taxonomy to biodiversity conservation. Administer a 10-item multiple-choice formative quiz covering taxonomic ranks, scientific naming, and dichotomous key usage.</td></tr>
+      <tr><td style="font-weight:bold">Learning Resources</td><td id="pv_mon_res" contenteditable="true">Taxonomy graphic organizer, Manila paper, visual diagram of taxonomic hierarchy.</td><td id="pv_tue_res" contenteditable="true">Binomial nomenclature rule chart, practice worksheets, whiteboard markers.</td><td id="pv_wed_res" contenteditable="true">Dichotomous key activity sheets, picture cards of Philippine flora and fauna.</td><td id="pv_thu_res" contenteditable="true">Formative assessment sheets, summary slides/visual chart.</td></tr>
+      <tr><td style="font-weight:bold">Opportunities for integration</td><td id="pv_mon_integ" contenteditable="true">Values Integration: Orderliness, systematic thinking, and organization in daily life.</td><td id="pv_tue_integ" contenteditable="true">Language Arts: Applying proper capitalization, typography rules, and Latin root word awareness.</td><td id="pv_wed_integ" contenteditable="true">Environmental Education &amp; Nationalism: Appreciating endemic Philippine species and biodiversity hotspots.</td><td id="pv_thu_integ" contenteditable="true">Critical Thinking: Evaluating how accurate scientific naming aids global conservation efforts and medical research.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="banner">ASSESSING LEARNING</div>
+  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Formative Assessment</td><td id="pvAssess" contenteditable="true" style="white-space:pre-wrap">Daily exit cards, group worksheet outputs on dichotomous keys, peer-reviewed scientific naming drills, and a 10-item synthesis quiz.</td></tr></tbody></table>
+  <div class="banner">WAYS FORWARD</div>
+  <table class="doc-table"><tbody><tr><td style="width:25%;font-weight:bold">Extended learning opportunities</td><td id="pvWay" contenteditable="true" style="white-space:pre-wrap">Create a localized mini-catalog of five schoolyard or neighborhood organisms including their common names, local names, and properly written scientific names.</td></tr>
+  <tr><td style="font-weight:bold">Reflections</td><td id="pvReflection" style="white-space:pre-wrap">
+<div class="print-reflection-lines">
+  <div><strong>Session 1</strong><span></span></div>
+  <div><strong>Session 2</strong><span></span></div>
+  <div><strong>Session 3</strong><span></span></div>
+  <div><strong>Session 4</strong><span></span></div>
+</div>
+</td></tr></tbody></table>
+
+  <div id="pvSignatures" class="signatures"></div>
+</div>
+</section>
+</div>
+
+<script>
+const SUBJECT_TOPICS={
+"Science 7":["Matter and Its Properties","Mixtures and Solutions","Earth and Space","Force and Motion","Heat and Temperature","Ecosystems"],
+"Science 8":["Cells","Reproduction","Force and Pressure","Waves","Light","Electricity"],
+"Science 9":["Chemistry Basics","Atoms and Molecules","Chemical Reactions","Electricity","Climate and Weather","Ecosystems"],
+"Science 10":["Plate Tectonics","Earthquakes and Volcanoes","Electricity","Magnetism","Electromagnetic Spectrum","Chemical Reactions","Biodiversity","Genetics"],
+"Mathematics 7":["Integers","Fractions","Expressions","Equations","Geometry","Statistics"],
+"Mathematics 8":["Linear Equations","Functions","Geometry","Pythagorean Theorem","Statistics","Probability"],
+"Mathematics 9":["Quadratic Equations","Sequences","Geometry","Trigonometry","Statistics","Probability"],
+"Mathematics 10":["Functions","Polynomials","Trigonometry","Circles","Statistics","Probability"],
+"English 7":["Reading Comprehension","Grammar","Vocabulary","Writing","Literature","Oral Communication"],
+"English 8":["Reading","Writing","Grammar","Literature","Research","Oral Communication"],
+"English 9":["Literature","Argumentative Writing","Research","Grammar","Speaking"],
+"English 10":["World Literature","Critical Reading","Creative Writing","Research","Media Literacy"],
+"Filipino":["Panitikan","Wika at Gramatika","Pagbasa","Pagsulat","Pagsasalita"],
+"Araling Panlipunan":["Kasaysayan","Heograpiya","Ekonomiks","Pamahalaan","Kultura"],
+"TLE/EPP 7":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"TLE/EPP 8":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"TLE/EPP 9":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"TLE/EPP 10":["ICT","Home Economics","Industrial Arts","Agriculture","Entrepreneurship"],
+"MAPEH 7":["Music","Arts","Physical Education","Health"],
+"MAPEH 8":["Music","Arts","Physical Education","Health"],
+"MAPEH 9":["Music","Arts","Physical Education","Health"],
+"MAPEH 10":["Music","Arts","Physical Education","Health"],
+"DRRR":["Hazard and Risk","Disaster Preparedness","Earthquake Safety","Flood Safety","Emergency Planning"]
+};
+
+const MAPEH_SUBTOPICS={
+  Music:{
+    "MAPEH 7":["Rhythm and Meter","Melody and Texture","Philippine Folk Music","Traditional Philippine Instruments"],
+    "MAPEH 8":["Music of Southeast Asia","Vocal and Instrumental Music","Musical Forms","Performance Practice"],
+    "MAPEH 9":["Music of the Philippines","Western Music","20th Century Music","Music Appreciation"],
+    "MAPEH 10":["Contemporary Music","Popular Music","Philippine Contemporary Composers","Music Production"]
+  },
+  Arts:{
+    "MAPEH 7":["Elements of Art","Principles of Design","Philippine Indigenous Arts","Drawing and Visual Composition"],
+    "MAPEH 8":["Arts of Southeast Asia","Painting and Sculpture","Crafts and Design","Cultural Art Appreciation"],
+    "MAPEH 9":["Philippine Art History","Modern Art","Visual Arts Techniques","Art Criticism"],
+    "MAPEH 10":["Contemporary Philippine Arts","Media and Technology in Art","Public and Community Art","Art Production"]
+  },
+  PE:{
+    "MAPEH 7":["Physical Fitness","Locomotor Skills","Team Sports","Rhythmic Activities"],
+    "MAPEH 8":["Fitness Training","Individual Sports","Team Sports","Dance and Recreation"],
+    "MAPEH 9":["Physical Fitness Assessment","Sports Skills","Recreational Activities","Dance"],
+    "MAPEH 10":["Fitness and Wellness","Sports and Games","Dance","Lifetime Physical Activities"]
+  },
+  Health:{
+    "MAPEH 7":["Personal Health","Nutrition","Mental and Emotional Health","Safety and First Aid"],
+    "MAPEH 8":["Family Health","Adolescent Health","Disease Prevention","Consumer Health"],
+    "MAPEH 9":["Community Health","Environmental Health","Health Services","Disease Prevention"],
+    "MAPEH 10":["Health Trends","Global Health","Consumer and Environmental Health","Health Advocacy"]
+  }
+};
+function isMapehSubject(s){return /^MAPEH (7|8|9|10)$/.test(s)}
+function mapehComponentChanged(){
+  const subject=$("aiSubject")?.value||"", component=$("mapehComponent")?.value||"", t=$("aiTopic");
+  if(!t)return;
+  const arr=isMapehSubject(subject)&&component?(MAPEH_SUBTOPICS[component]?.[subject]||[]):[];
+  t.innerHTML='<option value="">Select subtopic...</option>'+arr.map(x=>`<option>${x}</option>`).join('')+'<option value="__custom">Custom Subtopic...</option>';
+  $("customTopicWrap")?.classList.add("hidden");
+}
+function aiLessonTitleChanged(){
+  const v=$("aiLessonTitle")?.value||"";
+  appState.lessonTitle=v;
+  setVal("lessonTitle",v);
+  save();
+}
+function generationContext(){return{subject:$("aiSubject")?.value||$("subject")?.value||"",component:$("mapehComponent")?.value||"",subtopic:topicValue(),lessonTitle:$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim()||"",schoolYear:$("schoolYear")?.value||appState.schoolYear||"2026-2027",academicTerm:$("academicTerm")?.value||appState.academicTerm||"Term 1",curriculumVersion:$("curriculumVersion")?.value||appState.curriculumVersion||"",bowItem:$("bowItem")?.value.trim()||appState.bowItem||"",bowReference:$("bowReference")?.value.trim()||appState.bowReference||""}}
+let currentDay="mon", appLanguage="en", selectedModel=null;
+const defaultState=()=>({teacherName:"",teacherTitle:"",schoolName:"",schoolAddress:"",gradeSection:"",subject:"",mapehComponent:"",subtopic:"",planFormat:"ILAW Matrix",termWeek:"",academicTerm:"Term 1",schoolYear:"2026-2027",curriculumVersion:"",bowItem:"",bowReference:"",lessonTitle:"",references:"",aiDeclaration:"",curriculumStandards:"",bowCompetency:"",objectives:"",learnerContext:"",formativeAssessment:"",extendedLearning:"",fridayReflection:"",reflectionProgress:"",reflectionWorked:"",reflectionChallenges:"",reflectionAdjustments:"",reflectionInnovation:"",reflectionLines:[{label:"Session 1",text:""},{label:"Session 2",text:""},{label:"Session 3",text:""},{label:"Session 4",text:""}],logo:"",fridayEnabled:false,signatories:[{role:"Prepared by",name:"",designation:""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}],matrix:{mon:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},tue:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},wed:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""},thu:{date:"",timeIn:"",timeOut:"",pre:"",lead:"",resources:"",integration:""}}});
+let appState=defaultState();
+function getGradeNumber(){const gs=(appState.gradeSection||"").toString();let m=gs.match(/\b(7|8|9|10)\b/);if(m)return Number(m[1]);const src=($("aiSubject")?.value||"").toString();m=src.match(/(?:Grade|Science|Mathematics|English|Filipino|MAPEH|TLE\/EPP)\s*(7|8|9|10)\b/i);return m?Number(m[1]):null}
+function getCurriculumBasis(grade,sy){sy=String(sy||"2026-2027");if(grade===7||grade===8)return"MATATAG / Revised K–10 Curriculum";if(grade===9||grade===10)return sy>="2026-2027"?"MATATAG / Revised K–10 Curriculum (Phase 3)":"MELCs-based curriculum (transition)";return"Curriculum basis to be verified"}
+function updateCurriculumBasis(saveIt=false){const grade=getGradeNumber(),sy=$("schoolYear")?.value||appState.schoolYear||"2026-2027";appState.schoolYear=sy;appState.curriculumVersion=getCurriculumBasis(grade,sy);if($("curriculumVersion"))$("curriculumVersion").value=appState.curriculumVersion;if($("curriculumStatus"))$("curriculumStatus").textContent=grade?"✓ "+appState.curriculumVersion+" • BOW-driven planning.":"Select a Grade 7–10 subject to detect the curriculum basis.";if(saveIt)save()}
+function normalizeAppState(){const b=defaultState();appState={...b,...appState,matrix:{...b.matrix,...(appState.matrix||{})}};["mon","tue","wed","thu"].forEach(d=>appState.matrix[d]={...b.matrix[d],...(appState.matrix[d]||{})});if(!["Term 1","Term 2","Term 3"].includes(appState.academicTerm))appState.academicTerm="Term 1";if(!appState.schoolYear)appState.schoolYear="2026-2027";updateCurriculumBasis(false)}
+function curriculumContextChanged(){appState.academicTerm=$("academicTerm")?.value||"Term 1";appState.schoolYear=$("schoolYear")?.value||"2026-2027";appState.bowItem=$("bowItem")?.value||"";appState.bowReference=$("bowReference")?.value||"";updateCurriculumBasis(true);render()}
+
+
+const sample={teacherName:"JONEL T. MALAZAR",teacherTitle:"Teacher VI",schoolName:"ALTAMARINO-CLASIO HIGH SCHOOL",schoolAddress:"Curry, Pili, Camarines Sur",gradeSection:"GRADE 10 - ANDROMEDA",subject:"Science 10",termWeek:"Week 7 - 4 Sessions (240 minutes)",lessonTitle:"Thermal Dynamics of Change: Differentiating Exothermic and Endothermic Chemical Reactions",references:"Science 10 Learner's Material & TG | DepEd MATATAG Science 10 BOW",aiDeclaration:"Generative AI (Gemini) was utilized as a co-creator tool to structure and format the lesson activities into the ILAW framework.",curriculumStandards:"CONTENT STANDARD: Learners demonstrate an understanding of chemical reactions associated with biological and industrial processes affecting life and the environment.\\nPERFORMANCE STANDARD: Learners practice safety measures in handling household chemicals based on knowledge of chemical reactions.",bowCompetency:"Differentiate exothermic and endothermic reactions and explain their applications.",objectives:"1. Knowledge: Differentiate exothermic from endothermic reactions.\\n2. Skills: Measure and record temperature changes.\\n3. Attitude: Value safety and energy efficiency.",learnerContext:"Learners are familiar with heat release but need hands-on measurement to understand heat absorption.",formativeAssessment:"Thermal Reaction Matrix and exit ticket.",extendedLearning:"Investigate instant cold packs and self-heating meal packs used in disaster relief.",matrix:{mon:{pre:"Review prior learning; hot pack vs cold pack mystery.",lead:"Session 1: Introduce thermal energy and energy changes in reactions.",resources:"Thermometers, cups, safe household materials.",integration:"Health, Environmental Science, DRR"},tue:{pre:"Recall yesterday's key idea.",lead:"Session 2: Exothermic vs endothermic reactions and energy diagrams.",resources:"Charts, board, activity sheets.",integration:"Mathematics, Environmental Science"},wed:{pre:"Predict which reaction will warm/cool.",lead:"Session 3: Hands-on temperature investigation and data recording.",resources:"Thermometers, vinegar, baking soda, water, detergent.",integration:"Math, Health, Science Process Skills"},thu:{pre:"Review findings from investigation.",lead:"Session 4: Environmental and industrial applications; formative synthesis.",resources:"Scenario cards, worksheets.",integration:"DRR, Climate, Environmental Science"}}};
+
+function $(id){return document.getElementById(id)}
+function setText(id,v){if($(id))$(id).textContent=v||""}
+function setVal(id,v){if($(id))$(id).value=v??""}
+function noQuarter(v){return typeof v==="string"?v.replace(/quarter/gi,"Term"):v}
+function deepNoQuarter(obj){
+  if(typeof obj==="string")return noQuarter(obj);
+  if(Array.isArray(obj))return obj.map(deepNoQuarter);
+  if(obj&&typeof obj==="object"){const o={};for(const k in obj)o[k]=deepNoQuarter(obj[k]);return o}
+  return obj;
+}
+
+function ensureReflectionTableLines(){
+  const cell=$("pvReflection");
+  if(!cell)return;
+  if(!Array.isArray(appState.reflectionLines)||!appState.reflectionLines.length){
+    appState.reflectionLines=[{label:"Session 1",text:""},{label:"Session 2",text:""},{label:"Session 3",text:""},{label:"Session 4",text:""}];
+  }
+  const existing=cell.querySelectorAll("#pvReflectionLines > div").length;
+  if(existing===appState.reflectionLines.length)return;
+  cell.innerHTML='<div class="print-reflection-lines" id="pvReflectionLines">'+
+    appState.reflectionLines.map((l,i)=>
+      '<div><strong contenteditable="true" data-reflect-label="'+i+'">'+esc(l.label||"")+'</strong>'+
+      '<span contenteditable="true" data-reflect-text="'+i+'">'+esc(l.text||"")+'</span>'+
+      '<button type="button" class="reflect-remove" data-reflect-remove="'+i+'" title="Remove this line" aria-label="Remove this line">✕</button></div>'
+    ).join("")+
+    '</div>'+
+    '<button type="button" class="reflect-add-line" onclick="addReflectionLine()">＋ Add reflection space</button>';
+}
+function addReflectionLine(){
+  if(!Array.isArray(appState.reflectionLines))appState.reflectionLines=[];
+  appState.reflectionLines.push({label:"Extra Note",text:""});
+  save();ensureReflectionTableLines();
+}
+function removeReflectionLine(i){
+  if(!Array.isArray(appState.reflectionLines)||appState.reflectionLines.length<=1)return;
+  appState.reflectionLines.splice(i,1);
+  save();ensureReflectionTableLines();
+}
+
+function save(){
+  const uid=window.ILAW_currentUser?.id;
+  if(!uid)return;
+  localStorage.setItem("ilaw_v3_state_"+uid,JSON.stringify(appState));
+  queueProfileSave();
+}
+function updateState(){
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","bowItem","bowReference"].forEach(k=>{if($(k))appState[k]=$(k).value});appState.academicTerm=$("academicTerm")?.value||appState.academicTerm||"Term 1";appState.schoolYear=$("schoolYear")?.value||appState.schoolYear||"2026-2027";updateCurriculumBasis(false);
+if($("mapehComponent"))appState.mapehComponent=$("mapehComponent").value;
+if($("aiTopic"))appState.subtopic=$("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim();
+if($("aiLessonTitle"))appState.lessonTitle=$("aiLessonTitle").value.trim()||appState.lessonTitle;
+appState.formativeAssessment=$("assessInput").value;appState.extendedLearning=$("wayInput").value;save();render();
+}
+function normalizeSignatories(list){
+  if(!Array.isArray(list)||!list.length)return [{role:"Prepared by",name:appState.teacherName||"",designation:appState.teacherTitle||""},{role:"Reviewed by",name:"",designation:""},{role:"Noted by",name:"",designation:""}];
+  return list.map(s=>({role:String(s?.role||"").trim(),name:String(s?.name||"").trim(),designation:String(s?.designation||"").trim()}));
+}
+function esc(v){return String(v??"").replace(/[&<>\"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;", "'":"&#39;"}[m]));}
+function renderSignatoryEditor(){const box=$("signatoryEditor");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map((s,i)=>`<div class="sig-row"><div><label>Role / Label</label><input value="${esc(s.role)}" oninput="updateSignatory(${i},'role',this.value)" placeholder="e.g. Checked by"></div><div><label>Name</label><input value="${esc(s.name)}" oninput="updateSignatory(${i},'name',this.value)" placeholder="Full name"></div><div><label>Designation</label><input value="${esc(s.designation)}" oninput="updateSignatory(${i},'designation',this.value)" placeholder="e.g. Master Teacher I"></div><button type="button" class="btn red sig-remove" onclick="removeSignatory(${i})">✕</button></div>`).join("");}
+function updateSignatory(i,field,value){appState.signatories=normalizeSignatories(appState.signatories);appState.signatories[i][field]=value;save();renderSignatoryPreview();}
+function addSignatory(){appState.signatories=normalizeSignatories(appState.signatories);appState.signatories.push({role:"Checked by",name:"",designation:""});save();renderSignatoryEditor();renderSignatoryPreview();}
+function removeSignatory(i){appState.signatories=normalizeSignatories(appState.signatories);if(appState.signatories.length<=1){alert("Keep at least one signatory.");return;}appState.signatories.splice(i,1);save();renderSignatoryEditor();renderSignatoryPreview();}
+function renderSignatoryPreview(){const box=$("pvSignatures");if(!box)return;appState.signatories=normalizeSignatories(appState.signatories);box.innerHTML=appState.signatories.map(s=>`<div class="sig"><div>${esc(s.role||"Signatory")}:</div><div class="sigline">${esc(s.name||"")}</div><div>${esc(s.designation||"")}</div></div>`).join("");}
+function render(){
+setText("pvSchoolName",appState.schoolName);setText("pvSchoolAddress",appState.schoolAddress);setText("pvLessonTitle",appState.lessonTitle);setText("pvSubject",appState.subject);setText("pvGradeSection",appState.gradeSection);setText("pvTeacher",appState.teacherName);setText("pvTermWeek",noQuarter(appState.termWeek));setText("pvCurriculumVersion",appState.curriculumVersion);setText("pvBowItem",appState.bowItem||appState.bowCompetency);setText("pvReferences",appState.references);setText("pvAiDeclaration",appState.aiDeclaration);setText("pvStandards",appState.curriculumStandards);setText("pvBow",appState.bowCompetency);setText("pvObjectives",appState.objectives);setText("pvLearnerContext",appState.learnerContext);setText("pvAssess",appState.formativeAssessment);setText("pvWay",appState.extendedLearning);ensureReflectionTableLines();
+["mon","tue","wed","thu"].forEach(d=>{const m=appState.matrix[d]||{};setText("pv_"+d+"_pre",m.pre);setText("pv_"+d+"_lead",m.lead);setText("pv_"+d+"_res",m.resources);setText("pv_"+d+"_integ",m.integration);setText("pv_"+d+"_meta",[m.date||"",m.timeIn&&m.timeOut?m.timeIn+" – "+m.timeOut:(m.timeIn||m.timeOut||"")].filter(Boolean).join(" • "))});
+appState.signatories=normalizeSignatories(appState.signatories);renderSignatoryEditor();renderSignatoryPreview();
+const logo=$("pvLogo");if(appState.logo){logo.src=appState.logo;logo.classList.remove("hidden")}else logo.classList.add("hidden");
+const dl=$("dashboardLogo");if(appState.logo){dl.src=appState.logo;dl.style.display="block"}else dl.style.display="none";
+$("fridayCheck").checked=!!appState.fridayEnabled;
+$("reflectionFields").style.display=appState.fridayEnabled?"block":"none";
+$("reflectionWrap").classList.toggle("locked",!appState.fridayEnabled);
+loadReflectionParts();
+}
+const PV_FIELD_MAP={pvSchoolName:"schoolName",pvSchoolAddress:"schoolAddress",pvLessonTitle:"lessonTitle",pvSubject:"subject",pvTeacher:"teacherName",pvGradeSection:"gradeSection",pvTermWeek:"termWeek",pvBowItem:"bowItem",pvReferences:"references",pvAiDeclaration:"aiDeclaration",pvStandards:"curriculumStandards",pvBow:"bowCompetency",pvObjectives:"objectives",pvLearnerContext:"learnerContext",pvAssess:"formativeAssessment",pvWay:"extendedLearning"};
+const PV_DAY_FIELD_MAP={pre:"pre",lead:"lead",res:"resources",integ:"integration"};
+let editablePreviewReady=false;
+function initEditablePreview(){
+  const paper=$("lessonPaper");
+  if(!paper||editablePreviewReady)return;
+  editablePreviewReady=true;
+  paper.setAttribute("data-editable-ready","true");
+  paper.addEventListener("input",function(e){
+    const el=e.target.closest("[contenteditable='true']");
+    if(!el)return;
+    if(el.hasAttribute("data-reflect-label")){
+      const i=Number(el.getAttribute("data-reflect-label"));
+      if(appState.reflectionLines[i]){appState.reflectionLines[i].label=el.innerText;save();}
+      return;
+    }
+    if(el.hasAttribute("data-reflect-text")){
+      const i=Number(el.getAttribute("data-reflect-text"));
+      if(appState.reflectionLines[i]){appState.reflectionLines[i].text=el.innerText;save();}
+      return;
+    }
+    if(!el.id)return;
+    const text=el.innerText;
+    if(PV_FIELD_MAP[el.id]){
+      appState[PV_FIELD_MAP[el.id]]=text;
+      save();
+      return;
+    }
+    const m=el.id.match(/^pv_(mon|tue|wed|thu)_(pre|lead|res|integ)$/);
+    if(m){
+      const day=m[1],field=PV_DAY_FIELD_MAP[m[2]];
+      if(!appState.matrix[day])appState.matrix[day]={};
+      appState.matrix[day][field]=text;
+      save();
+    }
+  });
+  paper.addEventListener("click",function(e){
+    const btn=e.target.closest("[data-reflect-remove]");
+    if(!btn)return;
+    e.preventDefault();
+    removeReflectionLine(Number(btn.getAttribute("data-reflect-remove")));
+  });
+  paper.addEventListener("focusout",function(e){
+    const el=e.target.closest("[contenteditable='true']");
+    if(el&&PV_FIELD_MAP[el.id]==="lessonTitle"&&$("aiLessonTitle"))$("aiLessonTitle").value=appState.lessonTitle;
+  });
+}
+function syncForm(){
+["teacherName","teacherTitle","schoolName","schoolAddress","gradeSection","subject","termWeek","lessonTitle","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","bowItem","bowReference"].forEach(k=>setVal(k,appState[k]));setVal("academicTerm",appState.academicTerm||"Term 1");setVal("schoolYear",appState.schoolYear||"2026-2027");setVal("curriculumVersion",appState.curriculumVersion||"");
+setVal("assessInput",appState.formativeAssessment);setVal("wayInput",appState.extendedLearning);setVal("fridayReflection",appState.fridayReflection);
+populateSubjects();$("aiSubject").value=appState.subject||"";subjectChanged();
+if(isMapehSubject(appState.subject)&&$("mapehComponent")){
+  $("mapehComponent").value=appState.mapehComponent||"";
+  mapehComponentChanged();
+  $("aiTopic").value=appState.subtopic||"";
+}
+if($("aiLessonTitle"))$("aiLessonTitle").value=appState.lessonTitle||"";
+switchDay(currentDay,$("tab-"+currentDay));render();
+}
+function populateSubjects(){let s=$("aiSubject");s.innerHTML='<option value="">Select subject...</option>'+Object.keys(SUBJECT_TOPICS).map(x=>`<option>${x}</option>`).join("")+'<option value="Other">Other / Custom</option>'}
+function subjectChanged(){
+  const s=$("aiSubject").value,t=$("aiTopic");
+  if(isMapehSubject(s)){
+    $("mapehComponent") && ($("mapehComponent").value="");
+    t.innerHTML='<option value="">Select subtopic...</option><option value="__custom">Custom Subtopic...</option>';
+  }else{
+    $("mapehComponent") && ($("mapehComponent").value="");
+    t.innerHTML='<option value="">Select topic...</option>'+((SUBJECT_TOPICS[s]||[]).map(x=>`<option>${x}</option>`).join(""))+'<option value="__custom">Custom Topic...</option>';
+  }
+  if(s&&s!=="Other"){appState.subject=s;setVal("subject",s)}
+  $("customTopicWrap").classList.add("hidden");
+  updateState();
+}
+function topicChanged(){let custom=$("aiTopic").value==="__custom";$("customTopicWrap").classList.toggle("hidden",!custom)}
+function topicValue(){return $("aiTopic").value==="__custom"?$("customTopic").value.trim():$("aiTopic").value.trim()}
+function switchDay(d,btn){currentDay=d;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");const m=appState.matrix[d]||{};setText("dayLabel","SESSION "+({mon:1,tue:2,wed:3,thu:4}[d]));setVal("sessionDateInput",m.date);setVal("sessionTimeIn",m.timeIn);setVal("sessionTimeOut",m.timeOut);setVal("preLessonInput",m.pre);setVal("leadInput",m.lead);setVal("resourcesInput",m.resources);setVal("integrationInput",m.integration)}
+function updateDayData(){const m=appState.matrix[currentDay]||{};appState.matrix[currentDay]={...m,date:$("sessionDateInput")?.value||"",timeIn:$("sessionTimeIn")?.value||"",timeOut:$("sessionTimeOut")?.value||"",pre:$("preLessonInput").value,lead:$("leadInput").value,resources:$("resourcesInput").value,integration:$("integrationInput").value};save();render()}
+function updateFridayReflection(){appState.fridayReflection=$("fridayReflection").value;save();render()}
+function toggleReflection(){appState.fridayEnabled=$("fridayCheck").checked;save();render()}
+function loadLogo(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{appState.logo=r.result;save();render()};r.readAsDataURL(f)}
+function removeLogo(){appState.logo="";$("logoFile").value="";save();render()}
+function loadDefaultSample(){appState={...defaultState(),...sample};normalizeAppState();save();syncForm()}
+function exportJSON(){let a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(appState,null,2));a.download="ILAW_Lesson_Plan.json";a.click()}
+const PAPER_SIZES={letter:{label:"Short / Letter",css:"letter"},longbond:{label:"Long Bond — 8.5 × 13 in",css:"8.5in 13in"},legal:{label:"Legal — 8.5 × 14 in",css:"legal"},a4:{label:"A4",css:"A4"},a3:{label:"A3",css:"A3"},a5:{label:"A5",css:"A5"},b4:{label:"B4",css:"B4"},b5:{label:"B5",css:"B5"},tabloid:{label:"Tabloid",css:"tabloid"},executive:{label:"Executive",css:"7.25in 10.5in"},statement:{label:"Statement",css:"5.5in 8.5in"}};
+function getPrintPrefs(){let size="a4",orientation="landscape";try{size=localStorage.getItem("ilaw_print_size")||size;orientation=localStorage.getItem("ilaw_print_orientation")||orientation}catch(e){}if(!PAPER_SIZES[size])size="a4";if(!["portrait","landscape"].includes(orientation))orientation="landscape";return{size,orientation}}
+function updatePrintSummary(){const size=$("paperSizeSelect")?.value||"a4",orientation=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||"landscape",el=$("printSummary");if(el)el.textContent=(PAPER_SIZES[size]?.label||"A4")+" • "+(orientation==="landscape"?"Landscape":"Portrait")}
+function openPrintCenter(){const m=$("printCenter");if(!m)return window.print();const p=getPrintPrefs();$("paperSizeSelect").value=p.size;const r=document.querySelector('input[name="printOrientationChoice"][value="'+p.orientation+'"]');if(r)r.checked=true;updatePrintSummary();$("paperSizeSelect").onchange=updatePrintSummary;document.querySelectorAll('input[name="printOrientationChoice"]').forEach(x=>x.onchange=updatePrintSummary);m.classList.add("show");m.setAttribute("aria-hidden","false")}
+function closePrintCenter(){const m=$("printCenter");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true")}}
+function printFromCenter(mode){const size=$("paperSizeSelect")?.value||"a4",orientation=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||"landscape",paper=PAPER_SIZES[size]||PAPER_SIZES.a4;try{localStorage.setItem("ilaw_print_size",size);localStorage.setItem("ilaw_print_orientation",orientation)}catch(e){}let style=$("ilawPrintOrientationStyle");if(!style){style=document.createElement("style");style.id="ilawPrintOrientationStyle";document.head.appendChild(style)}style.textContent="@page{size:"+paper.css+" "+orientation+";margin:8mm}";closePrintCenter();setTimeout(()=>window.print(),80)}
+function initPrintOrientation(){getPrintPrefs()}
+function savePDF(){openPrintCenter()}
+function resetLessonPlan(){if(!confirm("Clear the current lesson plan?"))return;appState=defaultState();save();syncForm()}
+function changeLanguage(){appLanguage=$("langSelect").value;save()}
+
+
+function loadReflectionParts(){
+  const map={
+    reflectionProgress:appState.reflectionProgress||"",
+    reflectionWorked:appState.reflectionWorked||"",
+    reflectionChallenges:appState.reflectionChallenges||"",
+    reflectionAdjustments:appState.reflectionAdjustments||"",
+    reflectionInnovation:appState.reflectionInnovation||"",
+    fridayReflection:appState.fridayReflection||""
+  };
+  Object.keys(map).forEach(id=>{const e=$(id);if(e)e.value=map[id]});
+}
+function saveFridayReflection(){
+  appState.reflectionProgress=$("reflectionProgress").value;
+  appState.reflectionWorked=$("reflectionWorked").value;
+  appState.reflectionChallenges=$("reflectionChallenges").value;
+  appState.reflectionAdjustments=$("reflectionAdjustments").value;
+  appState.reflectionInnovation=$("reflectionInnovation").value;
+  appState.fridayReflection=$("fridayReflection").value;
+  save(); render();
+  $("reflectionStatus").textContent="✅ Reflection saved.";
+}
+function clearFridayReflection(){
+  if(!confirm("Clear this week's Friday reflection?"))return;
+  ["reflectionProgress","reflectionWorked","reflectionChallenges","reflectionAdjustments","reflectionInnovation","fridayReflection"].forEach(id=>{if($(id))$(id).value=""});
+  appState.reflectionProgress="";appState.reflectionWorked="";appState.reflectionChallenges="";
+  appState.reflectionAdjustments="";appState.reflectionInnovation="";appState.fridayReflection="";
+  save();render();
+  $("reflectionStatus").textContent="Reflection cleared.";
+}
+async function generateFridayReflection(){
+  const btn=document.querySelector('#reflectionFields button.btn.purple');
+  if(btn)btn.disabled=true;
+  $("reflectionStatus").textContent="⏳ Generating from this week's lesson plan...";
+  try{
+    const lesson={
+      subject:appState.subject,gradeSection:appState.gradeSection,lessonTitle:appState.lessonTitle,
+      objectives:appState.objectives,assessment:appState.formativeAssessment,
+      session1:appState.matrix.mon,session2:appState.matrix.tue,
+      session3:appState.matrix.wed,session4:appState.matrix.thu
+    };
+    const prompt=`Create a realistic Philippine teacher Friday weekly reflection based ONLY on this lesson-plan data.
+Do not invent learner scores, attendance, behavior, events, or outcomes. If evidence is not provided, use cautious wording such as "I will continue to monitor".
+Return JSON ONLY with these fields:
+progress, worked, challenges, adjustments, innovation, summary.
+Each should be concise and professional, first-person teacher voice, 1-3 sentences.
+LESSON DATA:
+${JSON.stringify(lesson)}`;
+    const r=await callGeminiReflection(prompt);
+    $("reflectionProgress").value=r.progress||"";
+    $("reflectionWorked").value=r.worked||"";
+    $("reflectionChallenges").value=r.challenges||"";
+    $("reflectionAdjustments").value=r.adjustments||"";
+    $("reflectionInnovation").value=r.innovation||"";
+    $("fridayReflection").value=r.summary||"";
+    saveFridayReflection();
+    $("reflectionStatus").textContent="✅ Reflection generated. Review it before finalizing.";
+  }catch(e){
+    $("reflectionStatus").textContent="❌ "+e.message;
+  }finally{
+    if(btn)btn.disabled=false;
+  }
+}
+function readableError(e){
+  if(e instanceof Error && e.message)return e.message;
+  if(typeof e==="string")return e;
+  if(e && e.message)return e.message;
+  try{return JSON.stringify(e)}catch(_){return String(e)}
+}
+async function apiFetch(url,key,opts={}){
+  try{
+    const headers={"Content-Type":"application/json",...(opts.headers||{})};
+    const r=await fetch("/api/gemini",{...opts,headers});
+    const raw=await r.text();
+    let d=null;
+    try{d=raw?JSON.parse(raw):null}catch(_){}
+    if(!r.ok){
+      const msg=d?.error?.message||d?.message||raw||("HTTP "+r.status);
+      throw Error(msg);
+    }
+    return d;
+  }catch(e){
+    throw Error(readableError(e));
+  }
+}
+async function generateWithFallback(key,prompt,useSchema=true,responseSchemaOverride=null){
+  $("aiStatus").textContent="⏳ Connecting to the ILAW AI server...";
+  const d=await apiFetch("/api/gemini",null,{
+    method:"POST",
+    body:JSON.stringify({
+      prompt,
+      useSchema,
+      responseSchema:responseSchemaOverride||schema
+    })
+  });
+  if(d?.model)selectedModel=d.model;
+  if(d?.data && typeof d.data==="object")return d.data;
+  if(d && typeof d==="object")return d;
+  throw Error("The AI server returned an invalid response.");
+}
+function aiPrompt(topic,subject,extra=""){
+  const c=generationContext(), exactTitle=c.lessonTitle||topic;
+  const hierarchy=c.component?`Component: ${c.component}. Subtopic: ${c.subtopic||"Not specified"}.`:`Topic: ${c.subtopic||topic}.`;
+  const teacherContext=($("learnerContext")?.value||appState.learnerContext||"").trim();
+  const contextBlock=teacherContext?`\nREAL CLASSROOM CONTEXT PROVIDED BY THE TEACHER (must be used to contextualize the plan): "${teacherContext}". Actively adapt the activities, examples, resources, and language to this context — e.g. reference the actual class size, address the stated weak areas with scaffolded/differentiated tasks, and use examples drawn from the stated livelihood/community context where relevant. Keep the learnerContext output field equal to this teacher-provided context, do not replace or genericize it.`:"";
+  return `You are a Philippine DepEd lesson-plan specialist. Create a practical 4-session ILAW Matrix lesson plan for ${subject||"General"}. ${hierarchy} The EXACT LESSON TITLE is "${exactTitle}". Treat that exact lesson title as the primary anchor of every section of the generated plan. Do not replace it with a generic topic, do not broaden it, and do not invent a different title. ${extra}${contextBlock}
+Use realistic classroom activities, age-appropriate tasks, measurable objectives, formative assessment, resources, safety considerations where applicable, and meaningful integration. Do not invent a specific DepEd competency code. If a competency statement is not supplied, write a competency-aligned statement and label it appropriately. Never use the word "Quarter" anywhere in the output (including termWeek) — use "Term" and/or specific week/session numbers instead. Return ONLY JSON.`
+}
+const schema={type:"OBJECT",properties:{
+lessonTitle:{type:"STRING"},subject:{type:"STRING"},termWeek:{type:"STRING"},references:{type:"STRING"},aiDeclaration:{type:"STRING"},curriculumStandards:{type:"STRING"},bowCompetency:{type:"STRING"},objectives:{type:"STRING"},learnerContext:{type:"STRING"},formativeAssessment:{type:"STRING"},extendedLearning:{type:"STRING"},
+matrix:{type:"OBJECT",properties:{mon:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},tue:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},wed:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]},thu:{type:"OBJECT",properties:{pre:{type:"STRING"},lead:{type:"STRING"},resources:{type:"STRING"},integration:{type:"STRING"}},required:["pre","lead","resources","integration"]}},required:["mon","tue","wed","thu"]}},required:["lessonTitle","subject","termWeek","references","aiDeclaration","curriculumStandards","bowCompetency","objectives","learnerContext","formativeAssessment","extendedLearning","matrix"]};
+
+const reflectionSchema={type:"OBJECT",properties:{
+  progress:{type:"STRING"},
+  worked:{type:"STRING"},
+  challenges:{type:"STRING"},
+  adjustments:{type:"STRING"},
+  innovation:{type:"STRING"},
+  summary:{type:"STRING"}
+},required:["progress","worked","challenges","adjustments","innovation","summary"]};
+
+async function callGeminiReflection(prompt){
+  return await generateWithFallback("",prompt,true,reflectionSchema);
+}
+async function callGemini(prompt){
+  return await generateWithFallback("",prompt,true);
+}
+async function testAPI(){
+  try{
+    selectedModel=null;
+    const d=await apiFetch("/api/gemini",null,{method:"POST",body:JSON.stringify({test:true})});
+    selectedModel=d?.model||"server";
+    $("aiStatus").textContent="✅ Secure AI server works. Model: "+selectedModel;
+  }catch(e){
+    selectedModel=null;
+    $("aiStatus").textContent="❌ "+readableError(e);
+  }
+}
+async function generateFullLessonPlan(){
+let topic=topicValue(),subject=$("aiSubject").value||$("subject").value,exactTitle=$("aiLessonTitle")?.value.trim()||$("lessonTitle")?.value.trim();
+if(!topic&&!exactTitle)return alert("Select or enter a subtopic.");
+if(!subject)return alert("Select a subject.");
+if(isMapehSubject(subject)&&!$("mapehComponent")?.value)return alert("Select a MAPEH component.");
+if(!exactTitle)return alert("Enter the exact Lesson Title to guide the generator.");
+const ctx=generationContext();appState.academicTerm=ctx.academicTerm;appState.schoolYear=ctx.schoolYear;appState.curriculumVersion=ctx.curriculumVersion;appState.bowItem=ctx.bowItem;appState.bowReference=ctx.bowReference;save();
+$("generateBtn").disabled=true;
+try{
+  let d=deepNoQuarter(await callGemini(aiPrompt(topic,subject,"Build a coherent progression: introduce → develop → apply/investigate → synthesize/assess.")));
+  const teacherContext=($("learnerContext")?.value||appState.learnerContext||"").trim();
+  let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,...(teacherContext?{learnerContext:teacherContext}:{})};
+  appState={...defaultState(),...d,...keep,subject:d.subject||subject,lessonTitle:exactTitle,mapehComponent:generationContext().component,subtopic:topic};
+  updateCurriculumBasis(false);
+  save();syncForm();$("aiStatus").textContent="✅ Full lesson plan generated.";
+}catch(e){$("aiStatus").textContent="❌ "+e.message}
+finally{$("generateBtn").disabled=false}
+}
+async function improvePlan(){
+if(!appState.lessonTitle)return alert("Generate or load a lesson plan first.");try{$("aiStatus").textContent="⏳ Reviewing alignment...";let d=deepNoQuarter(await callGemini(aiPrompt(appState.lessonTitle,appState.subject,"Improve the current plan below. Preserve useful content but strengthen alignment, objectives, activity progression, assessment, realism and integration. Current plan JSON: "+JSON.stringify(appState))));const teacherContext=($("learnerContext")?.value||appState.learnerContext||"").trim();let keep={teacherName:appState.teacherName,teacherTitle:appState.teacherTitle,schoolName:appState.schoolName,schoolAddress:appState.schoolAddress,gradeSection:appState.gradeSection,logo:appState.logo,fridayEnabled:appState.fridayEnabled,fridayReflection:appState.fridayReflection,signatories:appState.signatories,...(teacherContext?{learnerContext:teacherContext}:{})};appState={...defaultState(),...d,...keep};updateCurriculumBasis(false);save();syncForm();$("aiStatus").textContent="✅ Plan improved."}catch(e){$("aiStatus").textContent="❌ "+e.message}}
+async function regenerateCurrentSession(){
+ if(!appState.lessonTitle)return alert("Load or generate a plan first.");
+ let dayName={mon:"Session 1",tue:"Session 2",wed:"Session 3",thu:"Session 4"}[currentDay];
+ try{
+   const p=`Create ONLY a replacement ${dayName} for a DepEd ILAW lesson plan on "${appState.lessonTitle}" (${appState.subject}). It must logically follow the previous session and prepare for the next. Return JSON with pre,lead,resources,integration strings. Existing current session: ${JSON.stringify(appState.matrix[currentDay])}`;
+   const x=deepNoQuarter(await generateWithFallback("",p,false));
+   if(!x||typeof x!=="object")throw Error("The model returned invalid session data.");
+   appState.matrix[currentDay]=x;save();switchDay(currentDay,$("tab-"+currentDay));render();
+   $("aiStatus").textContent="✅ "+dayName+" regenerated using "+selectedModel+".";
+ }catch(e){$("aiStatus").textContent="❌ "+readableError(e)}
+}
+</script>
+
+
+<script>
+let authMode="login";
+let profileSaveTimer=null;
+
+function showAuthMode(mode){
+  authMode=mode;
+  const isRegister=mode==="register";
+  $("loginTab")?.classList.toggle("active",!isRegister);
+  $("registerTab")?.classList.toggle("active",isRegister);
+  $("registerNameWrap")?.classList.toggle("hidden",!isRegister);
+  $("authConfirmWrap")?.classList.toggle("hidden",!isRegister);
+  $("authSubmitBtn").textContent=isRegister?"Create Account":"Login";
+  $("authForgotBtn").style.display=isRegister?"none":"inline-block";
+  $("authStatus").textContent="";
+}
+function authMessage(message,ok=false){const el=$("authStatus");if(el)el.textContent=(ok?"✅ ":"❌ ")+message;}
+
+async function submitAuth(){
+  const email=$("authEmail").value.trim(), password=$("authPassword").value, name=$("authName").value.trim(), confirm=$("authConfirmPassword").value, btn=$("authSubmitBtn");
+  if(!email||!password)return authMessage("Enter your email and password.");
+  if(authMode==="register"){
+    if(!name)return authMessage("Enter your full name.");
+    if(password.length<6)return authMessage("Password must be at least 6 characters.");
+    if(password!==confirm)return authMessage("Passwords do not match.");
+  }
+  btn.disabled=true; authMessage(authMode==="register"?"Creating your account...":"Signing in...");
+  try{
+    if(authMode==="register"){
+      const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name}}});
+      if(error)throw error;
+      if(data?.session) await enterTeacherApp(data.session.user);
+      else {authMessage("Account created. Check your email and confirm it before logging in.",true);$("authPassword").value="";$("authConfirmPassword").value="";}
+    }else{
+      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+      if(error)throw error;
+      await enterTeacherApp(data.user);
+    }
+  }catch(e){authMessage(e?.message||"Authentication failed.");}
+  finally{btn.disabled=false;}
+}
+
+async function resetPassword(){
+  const email=$("authEmail").value.trim();
+  if(!email)return authMessage("Enter your email first.");
+  try{
+    const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin});
+    if(error)throw error;
+    authMessage("Password reset email sent. Check your inbox.",true);
+  }catch(e){authMessage(e?.message||"Unable to send password reset email.");}
+}
+
+async function loadTeacherProfile(user){
+  try{
+    const {data,error}=await supabaseClient.from("profiles").select("full_name,school_name,designation").eq("id",user.id).maybeSingle();
+    if(error)throw error;
+    if(data){
+      if(data.full_name){setVal("teacherName",data.full_name);appState.teacherName=data.full_name;}
+      if(data.school_name){setVal("schoolName",data.school_name);appState.schoolName=data.school_name;}
+      if(data.designation){setVal("teacherTitle",data.designation);appState.teacherTitle=data.designation;}
+    }else{
+      const metadataName=user.user_metadata?.full_name||"";
+      if(metadataName){setVal("teacherName",metadataName);appState.teacherName=metadataName;}
+      await saveTeacherProfile();
+    }
+  }catch(e){console.warn("Profile load:",e);}
+}
+async function saveTeacherProfile(){
+  const user=window.ILAW_currentUser;if(!user)return;
+  try{
+    const {error}=await supabaseClient.from("profiles").upsert({id:user.id,full_name:appState.teacherName||null,school_name:appState.schoolName||null,designation:appState.teacherTitle||null,updated_at:new Date().toISOString()});
+    if(error)throw error;
+  }catch(e){console.warn("Profile save:",e);}
+}
+function queueProfileSave(){
+  if(!window.ILAW_currentUser)return;
+  clearTimeout(profileSaveTimer);profileSaveTimer=setTimeout(saveTeacherProfile,900);
+}
+async function loadTeacherState(user){
+  try{
+    const raw=localStorage.getItem("ilaw_v3_state_"+user.id);
+    appState=raw?{...defaultState(),...JSON.parse(raw)}:defaultState();normalizeAppState();
+  }catch(e){console.warn("State load:",e);appState=defaultState();normalizeAppState();}
+  syncForm();
+  await loadTeacherProfile(user);
+  save();render();
+}
+async function enterTeacherApp(user){
+  window.ILAW_currentUser=user;
+  document.body.classList.remove("auth-locked");
+  $("authGate").style.display="none";
+  $("accountBadge").textContent=user.email||"Teacher account";
+  await loadTeacherState(user);
+}
+async function signOutTeacher(){
+  if(!confirm("Log out of this teacher account?"))return;
+  await supabaseClient.auth.signOut();
+  window.ILAW_currentUser=null;
+  document.body.classList.add("auth-locked");
+  $("authGate").style.display="flex";
+  $("accountBadge").textContent="Not signed in";
+  showAuthMode("login");$("authPassword").value="";
+}
+async function initSupabaseAuth(){
+  if(!SUPABASE_PUBLISHABLE_KEY||SUPABASE_PUBLISHABLE_KEY.includes("PASTE_YOUR_")){
+    authMessage("Supabase Publishable Key is not configured yet.");return;
+  }
+  try{
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(session?.user)await enterTeacherApp(session.user);
+    supabaseClient.auth.onAuthStateChange(async(_event,session)=>{
+      if(session?.user&&window.ILAW_currentUser?.id!==session.user.id)await enterTeacherApp(session.user);
+    });
+  }catch(e){authMessage(e?.message||"Unable to connect to Supabase.");}
+}
+document.addEventListener("DOMContentLoaded",initSupabaseAuth);
+</script>
+
+<div id="rawSourceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;padding:24px">
+  <div style="background:#fff;height:100%;border-radius:8px;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:10px 14px;background:#263238;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <b>🧩 ILAW V5 — RAW SOURCE CODE</b>
+      <div>
+        <button class="btn green" onclick="copyRawSource()">📋 Copy Raw Code</button>
+        <button class="btn gray" onclick="downloadRawSource()">💾 Save HTML</button>
+        <button class="btn red" onclick="closeRawSource()">✕ Close</button>
+      </div>
+    </div>
+    <textarea id="rawSourceBox" spellcheck="false" style="flex:1;width:100%;border:0;border-radius:0;padding:14px;font:12px Consolas,monospace;resize:none"></textarea>
+  </div>
+</div>
+<script>
+function openRawSource(){
+  const m=document.getElementById("rawSourceModal"), b=document.getElementById("rawSourceBox");
+  if(!m||!b)return;
+  b.value=document.documentElement.outerHTML;
+  m.style.display="block";
+}
+function closeRawSource(){const m=document.getElementById("rawSourceModal");if(m)m.style.display="none"}
+async function copyRawSource(){
+  const b=document.getElementById("rawSourceBox"); if(!b)return;
+  try{await navigator.clipboard.writeText(b.value);alert("Raw source copied.");}
+  catch(e){b.select();document.execCommand("copy");alert("Raw source copied.");}
+}
+function downloadRawSource(){
+  const b=document.getElementById("rawSourceBox"); if(!b)return;
+  const blob=new Blob([b.value],{type:"text/html;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="ILAW_Teacher_Suite_V5_RAW_SOURCE.html";a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+</script>
+
+<script>
+/* V5.3 RESCUE ENGINE: standalone subject/topic dropdown.
+   This is intentionally independent of the main app script. */
+;
+normalizeAppState();initPrintOrientation();initEditablePreview();
+</script>
+
+
+
+
+
+
+
+<style id="ilawV8AddonCSS">
+/* ILAW V8 additive curriculum + scheduling + print improvements */
+.v8-manager-btn{border:1px solid rgba(255,255,255,.24)!important;background:rgba(255,255,255,.12)!important;color:#fff!important}
+.v8-modal{position:fixed;inset:0;background:rgba(10,24,44,.68);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.v8-modal.show{display:flex}.v8-card{width:min(920px,96vw);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 25px 80px rgba(0,0,0,.3);padding:24px;border-top:4px solid #c39a55}.v8-card h2{margin:0 0 8px;color:#0c2038;font-family:"Fraunces",Georgia,serif;font-weight:600}.v8-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v8-grid .full{grid-column:1/-1}.v8-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}.v8-help{font-size:.78rem;color:#6b7280}.v8-badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#f5ecd8;color:#8c6a2f;font-size:.72rem;font-weight:700}.v8-import-list{max-height:240px;overflow:auto;border:1px solid #e6e1d3;border-radius:10px;margin-top:10px}.v8-import-list div{padding:8px 10px;border-bottom:1px solid #edf1f6;font-size:.8rem}.v8-import-list div:last-child{border-bottom:0}.v8-schedule-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px}.v8-inline-control{display:flex;gap:8px;align-items:end}.v8-inline-control select{flex:1}
+@media(max-width:700px){.v8-grid{grid-template-columns:1fr}.v8-grid .full{grid-column:auto}.v8-schedule-row{grid-template-columns:1fr 1fr}.v8-schedule-row button{grid-column:1/-1}}
+@media print{
+  body.ilaw-no-logo-print #lessonPaper img{display:none!important}
+  #ilawV8ReflectionPrint{display:block!important}
+}
+#ilawV8ReflectionPrint{display:none}
+</style>
+<script>
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const safe=(fn)=>{try{fn()}catch(e){console.error('[ILAW V8]',e)}};
+  const KEY='ilaw_v8_bow_catalog'; const SKEY='ilaw_v8_class_schedule';
+  const TERMS=['Term 1','Term 2','Term 3'];
+  const GRADES=['Grade 7','Grade 8','Grade 9','Grade 10'];
+  const CURR=['Revised K–10 / MATATAG','MELC / Transitional'];
+  function loadJSON(k,f){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch(e){return f}}
+  function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+  function gradeFromSection(){const v=($('gradeSection')?.value||'').toUpperCase();const m=v.match(/(?:GRADE\s*)?(7|8|9|10)/);return m?'Grade '+m[1]:''}
+  function currentGrade(){return gradeFromSection()||'Grade 10'}
+  function currentArea(){let v=$('aiSubject')?.value||$('subject')?.value||''; if(/^MAPEH/i.test(v))return 'MAPEH'; if(/^TLE|^EPP/i.test(v))return 'TLE/EPP'; return v}
+  function curriculumForGrade(g){ if(g==='Grade 10' && typeof getCurriculumBasis==='function')return getCurriculumBasis(10,$('schoolYear')?.value||'2026-2027'); return 'Revised K–10 / MATATAG'}
+  function addOption(sel,val,text){if(!sel)return;const o=document.createElement('option');o.value=val;o.textContent=text;sel.appendChild(o)}
+  function ensureV8Controls(){
+    const bow=$('bowItem');
+    if(bow && !$('v8BowSelect')){
+      const wrap=document.createElement('div'); wrap.innerHTML='<label>BOW</label><select id="v8BowSelect"><option value="">Select BOW...</option><option value="__custom">Custom / Manual Entry</option></select><label style="margin-top:7px;display:block">BOW Reference</label><select id="v8BowRef"><option value="">Select reference...</option><option value="__custom">Custom / Manual Reference</option></select>';
+      bow.parentElement.insertBefore(wrap,bow); bow.style.marginTop='6px'; bow.placeholder='Selected BOW competency/item will appear here, or enter a custom item.';
+      $('v8BowSelect').addEventListener('change',applyBowSelection); $('v8BowRef').addEventListener('change',applyBowReference);
+    }
+    if(!$('v8ScheduleBtn')){
+      const toolbar=document.querySelector('.toolbar'); if(toolbar){const b=document.createElement('button');b.id='v8ScheduleBtn';b.className='btn v8-manager-btn';b.textContent='📅 Schedule';b.onclick=openScheduleManager;toolbar.appendChild(b)}
+    }
+    if(!$('v8BowBtn')){
+      const toolbar=document.querySelector('.toolbar'); if(toolbar){const b=document.createElement('button');b.id='v8BowBtn';b.className='btn v8-manager-btn';b.textContent='📚 BOW Manager';b.onclick=openBowManager;toolbar.appendChild(b)}
+    }
+    if(!$('ilawV8BowModal')){
+      const m=document.createElement('div');m.id='ilawV8BowModal';m.className='v8-modal';m.innerHTML='<div class="v8-card"><h2>📚 BOW Manager</h2><div class="v8-help">Import BOW data into the local curriculum catalog. CSV, TSV, JSON and TXT are supported. PDF files are kept as references but are not silently parsed.</div><div class="v8-grid" style="margin-top:14px"><div><label>Year Level</label><select id="v8BowGrade">'+GRADES.map(x=>'<option>'+x+'</option>').join('')+'</select></div><div><label>Learning Area</label><input id="v8BowArea" placeholder="e.g. MAPEH, Science, Mathematics"></div><div><label>Curriculum</label><select id="v8BowCurr"><option>Revised K–10 / MATATAG</option><option>MELC / Transitional</option></select></div><div><label>Term</label><select id="v8BowTerm">'+TERMS.map(x=>'<option>'+x+'</option>').join('')+'</select></div><div class="full"><label>BOW Reference</label><input id="v8BowReferenceInput" placeholder="Official BOW/source reference"></div><div class="full"><label>Upload BOW</label><input id="v8BowFile" type="file" accept=".csv,.tsv,.json,.txt,.pdf"></div><div class="full" id="v8BowStatus" class="status"></div></div><div id="v8BowList" class="v8-import-list"></div><div class="v8-actions"><button class="btn gray" onclick="closeBowManager()">Close</button><button class="btn primary" onclick="importBowFile()">📥 Import BOW</button></div></div>';document.body.appendChild(m);
+    }
+    if(!$('ilawV8ScheduleModal')){
+      const m=document.createElement('div');m.id='ilawV8ScheduleModal';m.className='v8-modal';m.innerHTML='<div class="v8-card"><h2>📅 Class Schedule</h2><div class="v8-help">Save the regular time for each Grade/Section. The lesson plan will automatically use it beside the Date.</div><div id="v8ScheduleRows" style="margin-top:14px"></div><div class="v8-actions"><button class="btn gray" onclick="closeScheduleManager()">Close</button><button class="btn primary" onclick="addScheduleRow()">＋ Add Class</button><button class="btn green" onclick="saveScheduleManager()">💾 Save Schedule</button></div></div>';document.body.appendChild(m);
+    }
+    syncCurriculumUI(); populateBowDropdowns(); applyScheduleToSessions();
+  }
+  function syncCurriculumUI(){if(typeof updateCurriculumBasis==='function')updateCurriculumBasis(false)}
+  function filterMapehTle(){const g=currentGrade();const s=$('aiSubject');if(!s)return;let v=s.value; if(v==='MAPEH'||/^MAPEH\s/.test(v)){s.value=g.replace('Grade ','MAPEH ');if(typeof window.subjectChanged==='function')window.subjectChanged()} else if(v==='TLE/EPP'||/^TLE|^EPP/.test(v)){s.value=g.replace('Grade ','TLE/EPP ');if(typeof window.subjectChanged==='function')window.subjectChanged()}}
+  function catalog(){return loadJSON(KEY,[])}
+  function populateBowDropdowns(){const sel=$('v8BowSelect'),ref=$('v8BowRef');if(!sel||!ref)return;const g=currentGrade(),a=currentArea(),term=$('academicTerm')?.value||'Term 1';sel.innerHTML='<option value="">Select BOW...</option>';ref.innerHTML='<option value="">Select reference...</option>';const rows=catalog().filter(x=>(!x.grade||x.grade===g)&&(!x.area||x.area.toLowerCase()===a.toLowerCase())&&(!x.term||x.term===term));const seen=new Set();rows.forEach(x=>{const key=x.item||x.title||x.competency;if(key&&!seen.has(key)){seen.add(key);addOption(sel,key,key)}});const refs=[...new Set(rows.map(x=>x.reference).filter(Boolean))];refs.forEach(x=>addOption(ref,x,x));addOption(sel,'__custom','Custom / Manual Entry');addOption(ref,'__custom','Custom / Manual Reference')}
+  function applyBowSelection(){const v=$('v8BowSelect')?.value||'';if(v&&v!=='__custom'&&$('bowItem')){$('bowItem').value=v;if(typeof window.updateState==='function')window.updateState()}}
+  function applyBowReference(){const v=$('v8BowRef')?.value||'';if(v&&v!=='__custom'&&$('bowReference')){$('bowReference').value=v;if(typeof window.updateState==='function')window.updateState()}}
+  function openBowManager(){populateBowManagerList();$('ilawV8BowModal').classList.add('show')}
+  function closeBowManager(){$('ilawV8BowModal')?.classList.remove('show')}
+  function populateBowManagerList(){const box=$('v8BowList');if(!box)return;const rows=catalog();box.innerHTML=rows.length?rows.slice(-80).reverse().map((x,i)=>'<div><span class="v8-badge">'+(x.grade||'Any Grade')+'</span> '+(x.area||'')+' • '+(x.term||'')+' • '+(x.item||x.title||x.competency||'Imported item')+'<br><small>'+((x.reference||'No reference'))+'</small></div>').join(''):'<div>No BOW records imported yet.</div>'}
+  function parseCSV(txt){const lines=txt.split(/\r?\n/).filter(x=>x.trim());if(!lines.length)return[];const delim=lines[0].includes('\t')?'\t':',';const headers=lines[0].split(delim).map(x=>x.trim().toLowerCase().replace(/[^a-z0-9]+/g,''));return lines.slice(1).map(line=>{const cells=line.split(delim).map(x=>x.trim().replace(/^"|"$/g,''));const o={};headers.forEach((h,i)=>o[h]=cells[i]||'');return{grade:o.grade||o.yearlevel||o.year||$('v8BowGrade').value,area:o.learningarea||o.subject||$('v8BowArea').value,term:o.term||$('v8BowTerm').value,reference:o.reference||o.bowreference||$('v8BowReferenceInput').value,item:o.competency||o.bowitem||o.topic||o.lesson||o.lessontitle||cells[0]||''}}).filter(x=>x.item)}
+  function importBowFile(){const f=$('v8BowFile')?.files?.[0];if(!f)return $('v8BowStatus').textContent='❌ Choose a BOW file first.';const base={grade:$('v8BowGrade').value,area:$('v8BowArea').value.trim(),curriculum:$('v8BowCurr').value,term:$('v8BowTerm').value,reference:$('v8BowReferenceInput').value.trim()};const ext=f.name.split('.').pop().toLowerCase();if(ext==='pdf'){const rows=catalog();rows.push({...base,item:'PDF reference: '+f.name,filename:f.name,fileType:'pdf'});saveJSON(KEY,rows);$('v8BowStatus').textContent='⚠️ PDF reference saved. For structured import, use CSV/TSV/JSON/TXT.';populateBowManagerList();populateBowDropdowns();return}const r=new FileReader();r.onload=()=>{try{let parsed=[];if(ext==='json'){const data=JSON.parse(r.result);parsed=Array.isArray(data)?data:[data];parsed=parsed.map(x=>({...base,...x,grade:x.grade||base.grade,area:x.area||base.area,term:x.term||base.term,reference:x.reference||base.reference,item:x.item||x.competency||x.topic||x.lessonTitle||x.title||''})).filter(x=>x.item)}else parsed=parseCSV(String(r.result));const valid=parsed.map(x=>({...base,...x,grade:x.grade||base.grade,area:x.area||base.area,term:x.term||base.term,reference:x.reference||base.reference})).filter(x=>x.item);if(!valid.length)throw new Error('No BOW items found.');const all=catalog();const existing=new Set(all.map(x=>[x.grade,x.area,x.term,x.item].join('|')));const fresh=valid.filter(x=>!existing.has([x.grade,x.area,x.term,x.item].join('|')));saveJSON(KEY,all.concat(fresh));$('v8BowStatus').textContent='✅ Imported '+fresh.length+' new BOW item(s).';populateBowManagerList();populateBowDropdowns()}catch(e){$('v8BowStatus').textContent='❌ '+e.message}};r.readAsText(f)}
+  function schedule(){return loadJSON(SKEY,[])}
+  function openScheduleManager(){renderScheduleRows();$('ilawV8ScheduleModal').classList.add('show')}
+  function closeScheduleManager(){$('ilawV8ScheduleModal')?.classList.remove('show')}
+  function addScheduleRow(data){const box=$('v8ScheduleRows');if(!box)return;const d=data||{};const row=document.createElement('div');row.className='v8-schedule-row';row.innerHTML='<div><label>Grade</label><select class="v8-sg">'+GRADES.map(x=>'<option '+(x===(d.grade||'Grade 10')?'selected':'')+'>'+x+'</option>').join('')+'</select></div><div><label>Section</label><input class="v8-ss" value="'+(d.section||'')+'" placeholder="Andromeda"></div><div><label>Time</label><input class="v8-st" value="'+(d.time||'')+'" placeholder="10:00–11:00 AM"></div><button class="btn red" type="button" onclick="this.parentElement.remove()">Remove</button>';box.appendChild(row)}
+  function renderScheduleRows(){const box=$('v8ScheduleRows');if(!box)return;box.innerHTML='';const rows=schedule();(rows.length?rows:[{grade:'Grade 10',section:'Andromeda',time:''}]).forEach(addScheduleRow)}
+  function saveScheduleManager(){const rows=[...document.querySelectorAll('#v8ScheduleRows .v8-schedule-row')].map(r=>({grade:r.querySelector('.v8-sg').value,section:r.querySelector('.v8-ss').value.trim(),time:r.querySelector('.v8-st').value.trim()})).filter(x=>x.section&&x.time);saveJSON(SKEY,rows);applyScheduleToSessions();$('v8ScheduleBtn').textContent='📅 Schedule ✓';}
+  function applyScheduleToSessions(){const gs=$('gradeSection')?.value||'';const m=gs.match(/(?:GRADE\s*)?(7|8|9|10)\s*[-–]\s*(.+)$/i);if(!m)return;const keyGrade='Grade '+m[1],section=m[2].trim().toLowerCase();const hit=schedule().find(x=>x.grade===keyGrade&&x.section.toLowerCase()===section);if(!hit)return;const map=window.appState?.matrix||{};Object.keys(map).forEach(d=>{if(hit.time&&!map[d].timeIn&&!map[d].timeOut){const parts=hit.time.split(/\s*[–-]\s*/);map[d].timeIn=parts[0]||hit.time;map[d].timeOut=parts[1]||''}});try{if(window.save)window.save()}catch(e){} }
+  function patchPrint(){const old=window.printFromCenter;if(typeof old!=='function'||old.__v8)return;const wrapped=function(mode){const size=$('paperSizeSelect')?.value||'a4';const orient=document.querySelector('input[name="printOrientationChoice"]:checked')?.value||'landscape';document.body.classList.toggle('ilaw-no-logo-print',!window.appState?.logo);const style=$('ilawPrintOrientationStyle');if(style){const paper={letter:'letter',longbond:'8.5in 13in',legal:'legal',a4:'A4',a3:'A3',a5:'A5',b4:'B4',b5:'B5',tabloid:'tabloid',executive:'7.25in 10.5in',statement:'5.5in 8.5in'}[size]||'A4';style.textContent='@page{size:'+paper+' '+orient+';margin:8mm}'}return old.apply(this,arguments)};wrapped.__v8=true;window.printFromCenter=wrapped}
+  function patchSubject(){const old=window.subjectChanged;if(typeof old!=='function'||old.__v8)return;const wrapped=function(){safe(()=>{const s=$('aiSubject')?.value||'';const m=s.match(/(?:MAPEH|TLE\/EPP)\s*(7|8|9|10)/i);if(m&&$('v8YearLevel'))$('v8YearLevel').value='Grade '+m[1];syncCurriculumUI();populateBowDropdowns()});return old.apply(this,arguments)};wrapped.__v8=true;window.subjectChanged=wrapped}
+  function patchCurriculum(){const old=window.curriculumContextChanged;if(typeof old!=='function'||old.__v8)return;const wrapped=function(){const r=old.apply(this,arguments);safe(()=>{syncCurriculumUI();populateBowDropdowns()});return r};wrapped.__v8=true;window.curriculumContextChanged=wrapped}
+  function init(){ensureV8Controls();patchPrint();patchSubject();patchCurriculum();setInterval(()=>{safe(()=>{ensureV8Controls();populateBowDropdowns();applyScheduleToSessions()})},2500)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  window.openBowManager=openBowManager;window.closeBowManager=closeBowManager;window.importBowFile=importBowFile;window.openScheduleManager=openScheduleManager;window.closeScheduleManager=closeScheduleManager;window.addScheduleRow=addScheduleRow;window.saveScheduleManager=saveScheduleManager;
+})();
+</script>
+
+<script id="ilaw-v8-final-direct-pdf">
+(function(){
+  "use strict";
+
+  function getChoice(){
+    var size=(document.getElementById("paperSizeSelect")||{}).value||"a4";
+    var orientation=(document.querySelector('input[name="printOrientationChoice"]:checked')||{}).value||"landscape";
+    var sizes={
+      letter:{label:"Short / Letter",w:8.5,h:11},
+      longbond:{label:"Long Bond",w:8.5,h:13},
+      legal:{label:"Legal",w:8.5,h:14},
+      a4:{label:"A4",w:8.27,h:11.69},
+      a3:{label:"A3",w:11.69,h:16.54},
+      a5:{label:"A5",w:5.83,h:8.27},
+      b4:{label:"B4",w:9.84,h:13.9},
+      b5:{label:"B5",w:6.93,h:9.84},
+      tabloid:{label:"Tabloid",w:11,h:17},
+      executive:{label:"Executive",w:7.25,h:10.5},
+      statement:{label:"Statement",w:5.5,h:8.5}
+    };
+    return {size:size,orientation:orientation,spec:sizes[size]||sizes.a4};
+  }
+
+  function fileName(){
+    var v=(document.getElementById("lessonTitle")||{}).value||"ILAW_Lesson_Plan";
+    v=String(v).replace(/[\\/:*?"<>|]+/g," ").replace(/\s+/g," ").trim();
+    return (v||"ILAW_Lesson_Plan").slice(0,120)+".pdf";
+  }
+
+  function logoState(){
+    var logo=document.getElementById("pvLogo");
+    return !!(logo && logo.src && !logo.classList.contains("hidden") && logo.style.display!=="none");
+  }
+
+  function buildExportClone(){
+    var source=document.getElementById("lessonPaper");
+    if(!source) throw new Error("Lesson plan preview not found.");
+
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+
+    var clone=source.cloneNode(true);
+
+    // Remove anything that is not part of the actual printable lesson paper.
+    clone.querySelectorAll("#ilawLogoModule,.toolbar,.header,.ilaw-modal,.v8-modal,.orientation-control").forEach(function(el){
+      el.remove();
+    });
+
+    // Uploaded logo appears ONLY if the current printable logo is enabled.
+    var logo=clone.querySelector("#pvLogo");
+    if(logo && !logoState()) logo.remove();
+
+    // Clean up the reflection area for export: keep actual lines/content, strip editing controls.
+    var ref=clone.querySelector("#pvReflection");
+    if(ref){
+      ref.querySelectorAll(".reflect-remove,.reflect-add-line").forEach(function(el){el.remove()});
+      ref.querySelectorAll("[contenteditable]").forEach(function(el){el.removeAttribute("contenteditable")});
+      ref.querySelectorAll(".print-reflection-lines>div").forEach(function(el){el.style.gridTemplateColumns="78px 1fr"});
+    }
+
+    return clone;
+  }
+
+  function placeForCapture(node,widthIn){
+    var host=document.createElement("div");
+    host.id="ilawPdfCaptureHost";
+    host.style.position="absolute";
+    host.style.left="0";
+    host.style.top="0";
+    host.style.width=(widthIn+0.4)+"in";
+    host.style.background="#fff";
+    host.style.zIndex="2147483646";
+    host.style.pointerEvents="none";
+    host.style.padding="0";
+    host.appendChild(node);
+    document.body.appendChild(host);
+    return host;
+  }
+
+  function setPrintPage(choice){
+    var st=document.getElementById("ilawPrintOrientationStyle");
+    if(!st){
+      st=document.createElement("style");
+      st.id="ilawPrintOrientationStyle";
+      document.head.appendChild(st);
+    }
+    var pageMap={
+      letter:"letter",legal:"legal",a4:"A4",a3:"A3",a5:"A5",
+      b4:"B4",b5:"B5",tabloid:"tabloid"
+    };
+    var page=pageMap[choice.size] || (choice.size==="longbond"?"8.5in 13in":"8.5in 11in");
+    if(choice.size==="executive") page="7.25in 10.5in";
+    if(choice.size==="statement") page="5.5in 8.5in";
+    st.textContent="@page{size:"+page+" "+choice.orientation+";margin:8mm}";
+  }
+
+  async function downloadPDF(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
+    var c=getChoice();
+    setPrintPage(c);
+
+    if(window.ILAW_loadDirectPDF) await window.ILAW_loadDirectPDF();
+    if(!window.jspdf || !window.html2canvas){
+      throw new Error("PDF components could not be loaded. Please allow internet access and try again.");
+    }
+
+    var clone=buildExportClone();
+    var captureWidth=(c.orientation==="landscape"?c.spec.h:c.spec.w);
+    clone.style.display="block";
+    clone.style.visibility="visible";
+    clone.style.opacity="1";
+    clone.style.width=captureWidth+"in";
+    clone.style.maxWidth=captureWidth+"in";
+    clone.style.background="#fff";
+    clone.style.boxShadow="none";
+    clone.style.border="0";
+    clone.style.borderRadius="0";
+    clone.style.margin="0";
+    clone.style.padding="8mm";
+    clone.style.minHeight="auto";
+    clone.style.color="#000";
+
+    var host=placeForCapture(clone,captureWidth);
+
+    try{
+      // Wait for fonts/images before canvas capture.
+      if(document.fonts && document.fonts.ready) await document.fonts.ready;
+      var images=Array.from(clone.querySelectorAll("img"));
+      await Promise.all(images.map(function(img){
+        return img.complete ? Promise.resolve() : new Promise(function(resolve){img.onload=img.onerror=resolve;});
+      }));
+
+      var canvas=await window.html2canvas(clone,{
+        scale:2,
+        useCORS:true,
+        allowTaint:false,
+        backgroundColor:"#ffffff",
+        logging:false,
+        width:Math.ceil(clone.getBoundingClientRect().width),
+        windowWidth:Math.max(document.documentElement.clientWidth,Math.ceil(clone.getBoundingClientRect().width)),
+        scrollX:0,
+        scrollY:0
+      });
+
+      var jsPDF=window.jspdf.jsPDF;
+      var pageW=c.orientation==="landscape"?c.spec.h:c.spec.w;
+      var pageH=c.orientation==="landscape"?c.spec.w:c.spec.h;
+      var pdf=new jsPDF({
+        orientation:c.orientation,
+        unit:"in",
+        format:[pageW,pageH],
+        compress:true
+      });
+
+      var imgData=canvas.toDataURL("image/jpeg",0.98);
+      var imgW=pageW-0.55;
+      var imgH=canvas.height*(imgW/canvas.width);
+      var y=0.275;
+      var maxH=pageH-0.55;
+
+      // Split long content across pages rather than clipping it.
+      var sourceW=canvas.width;
+      var pagePxH=Math.floor(canvas.height*(maxH/imgH));
+      var offsetPx=0;
+      var first=true;
+      while(offsetPx<canvas.height){
+        var sliceH=Math.min(pagePxH,canvas.height-offsetPx);
+        var slice=document.createElement("canvas");
+        slice.width=canvas.width;
+        slice.height=sliceH;
+        slice.getContext("2d").drawImage(canvas,0,offsetPx,sourceW,sliceH,0,0,sourceW,sliceH);
+        var sliceData=slice.toDataURL("image/jpeg",0.98);
+        var renderedH=sliceH*(imgW/sourceW);
+        if(!first) pdf.addPage([pageW,pageH],c.orientation);
+        pdf.addImage(sliceData,"JPEG",0.275,y,imgW,renderedH,undefined,"FAST");
+        first=false;
+        offsetPx+=sliceH;
+      }
+
+      pdf.save(fileName());
+    } finally {
+      host.remove();
+    }
+  }
+
+  // IMPORTANT: Download PDF is direct download; it does NOT open the printer.
+  window.savePDF=function(){
+    var status=document.getElementById("aiStatus");
+    if(status) status.textContent="⏳ Preparing PDF download...";
+    downloadPDF().then(function(){
+      if(status) status.textContent="✅ PDF downloaded.";
+    }).catch(function(err){
+      console.error("[ILAW Direct PDF]",err);
+      if(status) status.textContent="❌ PDF download failed.";
+      alert("PDF download failed: "+(err && err.message ? err.message : err));
+    });
+  };
+
+  // Existing Print/PDF remains the printer workflow.
+  window.printFromCenter=function(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
+    var c=getChoice();
+    setPrintPage(c);
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+    var modal=document.getElementById("printCenter");
+    if(modal){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+    }
+    setTimeout(function(){window.print();},100);
+  };
+
+  window.addEventListener("beforeprint",function(){
+    if(window.ensurePrintSessionDateTimes)window.ensurePrintSessionDateTimes();
+    if(typeof ensureReflectionTableLines==="function") ensureReflectionTableLines();
+  });
+})();
+</script>
+
+
+<script id="ilaw-v8-language-fix">
+(function(){
+  const T = {
+    en: {
+      "School Logo":"School Logo","Remove Logo":"Remove Logo","Teacher Name":"Teacher Name",
+      "Teacher Title":"Teacher Title","School Name":"School Name","School Address":"School Address",
+      "Learning Area / Subject":"Learning Area / Subject","Grade & Section":"Grade & Section",
+      "Term / Week":"Term / Week","Lesson Plan Format":"Lesson Plan Format","Lesson Title":"Lesson Title",
+      "References":"References","Declaration of AI Use":"Declaration of AI Use",
+      "Curriculum Standards":"Curriculum Standards","Learning Competency (BOW)":"Learning Competency (BOW)",
+      "Learning Objectives":"Learning Objectives","Learner Context":"Learner Context",
+      "Formative Assessment":"Formative Assessment","Extended Learning Opportunities":"Extended Learning Opportunities",
+      "Daily Schedule Editor":"Daily Schedule Editor","Session Date":"Session Date","Time In":"Time In","Time Out":"Time Out",
+      "Pre-Lesson":"Pre-Lesson","Flow / Activities & Procedures":"Flow / Activities & Procedures",
+      "Learning Resources":"Learning Resources","Opportunities for Integration":"Opportunities for Integration",
+      "Friday Reflection — Friday only":"Friday Reflection — Friday only",
+      "It is Friday / enable weekly reflection":"It is Friday / enable weekly reflection",
+      "Assessing & Ways Forward":"Assessing & Ways Forward",
+      "Upload Logo":"Upload Logo","Print/PDF":"Print/PDF","Download PDF":"Download PDF",
+      "Preferences":"Preferences","Logout":"Logout","Lock":"Lock","Test API":"Test API",
+      "Generate Full Plan":"Generate Full Plan","Improve Plan":"Improve Plan",
+      "Regenerate Session":"Regenerate Session","Copy to Next":"Copy to Next","Clear Session":"Clear Session",
+      "Generate Reflection":"Generate Reflection","Save Reflection":"Save Reflection","Clear":"Clear",
+      "Print Center":"Print Center","Paper Size":"Paper Size","Orientation":"Orientation",
+      "Portrait":"Portrait","Landscape":"Landscape","Print":"Print","Cancel":"Cancel",
+      "Term":"Term","BOW Item / Competency":"BOW Item / Competency","BOW Reference":"BOW Reference"
+    },
+    fil: {
+      "School Logo":"Logo ng Paaralan","Remove Logo":"Alisin ang Logo","Teacher Name":"Pangalan ng Guro",
+      "Teacher Title":"Posisyon ng Guro","School Name":"Pangalan ng Paaralan","School Address":"Address ng Paaralan",
+      "Learning Area / Subject":"Learning Area / Asignatura","Grade & Section":"Baitang at Seksyon",
+      "Term / Week":"Term / Linggo","Lesson Plan Format":"Format ng Lesson Plan","Lesson Title":"Pamagat ng Aralin",
+      "References":"Mga Sanggunian","Declaration of AI Use":"Pahayag sa Paggamit ng AI",
+      "Curriculum Standards":"Pamantayan ng Kurikulum","Learning Competency (BOW)":"Learning Competency (BOW)",
+      "Learning Objectives":"Mga Layunin sa Pagkatuto","Learner Context":"Konteksto ng mga Mag-aaral",
+      "Formative Assessment":"Pagtatayang Formative","Extended Learning Opportunities":"Karagdagang Pagkakataon sa Pagkatuto",
+      "Daily Schedule Editor":"Editor ng Pang-araw-araw na Iskedyul","Session Date":"Petsa ng Session",
+      "Time In":"Oras ng Simula","Time Out":"Oras ng Tapos","Pre-Lesson":"Bago ang Aralin",
+      "Flow / Activities & Procedures":"Daloy / Mga Gawain at Pamamaraan",
+      "Learning Resources":"Mga Learning Resource","Opportunities for Integration":"Mga Pagkakataon sa Integrasyon",
+      "Friday Reflection — Friday only":"Friday Reflection — Biyernes lamang",
+      "It is Friday / enable weekly reflection":"Biyernes / paganahin ang weekly reflection",
+      "Assessing & Ways Forward":"Pagtataya at Mga Susunod na Hakbang",
+      "Upload Logo":"Mag-upload ng Logo","Print/PDF":"I-print/PDF","Download PDF":"I-download ang PDF",
+      "Preferences":"Mga Setting","Logout":"Mag-logout","Lock":"I-lock","Test API":"Subukan ang API",
+      "Generate Full Plan":"Bumuo ng Buong Lesson Plan","Improve Plan":"Pagbutihin ang Lesson Plan",
+      "Regenerate Session":"Bumuo Ulit ng Session","Copy to Next":"Kopyahin sa Kasunod","Clear Session":"I-clear ang Session",
+      "Generate Reflection":"Bumuo ng Reflection","Save Reflection":"I-save ang Reflection","Clear":"I-clear",
+      "Print Center":"Print Center","Paper Size":"Laki ng Papel","Orientation":"Orientation",
+      "Portrait":"Portrait","Landscape":"Landscape","Print":"I-print","Cancel":"Kanselahin",
+      "Term":"Term","BOW Item / Competency":"BOW Item / Competency","BOW Reference":"BOW Reference"
+    }
+  };
+
+  function replaceTextNode(el, from, to){
+    if(!el || !to) return;
+    const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n=>{
+      if(n.nodeValue.trim()===from) n.nodeValue=n.nodeValue.replace(from,to);
+    });
+  }
+
+  function translateValueFields(lang){
+    // Button IDs: preserve all existing handlers; only change visible labels.
+    const byId = {
+      fil:{
+        generateBtn:"✨ Bumuo ng Buong Plan", 
+        langSelect:"Filipino"
+      },
+      en:{
+        generateBtn:"✨ Generate Full Plan",
+        langSelect:"English"
+      }
+    };
+    if($("generateBtn")) $("generateBtn").textContent=byId[lang].generateBtn;
+    if($("langSelect")) $("langSelect").value=lang;
+  }
+
+  function applyLanguage(lang){
+    lang = (lang==="fil") ? "fil" : "en";
+    appLanguage = lang;
+    try{ localStorage.setItem("ilaw_language",lang); }catch(e){}
+
+    const map=T[lang];
+
+    // Labels and headings.
+    document.querySelectorAll("label,h1,h2,h3,h4,button,.label,.small").forEach(el=>{
+      const raw = el.dataset.langOriginal || el.textContent.trim();
+      if(!el.dataset.langOriginal) el.dataset.langOriginal=raw;
+      if(map[raw]){
+        // Do not replace icon-only / complex elements; plain text only.
+        if(el.children.length===0) el.textContent=map[raw];
+      }
+    });
+
+    // Specific buttons with icons.
+    const buttons = {
+      fil:{
+        "lockApp":"🔒 I-lock","openSettings":"⚙ Mga Setting","signOutTeacher":"Mag-logout",
+        "testAPI":"🔌 Subukan ang API","generateFullLessonPlan":"✨ Bumuo ng Buong Plan",
+        "improvePlan":"🧠 Pagbutihin ang Plan","regenerateCurrentSession":"🔄 Bumuo Ulit ng Session",
+        "copyCurrentToNext":"📋 Kopyahin sa Kasunod","clearCurrentSession":"🧹 I-clear ang Session"
+      },
+      en:{
+        "lockApp":"🔒 Lock","openSettings":"⚙ Preferences","signOutTeacher":"Logout",
+        "testAPI":"🔌 Test API","generateFullLessonPlan":"✨ Generate Full Plan",
+        "improvePlan":"🧠 Improve Plan","regenerateCurrentSession":"🔄 Regenerate Session",
+        "copyCurrentToNext":"📋 Copy to Next","clearCurrentSession":"🧹 Clear Session"
+      }
+    };
+
+    document.querySelectorAll("button").forEach(btn=>{
+      const m=btn.getAttribute("onclick");
+      if(!m) return;
+      const fn=(m.match(/^\s*([A-Za-z_$][\w$]*)\s*\(/)||[])[1];
+      if(buttons[lang][fn]) btn.textContent=buttons[lang][fn];
+    });
+
+    translateValueFields(lang);
+  }
+
+  window.changeLanguage=function(){
+    const lang=$("langSelect")?.value==="fil" ? "fil" : "en";
+    applyLanguage(lang);
+  };
+
+  window.applyILAWLanguage=applyLanguage;
+
+  document.addEventListener("DOMContentLoaded",function(){
+    let lang="en";
+    try{lang=localStorage.getItem("ilaw_language")==="fil"?"fil":"en"}catch(e){}
+    const sel=$("langSelect");
+    if(sel)sel.value=lang;
+    applyLanguage(lang);
+  });
+})();
+</script>
+
+<script>
+/* PWA: service worker registration + install prompt handling.
+   Falls back silently if not served over http(s) (e.g. opened as a local file). */
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+let deferredInstallPrompt=null;
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  const btn=document.getElementById("installAppBtn");
+  if(btn)btn.classList.remove("hidden");
+});
+function installPwa(){
+  const btn=document.getElementById("installAppBtn");
+  if(!deferredInstallPrompt){if(btn)btn.classList.add("hidden");return}
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.finally(function(){
+    deferredInstallPrompt=null;
+    if(btn)btn.classList.add("hidden");
+  });
+}
+window.addEventListener("appinstalled",function(){
+  const btn=document.getElementById("installAppBtn");
+  if(btn)btn.classList.add("hidden");
+  deferredInstallPrompt=null;
+});
+</script>
+
+</body></html>
